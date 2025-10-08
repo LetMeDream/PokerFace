@@ -1,0 +1,41 @@
+
+
+.main-container {
+  --margin : 0px;
+  margin: var(--margin);
+  min-height: max-content;
+  background: url('../../assets/bg.jpg') no-repeat 50% 47%;
+}
+
+.main-container__section {
+  background-size: initial;
+  min-width: calc(100vw - (var(--margin) * 2 + 20px ));
+}
+
+/* Media querys */
+@media (min-width: 640px) {
+  .main-container {
+    --margin : 0px;
+    min-height: calc(100vh - (var(--margin) * 2) ) !important;
+  }
+
+  .main-container__section {
+    background-size: contain;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-container {
+    background-position: 50% 37.5%;
+  }
+}
+
+
+/* BREAKPOINT CHEAT SHEET
+  * - Breakpoint prefix	Minimum width	CSS
+  * sm	40rem (640px)	@media (width >= 40rem) { ... }
+  * md	48rem (768px)	@media (width >= 48rem) { ... }
+  * lg	64rem (1024px)	@media (width >= 64rem) { ... }
+  * xl	80rem (1280px)	@media (width >= 80rem) { ... }
+  * 2xl	96rem (1536px)	@media (width >= 96rem) { ... }
+*/
