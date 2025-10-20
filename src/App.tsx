@@ -3,6 +3,7 @@ import viteLogo from '/vite.svg' */
 import First from './sections/First/First'
 import Second from './sections/Second/Second'
 import Third from './sections/Third/Third'
+import Fourth from './sections/Fourth/Fourth'
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
         <First />
         <Second />
         <Third />
+        <Fourth />
       </div>
     </>
   )
