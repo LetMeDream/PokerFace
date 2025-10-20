@@ -1,19 +1,19 @@
 
 
-.main-container {
+/* .main-container {
   --margin : 0px;
   margin: var(--margin);
   min-height: max-content;
-  background: url('../../assets/bg.jpg') no-repeat 50% 47%;
+  background: ul('../../assets/bg.jpg') no-repeat 50% 47%;
 }
 
 .main-container__section {
   background-size: initial;
   min-width: calc(100vw - (var(--margin) * 2 + 20px ));
 }
-
+ */
 /* Media querys */
-@media (min-width: 640px) {
+/* @media (min-width: 640px) {
   .main-container {
     --margin : 0px;
     min-height: calc(100vh - (var(--margin) * 2) ) !important;
@@ -28,7 +28,7 @@
   .main-container {
     background-position: 50% 37.5%;
   }
-}
+} */
 
 
 /* BREAKPOINT CHEAT SHEET
