@@ -10,7 +10,7 @@ const Third = () => {
         Los juegos que más te gustan, en un solo lugar:
       </div>
       <div className="main-third-container">
-        <div className=" flex md:flex-row px-1 py-1 max-w-[1800px]">
+        <div className=" flex md:flex-row px-1 py-1 max-w-[1800px] 2xl:mx-auto 2xl:justify-center">
           <img src={ruleta} alt="ruleta" className='third-ruleta-image max-w-[33%] h-[90px] md:h-[unset] md:max-w-[33%] 2xl:max-w-[420px] justify-center cursor-pointer hover:scale-105 transition duration-700' />
           <img src={slots} alt="slots" className='third-slots-image max-w-[33%] h-[90px] md:h-[unset] md:max-w-[33%] 2xl:max-w-[420px] justify-center cursor-pointer hover:scale-105 transition duration-700' />
           <img src={deportes} alt="deportes" className='third-deportes-image max-w-[33%] h-[90px] md:h-[unset] md:max-w-[33%] 2xl:max-w-[420px] justify-center cursor-pointer hover:scale-105 transition duration-700' />
