@@ -1,0 +1,15 @@
+.chat-pulse{
+  /* anima transform (incluye el translateX que ya usas en la clase Tailwind) */
+  animation: chatPulse 4s ease-in-out infinite;
+  /* Adding nice shadow, but  to the element, not the box */
+    filter: drop-shadow(0 8px 10px rgba(0,0,0,0.35));
+  -webkit-filter: drop-shadow(0 8px 10px rgba(0,0,0,0.35));
+}
+
+/* keyframes: pulso breve (0-20%), luego reposo (20-100%) */
+@keyframes chatPulse {
+  0%   { transform: translateX(-50%) scale(1); }
+  20%  { transform: translateX(-50%) scale(1.06); } /* crecer */
+  40%  { transform: translateX(-50%) scale(1); }    /* volver tamaño */
+  100% { transform: translateX(-50%) scale(1); }    /* pausa hasta la próxima repetición */
+}

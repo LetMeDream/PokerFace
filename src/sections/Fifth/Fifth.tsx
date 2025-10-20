@@ -1,5 +1,6 @@
 import videoIcono from '../../assets/sections/fifth/video-icono.png'
 import chatear from '../../assets/sections/fifth/chatear.png'
+import './Fifth.css'
 
 const Fifth = () => {
   return (
@@ -11,8 +12,10 @@ const Fifth = () => {
       </div>
       <div className="bg-secondary">
         <div className=' relative pt-12 flex flex-row justify-center 2xl:max-w-[900px] 2xl:mx-auto px-2'>  
-          <img src={chatear} alt="Chat Icon" className='mx-auto max-w-[180px] md:max-w-[440px] absolute -top-4 left-[50%] transform -translate-x-[50%]' />
-
+          {/* Chatear */}
+          <div className="absolute -top-4 left-1/2 -translate-y-1">
+            <img src={chatear} alt="Chat Icon" className="chat-pulse max-w-[180px] md:max-w-[440px] block" />
+           </div>
           <div className=' flex-1 mb-3 flex flex-col items-center'>
             <img src={videoIcono} alt="Play Icon" className='max-w-[45vw] w-[140px] md:py-10 pb-3' />
             <p className=' text-center uppercase montserrat-normal text-[10px] md:text-3xl max-w-[60%]'>

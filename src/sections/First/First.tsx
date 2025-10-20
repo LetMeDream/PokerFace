@@ -6,7 +6,7 @@ import bigerscreen from '../../assets/sections/first/3220.png'
 const First = () => {
   return (
     <div>
-      <img src={mobile} alt="mobile" className='first-mobile-image md:hidden w-[100vw] max-h-[26vh]' />
+      <img src={mobile} alt="mobile" className='first-mobile-image md:hidden w-[100vw] max-h-[180px]' />
       <img src={desktop} alt="desktop" className='first-desktop-image hidden md:block 2xl:hidden' />
       <img src={bigerscreen} alt="3220" className='first-3220-image hidden 2xl:block' />
     </div>    

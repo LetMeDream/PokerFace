@@ -6,7 +6,7 @@ import whatssap from '../../assets/sections/sixth/whatssapp.png'
 const Sixth = () => {
   return (
     <section className="main-container pb-4 2xl:flex 2xl:flex-row-reverse 2xl:items-center 2xl:justify-center 2xl:py-14 caret-transparent">
-      <img src={tribetClub} alt="Tribet Club" className='max-w-[300px] w-[70px] mx-auto 2xl:mx-[0px] pt-2 pb-6 ' />
+      <img src={tribetClub} alt="Tribet Club" className='max-w-[300px] w-[70px] mx-auto 2xl:mx-[0px] pt-3 pb-5 ' />
 
       <div className="icons flex flex-col gap-2">
 
