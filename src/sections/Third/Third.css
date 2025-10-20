@@ -1,17 +1,20 @@
-.main-container {
+.main-third-container {
   min-height: max-content;
   background: url('../../assets/sections/third/bg-mobile.png') no-repeat;
+  background-size: contain;
 }
 
 @media (min-width: 48rem) {
-  .main-container {
+  .main-third-container {
     background: url('../../assets/sections/third/bg-desktop.png') no-repeat;
+    background-size: cover;
   }
 }
 
 @media (min-width: 96rem) {
-  .main-container {
+  .main-third-container {
     background: url('../../assets/sections/third/bg-3220.png') no-repeat;
+    background-size: cover;
   }
 }
 
