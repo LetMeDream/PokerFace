@@ -37,6 +37,13 @@
   font-style: normal;
 }
 
+.montserrat-normal {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
 /* Classes for CUSTOM FONTS */
 /* For the HERO SECTION */
 .hero-font {

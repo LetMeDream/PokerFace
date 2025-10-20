@@ -1,6 +1,6 @@
 .main-container {
   min-height: max-content;
-  background: url('../../assets/sections/sixth/bg.png') no-repeat;
+  background: url('../../assets/sections/sixth/bg-desktop.png') no-repeat;
   background-size: cover;
 }
 .icon-container {
