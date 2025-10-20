@@ -5,7 +5,7 @@ import bigercreen from '../../assets/sections/second/3220.png'
 const Second = () => {
   return (
     <div className='bg-secondary'>
-      <img src={dekstop} alt="desktop" className='second-desktop-image block 2xl:hidden md:pt-2 2xl:pt-0 w-[100vw] relative -top-1 h-[140px]' />
+      <img src={dekstop} alt="desktop" className='second-desktop-image block 2xl:hidden md:pt-2 2xl:pt-0 w-[100vw] relative -top-1 h-[140px] md:h-[unset]' />
       <img src={bigercreen} alt="3220" className='second-3220-image hidden 2xl:block -mt-4' />
     </div>
   )
