@@ -10,14 +10,14 @@ const Sixth = () => {
 
       <div className='flex items-center justify-center px-1 sm:border'>
         <img src={whatssap} alt="WhatsApp" className=' mx-auto pt-12 pb-6 max-w-[72px] relative -top-2' />
-        <span className=' relative montserrat-font text-2xl -left-[6vw]'>
+        <span className=' relative montserrat-font text-2xl -left-[26px]'>
           +54 911 722 35 159
         </span>
       </div>
 
       <div className='flex items-center justify-center px-10 relative -top-4 sm:border'>
         <img src={instagram} alt="Instagram" className=' mx-auto pt-12 pb-6 max-w-[72px] relative -top-2' />
-        <span className=' relative montserrat-font text-2xl -left-[4vw]'>
+        <span className=' relative montserrat-font text-2xl -left-[16px]'>
           tribet.club_
         </span>
       </div>
