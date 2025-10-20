@@ -1,9 +1,8 @@
-/* import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg' */
 import First from './sections/First/First'
 import Second from './sections/Second/Second'
 import Third from './sections/Third/Third'
 import Fourth from './sections/Fourth/Fourth'
+import Fifth from './sections/Fifth/Fifth'
 
 function App() {
 
@@ -14,6 +13,7 @@ function App() {
         <Second />
         <Third />
         <Fourth />
+        <Fifth />
       </div>
     </>
   )
