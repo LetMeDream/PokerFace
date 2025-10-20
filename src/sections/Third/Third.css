@@ -1,7 +1,7 @@
 .main-third-container {
   min-height: max-content;
   background: url('../../assets/sections/third/bg-mobile.png') no-repeat;
-  background-size: contain;
+  background-size: cover;
 }
 
 @media (min-width: 48rem) {
