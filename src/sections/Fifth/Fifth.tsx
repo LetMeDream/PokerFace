@@ -4,7 +4,7 @@ import chatear from '../../assets/sections/fifth/chatear.png'
 const Fifth = () => {
   return (
     <section>
-      <div className=' bg-primary text-secondary montserrat-font uppercase py-8 pt-4 px-3 text-center md:text-3xl md:px-20 md:pt-10 md:pb-12 2xl:py-16'>
+      <div className=' bg-primary text-secondary montserrat-font uppercase py-8 pt-4 px-3 text-center md:text-3xl md:px-20 md:pt-10 md:pb-12 2xl:py-12'>
         <p className=' 2xl:max-w-[700px] 2xl:mx-auto'>
           "Escribinos para crear tu usuario ahora, atención 24 horas"
         </p>
