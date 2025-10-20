@@ -5,7 +5,7 @@ import whatssap from '../../assets/sections/sixth/whatssapp.png'
 
 const Sixth = () => {
   return (
-    <div className="main-container pb-4 2xl:flex 2xl:flex-row-reverse 2xl:items-center 2xl:justify-center 2xl:py-14">
+    <section className="main-container pb-4 2xl:flex 2xl:flex-row-reverse 2xl:items-center 2xl:justify-center 2xl:py-14 caret-transparent">
       <img src={tribetClub} alt="Tribet Club" className='max-w-[300px] mx-auto 2xl:mx-[0px] pt-12 pb-6 ' />
 
       <div className="icons md:flex md:flex-col ">
@@ -23,7 +23,7 @@ const Sixth = () => {
           </span>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

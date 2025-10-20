@@ -5,7 +5,7 @@ import deportes from '../../assets/sections/third/deportes.png'
 
 const Third = () => {
   return (
-    <div className=''>
+    <div className='caret-transparent'>
       <div className='bg-secondary montserrat-font text-center text-[#FFB400] text-lg px-8 md:px-40 py-4 md:py-5 md:text-[26px] lg:text-3xl xl:text-[32px] xl:pt-1 xl:pb-4'>
         Los juegos que más te gustan, en un solo lugar:
       </div>
