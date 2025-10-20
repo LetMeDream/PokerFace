@@ -5,12 +5,12 @@ import whatssap from '../../assets/sections/sixth/whatssapp.png'
 
 const Sixth = () => {
   return (
-    <div className="main-container">
+    <div className="main-container pb-4">
       <img src={tribetClub} alt="Tribet Club" className='max-w-[300px] mx-auto pt-12 pb-6' />
 
       <div className='flex items-center justify-center px-1 sm:border'>
         <img src={whatssap} alt="WhatsApp" className=' mx-auto pt-12 pb-6 max-w-[72px] relative -top-2' />
-        <span className=' relative montserrat-font text-2xl -left-[4vw]'>
+        <span className=' relative montserrat-font text-2xl -left-[6vw]'>
           +54 911 722 35 159
         </span>
       </div>
