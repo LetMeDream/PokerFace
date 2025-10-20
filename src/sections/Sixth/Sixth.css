@@ -3,16 +3,32 @@
   background: url('../../assets/sections/sixth/bg.png') no-repeat;
   background-size: cover;
 }
+.icon-container {
+  max-width: 90vw;
+}
+
+@media (min-width: 560px) {
+  .icon-container {
+    max-width: 80vw;
+  }
+}
+@media (min-width: 680px) {
+  .icon-container {
+    max-width: 60vw;
+  }
+}
 
 @media (min-width: 48rem) {
   .main-container {
     background: url('../../assets/sections/sixth/bg-desktop.png') no-repeat;
+    background-size: cover;
   }
 }
 
 @media (min-width: 96rem) {
   .main-container {
     background: url('../../assets/sections/sixth/bg-3220.png') no-repeat;
+    background-size: cover;
   }
 }
 
