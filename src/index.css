@@ -4,6 +4,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 @import "tailwindcss";
 
+/* Add custom personal colors to Tailwinds */
+* {
+  --color-primary: #ffb400;
+  --color-secondary: #242834;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+}
+
+
+
 /* FONTS */
 .fira-sans-font {
   font-family: "Fira Sans", sans-serif;
