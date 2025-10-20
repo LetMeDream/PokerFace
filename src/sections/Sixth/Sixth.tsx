@@ -7,15 +7,17 @@ const Sixth = () => {
   return (
     <div className="main-container">
       <img src={tribetClub} alt="Tribet Club" className='max-w-[300px] mx-auto pt-12 pb-6' />
-      <div className='flex items-center justify-center px-1'>
+
+      <div className='flex items-center justify-center px-1 sm:border'>
         <img src={whatssap} alt="WhatsApp" className=' mx-auto pt-12 pb-6 max-w-[72px] relative -top-2' />
-        <span className=' relative montserrat-font text-2xl -left-12'>
+        <span className=' relative montserrat-font text-2xl -left-[4vw]'>
           +54 911 722 35 159
         </span>
       </div>
-      <div className='flex items-center justify-center px-10 relative -top-4'>
+
+      <div className='flex items-center justify-center px-10 relative -top-4 sm:border'>
         <img src={instagram} alt="Instagram" className=' mx-auto pt-12 pb-6 max-w-[72px] relative -top-2' />
-        <span className=' relative montserrat-font text-2xl -left-12'>
+        <span className=' relative montserrat-font text-2xl -left-[4vw]'>
           tribet.club_
         </span>
       </div>
