@@ -3,6 +3,7 @@ import Second from './sections/Second/Second'
 import Third from './sections/Third/Third'
 import Fourth from './sections/Fourth/Fourth'
 import Fifth from './sections/Fifth/Fifth'
+import Sixth from './sections/Sixth/Sixth'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
         <Third />
         <Fourth />
         <Fifth />
+        <Sixth />
       </div>
     </>
   )
