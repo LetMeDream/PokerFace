@@ -1,7 +1,7 @@
 import './Second.css'
-import mobile from '../../assets/sections/Second/mobile.png'
-import dekstop from '../../assets/sections/Second/desktop.png'
-import bigercreen from '../../assets/sections/Second/3220.png'
+import mobile from '../../assets/sections/second/mobile.png'
+import dekstop from '../../assets/sections/second/desktop.png'
+import bigercreen from '../../assets/sections/second/3220.png'
 
 const Second = () => {
   return (
