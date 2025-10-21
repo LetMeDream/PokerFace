@@ -10,7 +10,7 @@ const Fifth = () => {
           "Escribinos para crear tu usuario ahora, atención 24 horas"
         </p>
       </div>
-      <div className="bg-secondary">
+      <div className="bg-black">
         <div className=' relative pt-12 flex flex-row justify-center 2xl:max-w-[900px] 2xl:mx-auto px-2'>  
           {/* Chatear */}
           <div className="absolute -top-4 left-1/2 -translate-y-1 md:-translate-y-6">
