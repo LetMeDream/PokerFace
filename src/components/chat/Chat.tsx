@@ -1,17 +1,19 @@
-import { RiMessage2Line, RiCloseLine } from "react-icons/ri";
+import { RiMessage2Line, RiCloseLine, RiSendPlane2Fill  } from "react-icons/ri";
 import useChat from "../../hooks/useChat";
+import { messages } from "../../constants/chat";
+import { useState } from "react";
 
 const Chat = () => {
-  const { isOpen, toggleChat, agentMessage, guestMessage } = useChat();
+  const { isOpen, toggleChat, agentMessage, guestMessage, classnames } = useChat();
+  const [messageInput, setMessageInput] = useState("");
+  const [chatMessages, setChatMessages] = useState(messages);
 
-  const classnames = {
-    // 'overflow-hidden' is crucial so the chat body is hidden when collapsed
-    widgetWrapper: 'fixed rounded-tl text-sm bottom-0 left-10 max-w-[80vw] w-[310px] caret-transparent overflow-hidden',
-    // Base classes for the chat body; includes height/opacity transitions
-    chatBody: 'bg-white h-[450px] shadow-lg flex flex-col transition-all duration-300 ease-in-out',
-    // Clickable banner at the top
-    banner: 'bg-gray-500 text-primary montserrat regular px-3 py-2 cursor-pointer flex items-center justify-between gap-2'
-  };
+  const send = () => {
+    if (messageInput.trim() === "") return;
+    console.log(messageInput)
+    setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
+    setMessageInput("");   
+  }
 
   return (
     <div className={classnames.widgetWrapper}>
@@ -45,18 +47,34 @@ const Chat = () => {
           <p className="text-xs text-center text-gray-500 mb-2">Today</p>
 
           {/* Messages */}
-          {guestMessage("Hi there! I need some help.")}
-          {agentMessage("Hello! How can I help you?")}
-          {guestMessage("I love the website!")}
+          {chatMessages.map((msg, index) => (
+            <div 
+              key={index}
+            >
+              {msg.type === 'guest' ? guestMessage(msg.content) : agentMessage(msg.content)}
+            </div>
+          ))}
         </div>
-          
-        
+
         {/* Input */}
-        <div className="border-t p-3 bg-white flex-shrink-0 caret-amber-400">
+        <div className="border-t p-3 bg-white flex-shrink-0 relative caret-transparent">
           <input 
+            name='message'
             type="text" 
             placeholder="Type here" 
-            className="w-full p-2 border rounded-md text-black"
+            className="w-full p-2 border rounded-md text-black caret-amber-400"
+            value={messageInput}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                send();
+              }
+            }}
+            onChange={(e) => setMessageInput(e.target.value)}
+          />
+          <RiSendPlane2Fill 
+            onClick={send}
+            onMouseDown={(e) => e.preventDefault()} /* prevent icon from stealing focus */
+            className="text-lg text-black cursor-pointer !caret-transparent absolute right-6 top-1/2 transform -translate-y-1/2" 
           />
         </div>
 
@@ -64,6 +82,7 @@ const Chat = () => {
     </div>
   );
 };
+
 
 
 
