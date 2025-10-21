@@ -2,6 +2,16 @@ import { useState } from "react";
 
 const useChat = () => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  const classnames = {
+    // 'overflow-hidden' is crucial so the chat body is hidden when collapsed
+    widgetWrapper: 'fixed rounded-tl text-sm bottom-0 left-10 max-w-[80vw] w-[310px] caret-transparent overflow-hidden !caret-transparent',
+    // Base classes for the chat body; includes height/opacity transitions
+    chatBody: 'bg-white h-[450px] shadow-lg flex flex-col transition-all duration-300 ease-in-out',
+    // Clickable banner at the top
+    banner: 'bg-gray-500 text-primary montserrat regular px-3 py-2 cursor-pointer flex items-center justify-between gap-2'
+  };
+
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -34,7 +44,8 @@ const useChat = () => {
     isOpen,
     toggleChat,
     agentMessage,
-    guestMessage
+    guestMessage,
+    classnames
   }
 }
 
