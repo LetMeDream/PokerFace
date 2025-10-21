@@ -10,7 +10,7 @@ const Fifth = () => {
           "Escribinos para crear tu usuario ahora, atención 24 horas"
         </p>
       </div>
-      <div className="bg-secondary">
+      <div className="bg-black">
         <div className=' relative pt-12 flex flex-row justify-center 2xl:max-w-[900px] 2xl:mx-auto px-2'>  
           {/* Chatear */}
           <div className="absolute -top-4 left-1/2 -translate-y-1 md:-translate-y-6">
@@ -18,14 +18,14 @@ const Fifth = () => {
            </div>
           <div className=' flex-1 mb-3 flex flex-col items-center'>
             <img src={videoIcono} alt="Play Icon" className='max-w-[45vw] w-[140px] md:w-[240px] md:pt-10 pb-3' />
-            <p className=' text-center uppercase montserrat-normal text-[10px] md:text-2xl md:pb-6 max-w-[60%]'>
+            <p className=' text-center text-white uppercase montserrat-normal text-[10px] md:text-2xl md:pb-6 max-w-[60%]'>
               Si sabés jugar bien tus cartas
             </p>
           </div>
 
           <div className=' flex-1 mb-3 flex flex-col items-center'>
             <img src={videoIcono} alt="Play Icon" className='max-w-[45vw] w-[140px] md:w-[240px] md:pt-10 pb-3' />
-            <p className=' text-center uppercase montserrat-normal text-[10px] md:text-2xl md:pb-6 '>
+            <p className=' text-center text-white uppercase montserrat-normal text-[10px] md:text-2xl md:pb-6 '>
               Atención 24 horas
             </p>
           </div>
