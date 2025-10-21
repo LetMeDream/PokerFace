@@ -12,14 +12,14 @@ const Sixth = () => {
 
         <div className='icon-container flex gap-2 items-center justify-center px-1 max-w-[90vw] mx-auto md:gap-3 md:!max-w-max 2xl:py-0 2xl:px-0 2xl:mx-[unset] relative'>
           <img src={whatssap} alt="WhatsApp" className=' max-w-[22px]  relative' />
-          <span className=' relative montserrat-normal text-xs md:text-lg 2xl:text-2xl '>
+          <span className=' text-white relative montserrat-normal text-xs md:text-lg 2xl:text-2xl '>
             +54 911 722 35 159
           </span>
         </div>
 
         <div className='icon-container flex gap-2 items-center justify-center  relative max-w-[90vw] mx-auto md:gap-3 md:!max-w-max 2xl:py-0 2xl:px-0 2xl:mx-[unset]'>
           <img src={instagram} alt="Instagram" className=' max-w-[22px] relative' />
-          <span className=' relative montserrat-normal text-xs md:text-lg 2xl:text-2xl '>
+          <span className=' text-white relative montserrat-normal text-xs md:text-lg 2xl:text-2xl '>
             tribet.club_
           </span>
         </div>
