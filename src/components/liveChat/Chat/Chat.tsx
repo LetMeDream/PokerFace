@@ -1,11 +1,12 @@
 import { RiMessage2Line, RiCloseLine, RiSendPlane2Fill  } from "react-icons/ri";
-import useChat from "../../hooks/useChat";
-import usePresentation from "../../hooks/usePresentation";
-import useContactForm from "../../hooks/useContactForm";
+import useChat from "../../../hooks/useChat";
+import usePresentation from "../../../hooks/usePresentation";
+import useContactForm from "../../../hooks/useContactForm";
+import ContactForm from "../ContactForm/ContactForm";
 
 const Chat = () => {
   const { isOpen, toggleChat, agentMessage, guestMessage, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages} = useChat();
-  const { contactFormMessage, isContactFormVisible, isUserConected, setIsContactFormVisible  } = useContactForm({ chatMessages, chatBodyRef });
+  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isAnimating, setIsAnimating } = useContactForm({ chatMessages, chatBodyRef });
   usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected });
 
   return (
@@ -36,7 +37,7 @@ const Chat = () => {
 
         {/* Content wrapper scrolls when the chat is open */}
         <div 
-          className="p-4 px-2 flex-grow overflow-y-auto scroll-smooth text-black"         
+          className="p-4 pb-0 px-2 flex-grow overflow-y-auto scroll-smooth text-black"         
           ref={chatBodyRef}
 >
           {/* Date separator */}
@@ -52,7 +53,12 @@ const Chat = () => {
           ))}
 
           {/* Contact Form Message */}
-          {isContactFormVisible && contactFormMessage()}
+          {isContactFormVisible && (
+            <ContactForm
+              isAnimating={isAnimating}
+              setIsAnimating={setIsAnimating}
+            />
+          )}
         </div>
 
         {/* Input */}
