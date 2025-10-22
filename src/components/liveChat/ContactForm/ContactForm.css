@@ -3,52 +3,36 @@
     width: 100%;
     border-radius: 0.5rem; /* rounded-lg */
     transform: rotate(0deg);
-    opacity: 1; /* Opcional: si quieres que el texto se desvanezca */
   }
-  20% { /* Compresión a cuadrado */
-    width: 44px; /* Un tamaño fijo para que sea un cuadrado, ej: la altura py-2.5 px-4 da 40px de height + paddings = ~40px */
-    height: 44px; /* Asegura que sea un cuadrado */
+  20% { /* Compress to a square */
+    width: 44px; /* Fixed size to form a square, e.g. button height ~40px including padding */
+    height: 44px; /* Ensure it's square */
+    border-radius: 90%;
     transform: rotate(0deg);
-    padding: 0; /* Remover padding para que el contenido no influya en el tamaño */
   }
-  50% { /* Primer giro completo */
+  50% { /* First full rotation */
     width: 44px;
     height: 44px;
     transform: rotate(360deg);
-    padding: 0;
+    border-radius: 100%;
   }
-  80% { /* Segundo giro completo */
+  80% { /* Second full rotation */
     width: 44px;
     height: 44px;
-    transform: rotate(720deg); /* Dos giros completos */
-    padding: 0;
+    transform: rotate(720deg); /* Two full spins */
+    border-radius: 90%;
+
   }
-  100% { /* Vuelve a la forma original */
+  100% { /* Return to original shape */
     width: 100%;
     border-radius: 0.5rem;
-    transform: rotate(720deg); /* Mantiene la rotación final */
-    opacity: 1; /* Vuelve a mostrar el texto */
+    transform: rotate(720deg); /* Keep final rotation */
+    border-radius: 0.5rem;
   }
 }
 
-/* Aplicación de la animación */
+/* Apply animation */
 .animate-compress-spin {
-  animation: compressAndSpin 2.5s ease-in-out forwards; /* Duración total de 2.5s */
+  animation: compressAndSpin 2.5s ease-in-out forwards; /* Total duration: 2.5s */
 }
 
-/* Animación para el texto (opcional, para que aparezca/desaparezca suavemente) */
-@keyframes textFadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-@keyframes textFadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-.text-fade-out {
-  animation: textFadeOut 0.2s forwards;
-}
-.text-fade-in {
-  animation: textFadeIn 0.2s forwards;
-}
