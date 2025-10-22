@@ -1,14 +1,15 @@
 import { useForm } from "react-hook-form"
 import type { SubmitHandler } from "react-hook-form"
-import { useState } from "react";
 import './ContactForm.css'
 
 const ContactForm = ({
-  isAnimating,
-  setIsAnimating
+  isSending,
+  setIsSending,
+  setIsUserConected
 }: {
-  isAnimating: boolean;
-  setIsAnimating: (animating: boolean) => void;
+  isSending: boolean;
+  setIsSending: (animating: boolean) => void;
+  setIsUserConected: (connected: boolean) => void;
 }) => {
   type FormValues = {
     name: string;
@@ -29,21 +30,16 @@ const ContactForm = ({
     console.log(data);
   };
 
-  const [showText, setShowText] = useState(true);
-
   const handleClick = () => {
-    if (isAnimating) return; // Evita múltiples animaciones si se hace clic rápido
+    if (isSending) return; // prevent duplicate animations
 
-    setIsAnimating(true);
-    setShowText(false); // Oculta el texto al inicio de la animación
+    setIsSending(true);
 
-    // Aquí simularías una acción asíncrona (ej. envío de formulario)
-    // Por simplicidad, usaremos un setTimeout
+    // simulate async submit (replace with real request)
     setTimeout(() => {
-      // Después de la animación, el botón vuelve a su estado normal
-      setIsAnimating(false);
-      setShowText(true); // Muestra el texto de nuevo
-    }, 3000); // Ajusta este tiempo para que coincida con la duración total de tu animación
+      setIsSending(false); // reset animation state
+      setIsUserConected(true); // mark user connected
+    }, 3000); // match animation duration
   };
 
   return (
@@ -99,24 +95,19 @@ const ContactForm = ({
               type="button" // use button (not form submit)
               onClick={handleClick}
               onMouseDown={(e) => e.preventDefault()} // prevent focus stealing on mousedown
-              className={`!bg-green-500 text-white py-2.5 px-4 rounded-lg font-semibold !hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 mt-2 relative overflow-hidden mx-auto w-full ${isAnimating ? 'animate-compress-spin' : ''}`}
-              style={{
-                  // compact square when animating
-                  minWidth: isAnimating ? '40px' : 'auto',
-                  height: isAnimating ? '40px' : 'auto',
-              }}
+              className={`!bg-green-500 text-white py-2.5 px-4 rounded-lg font-semibold !hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 mt-2 relative overflow-hidden mx-auto w-full ${isSending ? 'animate-compress-spin' : ''}`}
             >
               {/* text toggled during animation */}
-              <span className={`transition-opacity duration-200 ${showText ? 'opacity-100' : 'opacity-0'}`}>
+              <span className={`transition-opacity duration-75 ${!isSending ? 'opacity-100' : 'opacity-0'}`}>
                 Send
               </span>
               
               {/* spinner shown while animating */}
-              {isAnimating && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="border-2 border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
-                  </div>
-              )}
+              
+              <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isSending ? 'opacity-100' : 'opacity-0'}`}>
+                  <div className="border-2 border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
+              </div>
+              
             </button>
 
 
