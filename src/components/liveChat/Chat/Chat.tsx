@@ -1,12 +1,13 @@
-import { RiMessage2Line, RiCloseLine, RiSendPlane2Fill  } from "react-icons/ri";
+import { RiMessage2Line, RiCloseLine, /* RiSendPlane2Fill */  } from "react-icons/ri";
+import { IoArrowUpCircle } from "react-icons/io5";
 import useChat from "../../../hooks/useChat";
 import usePresentation from "../../../hooks/usePresentation";
 import useContactForm from "../../../hooks/useContactForm";
-import ContactForm from "../ContactForm/ContactForm";
+import Messages from "../Messages/Messages";
 
 const Chat = () => {
-  const { isOpen, toggleChat, agentMessage, guestMessage, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages} = useChat();
-  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isAnimating, setIsAnimating } = useContactForm({ chatMessages, chatBodyRef });
+  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages} = useChat();
+  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending, setIsUserConected } = useContactForm({ chatMessages, chatBodyRef, setChatMessages });
   usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected });
 
   return (
@@ -20,7 +21,7 @@ const Chat = () => {
       >
         <div className="flex items-center gap-2">
           <RiMessage2Line className="text-2xl" />
-          Send us a message
+          Enviá un mensaje
         </div>
         
         {isOpen && (
@@ -29,36 +30,26 @@ const Chat = () => {
       </div>
 
       {/* Chat body is always rendered; visibility is controlled via max-height and opacity */}
-      <div className={`
-        ${classnames.chatBody}
-        ${isOpen ? 'max-h-[450px] opacity-100' : 'max-h-0 opacity-0'}
-        `}
+      <div className={`${classnames.chatBody} ${isOpen ? 'max-h-[450px] opacity-100' : 'max-h-0 opacity-0'}`}
       >
-
         {/* Content wrapper scrolls when the chat is open */}
         <div 
           className="p-4 pb-0 px-2 flex-grow overflow-y-auto scroll-smooth text-black"         
           ref={chatBodyRef}
->
+        >
           {/* Date separator */}
-          <p className="text-xs text-center text-gray-500 mb-2">Today</p>
+          <p className="text-xs text-center text-gray-500 mb-2">Hoy</p>
 
           {/* Messages */}
-          {chatMessages.map((msg, index) => (
-            <div 
-              key={index}
-            >
-              {msg.type === 'guest' ? guestMessage(msg.content) : agentMessage(msg.content)}
-            </div>
-          ))}
+          <Messages
+            chatMessages={chatMessages}
+            isSending={isSending}
+            setIsSending={setIsSending}
+            setIsUserConected={setIsUserConected}
+            isUserConected={isUserConected}
+            chatBodyRef={chatBodyRef}
+          />
 
-          {/* Contact Form Message */}
-          {isContactFormVisible && (
-            <ContactForm
-              isAnimating={isAnimating}
-              setIsAnimating={setIsAnimating}
-            />
-          )}
         </div>
 
         {/* Input */}
@@ -66,21 +57,30 @@ const Chat = () => {
           <textarea 
             autoComplete="off"
             name='message'
-            placeholder="Type here" 
+            placeholder="Escribí aquí tu mensaje..." 
             className={`w-full p-2 border rounded-md text-black ${isContactFormVisible && !isUserConected ? 'caret-transparent' : 'caret-amber-400'} break-word overflow-clip pr-8`}
             value={messageInput}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
+                e.preventDefault()
                 send();
               }
             }}
             onChange={(e) => setMessageInput(e.target.value)}
-            // disabled={isContactFormVisible && !isUserConected}
+            disabled={chatMessages.some(message => message.type === 'contactForm') && !isUserConected}
           />
-          <RiSendPlane2Fill 
+          {/* <RiSendPlane2Fill 
             onClick={send}
+            onMouseDown={(e) => e.preventDefault()} /* prevent icon from stealing focus /
+            className="text-lg text-black cursor-pointer !caret-transparent absolute right-6 top-1/2 translate-y-[-75%] hidden md:block" 
+          /> */}
+          <IoArrowUpCircle 
+            onClick={messageInput.length > 0 ? send : undefined}
             onMouseDown={(e) => e.preventDefault()} /* prevent icon from stealing focus */
-            className="text-lg text-black cursor-pointer !caret-transparent absolute right-6 top-1/2 translate-y-[-75%]" 
+            className={`
+              text-3xl text-black !caret-transparent absolute right-5 top-1/2 translate-y-[-50%] hidden md:block transition
+              ${messageInput.length > 0 ? 'text-green-500 cursor-pointer' : 'text-gray-300'}
+            `}
           />
         </div>
 
@@ -88,9 +88,5 @@ const Chat = () => {
     </div>
   );
 };
-
-
-
-
 
 export default Chat;
