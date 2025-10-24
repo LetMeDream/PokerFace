@@ -80,13 +80,6 @@
 
 
 
-
-
-
-
-
-
-
 /* BREAKPOINT CHEAT SHEET
   * - Breakpoint prefix	Minimum width	CSS
   * sm	40rem (640px)	@media (width >= 40rem) { ... }
@@ -95,32 +88,6 @@
   * xl	80rem (1280px)	@media (width >= 80rem) { ... }
   * 2xl	96rem (1536px)	@media (width >= 96rem) { ... }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* GLOBAL STYLES */
 :root {
