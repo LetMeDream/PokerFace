@@ -40,7 +40,7 @@ const ContactForm = ({
 
   const handleSend = () => {
     if (isSending) return; // prevent duplicate animations
-
+    (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
     setIsSending(true);
 
     // simulate async submit (replace with real request)
