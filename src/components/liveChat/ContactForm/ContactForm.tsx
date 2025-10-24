@@ -71,13 +71,13 @@ const ContactForm = ({
       <FormProvider {...methods}>
         <div className="flex flex-col items-center justify-center px-4 mb-1">
           <p className="text-sm text-gray-600 text-center mb-2">
-            Please fill in your contact information to send this message.
+            Por favor complete su información de contacto para enviar este mensaje.
           </p>
 
           <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-sm border border-gray-100">
             <form className="flex flex-col gap-5" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
               <div>
-                <label htmlFor="name" className="text-sm font-medium text-green-600">Your name</label>
+                <label htmlFor="name" className="text-sm font-medium text-green-600">Tu nombre*</label>
                 <div className="flex items-center border-b-2 border-gray-200 focus-within:border-green-500">
                   <input
                     type="text"
@@ -91,7 +91,7 @@ const ContactForm = ({
               </div>
               {/* Email */}
               <div>
-                <label htmlFor="email" className="text-sm font-medium text-green-600">Your email*</label>
+                <label htmlFor="email" className="text-sm font-medium text-green-600">Tu correo electrónico*</label>
                 <div className="flex items-center border-b-2 border-gray-200">
                   <input
                     type="email"
@@ -105,7 +105,7 @@ const ContactForm = ({
               </div>
               {/* Phone */}
               <div>
-                <label htmlFor="phone" className="text-sm font-medium text-green-600">Your phone</label>
+                <label htmlFor="phone" className="text-sm font-medium text-green-600">Tu teléfono*</label>
                 <div className="flex items-center border-b-2 border-gray-200 focus-within:border-green-500">
                   <input
                     type="tel"
@@ -148,7 +148,7 @@ const ContactForm = ({
 
           {/* Branding link */}
           <a 
-            className="text-xs text-gray-500 hover:text-gray-600 text-center mt-2 block"
+            className="text-[11px] !text-gray-500 hover:text-gray-600 text-center mt-2 block"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -160,7 +160,7 @@ const ContactForm = ({
       {/* Agent Alert */}
       {isAgentAlerted && (
         <div className="flex flex-col items-center justify-center px-4 mb-1">
-          <p className="text-sm text-gray-600 text-center mb-2">Your message is being sent over to the team. They'll be in touch soon.</p>
+          <p className="text-sm text-gray-600 text-center mb-2">Tu mensaje está siendo enviado al equipo. Se pondrán en contacto pronto.</p>
         </div>
       )}
     </>
