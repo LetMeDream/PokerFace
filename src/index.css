@@ -44,6 +44,20 @@
   font-style: normal;
 }
 
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.light {
+  font-weight: 300;
+}
+
+.regular {
+  font-weight: 500;
+}
+
 /* Classes for CUSTOM FONTS */
 /* For the HERO SECTION */
 .hero-font {
@@ -66,13 +80,6 @@
 
 
 
-
-
-
-
-
-
-
 /* BREAKPOINT CHEAT SHEET
   * - Breakpoint prefix	Minimum width	CSS
   * sm	40rem (640px)	@media (width >= 40rem) { ... }
@@ -81,32 +88,6 @@
   * xl	80rem (1280px)	@media (width >= 80rem) { ... }
   * 2xl	96rem (1536px)	@media (width >= 96rem) { ... }
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* GLOBAL STYLES */
 :root {

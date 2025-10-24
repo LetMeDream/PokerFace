@@ -1,0 +1,38 @@
+@keyframes compressAndSpin {
+  0% {
+    width: 100%;
+    border-radius: 0.5rem; /* rounded-lg */
+    transform: rotate(0deg);
+  }
+  20% { /* Compress to a square */
+    width: 44px; /* Fixed size to form a square, e.g. button height ~40px including padding */
+    height: 44px; /* Ensure it's square */
+    border-radius: 90%;
+    transform: rotate(0deg);
+  }
+  50% { /* First full rotation */
+    width: 44px;
+    height: 44px;
+    transform: rotate(360deg);
+    border-radius: 100%;
+  }
+  80% { /* Second full rotation */
+    width: 44px;
+    height: 44px;
+    transform: rotate(720deg); /* Two full spins */
+    border-radius: 90%;
+
+  }
+  100% { /* Return to original shape */
+    width: 100%;
+    border-radius: 0.5rem;
+    transform: rotate(720deg); /* Keep final rotation */
+    border-radius: 0.5rem;
+  }
+}
+
+/* Apply animation */
+.animate-compress-spin {
+  animation: compressAndSpin 2.5s ease-in-out forwards; /* Total duration: 2.5s */
+}
+

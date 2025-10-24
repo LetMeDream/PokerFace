@@ -4,6 +4,7 @@ import Third from './sections/Third/Third'
 import Fourth from './sections/Fourth/Fourth'
 import Fifth from './sections/Fifth/Fifth'
 import Sixth from './sections/Sixth/Sixth'
+import Chat from './components/liveChat/Chat/Chat'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Fifth />
         <Sixth />
       </div>
+      <Chat />
     </>
   )
 }
