@@ -1,24 +1,17 @@
-import First from './sections/First/First'
-import Second from './sections/Second/Second'
-import Third from './sections/Third/Third'
-import Fourth from './sections/Fourth/Fourth'
-import Fifth from './sections/Fifth/Fifth'
-import Sixth from './sections/Sixth/Sixth'
-import Chat from './components/liveChat/Chat/Chat'
+import Sections from './components/liveChat/Sections'
+import Login from './pages/Login'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
 
   return (
     <>
-      <div className="App">
-        <First />
-        <Second />
-        <Third />
-        <Fourth />
-        <Fifth />
-        <Sixth />
-      </div>
-      <Chat />
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Sections />} />
+          <Route path="login" element={<Login />} />
+        </Routes>
+      </HashRouter>
     </>
   )
 }
