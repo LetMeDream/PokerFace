@@ -9,8 +9,24 @@ type User = {
 };
 
 type LoginSuccess = {
-  success: true;
-  user: { id: number; name: string };
+  success: true
+  data: {
+    token: string;
+    user: {
+      id: number;
+      username: string;
+      email: string;
+      first_name: string;
+      last_name: string;
+      is_active: boolean;
+    };
+    chat_profile: {
+      id: number;
+      is_online: boolean;
+      last_seen: string;
+      full_name: string;
+    };
+  };
 };
 
 type LoginFailure = {
@@ -26,9 +42,30 @@ const mockData = {
     { id: 1, name: 'Juan', email: 'juan@example.com' },
     { id: 2, name: 'María', email: 'maria@example.com' },
   ] as User[],
-  login: (credentials: { email: string; password: string }): LoginResponse => {
-    if (credentials.email === 'test@test.com' && credentials.password === '123') {
-      return { success: true, user: { id: 1, name: 'Test User' } };
+
+  /* Mocks up login */
+  login: (credentials: { pk_username: string; pk_password: string }): LoginResponse => {
+    if (credentials.pk_username === 'usuario123' && credentials.pk_password === 'contraseña123') {
+      return {
+        success: true,
+        data: {
+          "token": "abc123token456",
+          "user": {
+            "id": 1,
+            "username": "usuario123",
+            "email": "usuario@ejemplo.com",
+            "first_name": "Juan",
+            "last_name": "Pérez",
+            "is_active": true
+          },
+          "chat_profile": {
+            "id": 1,
+            "is_online": true,
+            "last_seen": "2024-01-15T10:30:00Z",
+            "full_name": "Juan Pérez"
+          }
+        }
+      };
     }
     return { success: false, error: 'Credenciales inválidas' };
   },
@@ -43,7 +80,8 @@ export const mockApi = createApi({
         return { data: mockData.users };
       },
     }),
-    login: builder.mutation<LoginResponse, { email: string; password: string }>({
+    // `POST /api/auth/login/`
+    login: builder.mutation<LoginResponse, { pk_username: string; pk_password: string }>({
       queryFn(credentials) {
         const result = mockData.login(credentials);
         if (result.success) {
@@ -56,4 +94,4 @@ export const mockApi = createApi({
   }),
 });
 
-export const { useGetUsersQuery, useLoginMutation } = mockApi;
+export const { useLoginMutation } = mockApi;
