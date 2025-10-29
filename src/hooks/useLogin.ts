@@ -2,6 +2,12 @@ import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLoginMutation } from "../services/service";
+import toast from "react-hot-toast";
+import { setChatProfile } from "../store/slices/chat_profile";
+import { setUser } from "../store/slices/user";
+import { login } from "../store/slices/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 interface LoginForm {
   pk_username: string;
   pk_password: string;
@@ -14,7 +20,9 @@ interface LoginForm {
   }); 
 
 const useLogin = () => {
-  const [loginMutation, /* { isLoading } */] = useLoginMutation();
+  const [loginMutation] = useLoginMutation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     defaultValues: {
       pk_username: '',
@@ -37,9 +45,43 @@ const useLogin = () => {
     submitBtn: "w-full py-3 bg-gray-900 hover:text-gray-300 text-white font-medium rounded-xl hover:bg-gray-800 shadow-lg caret-transparent"
   }
 
-  const onSubmit = async (data: LoginForm) => {
+  /* const onSubmit = async (data: LoginForm) => {
     const res = await loginMutation(data);
     console.log(res);
+    if (res.error) {
+      toast.error(res.error?.data as string || 'Error en el login');
+    } else {
+      toast.success('Login exitoso');
+    }
+  } */
+
+  const onSubmit = async (data: LoginForm) => {
+    console.log(data)
+    const promise = loginMutation(data).unwrap(); // returns typed payload or throws
+    toast.promise(promise, {
+      loading: 'Logging in...',
+      success: 'Login exitoso',
+      error: 'Error en el login'
+    });
+    try {
+        const result = await promise; // no second request, sólo espera el mismo promise
+        console.log('result', result);
+        // if your endpoint returns { success, data }, access it:
+        if (!result.success) {
+          // failure branch — LoginFailure
+          toast.error(result.error || 'Invalid credentials');
+          return;
+        }
+        const token = result?.data?.token;
+        console.log('token', token);
+        dispatch(login());
+        dispatch(setChatProfile(result?.data?.chat_profile));
+        dispatch(setUser(result?.data?.user));
+        navigate('/agent')
+      } catch (err: any) {
+        console.error('login failed', err);
+        // already handled by toast.promise, but you can add extra handling here
+      }
   }
 
   return {
