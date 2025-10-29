@@ -1,0 +1,11 @@
+.password-look {
+  -webkit-text-security: disc; /* Chrome, Edge, Safari */
+  text-security: disc;         /* non-standard fallback */
+  caret-color: auto;          /* keep caret unless you want to hide it */
+}
+
+/* Optional fallback visual: hide actual text & show bullets via text-shadow (not bullet chars) */
+/* input.password-look-fallback {
+  color: transparent;
+  text-shadow: 0 0 0 #000; 
+} */
