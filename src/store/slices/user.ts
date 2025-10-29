@@ -1,15 +1,7 @@
 /* User slice */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-
-interface UserState {
-  id: number | null;
-  username: string | null;
-  email: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  is_active: boolean | null;
-}
+import type { UserState } from '../../types/Slices';
 
 const initialState: UserState = {
   id: null,
