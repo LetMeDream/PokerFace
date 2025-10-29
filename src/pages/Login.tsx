@@ -1,8 +1,12 @@
-import { MdEmail, MdLock, MdArrowBack } from 'react-icons/md'
+import { MdLock, MdArrowBack } from 'react-icons/md'
+import { FaUserCog } from "react-icons/fa";
 import useLogin from '../hooks/useLogin'
+import '../components/liveChat/MaskedInput/MaskedInput.css'
+import { inputErrors } from '../constants/chat';
+// import MaskedInput from '../components/liveChat/MaskedInput/MaskedInput';
 
 const Login = () => {
-  const { classNames } = useLogin()
+  const { classNames, register, handleSubmit, onSubmit, errors } = useLogin()
 
   return (
     <>
@@ -11,43 +15,62 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-sky-200 via-sky-100 to-sky-50" />
       </div>
 
-      <div className="relative min-h-screen flex items-center justify-center p-4 pt-0 w-[100vw]">
+      <div className={classNames.container}>
 
         {/* Card */}
         <div className="w-full max-w-md relative -top-6">
           <div className={classNames.cardWrapper}>
             <button className={classNames.backBtn}>
-              <MdArrowBack className="w-5 h-5 text-white-700 hover:text-gray-300" />
+              <MdArrowBack className={classNames.back} />
             </button>
 
-            <h1 className="!text-2xl font-bold text-gray-900 mb-2">Bienvenido de nuevo</h1>
+            <h1 className={classNames.welcome}>Bienvenido de nuevo</h1>
 
             {/* Login form */}
-            <form className="space-y-4" autoComplete="off">
+            <form 
+              className="space-y-4" 
+              autoComplete="off"
+              onSubmit={handleSubmit(onSubmit)}
+            >
 
               <div className="relative">
-                <MdEmail className={classNames.icon} />
+                <FaUserCog 
+                  className={`
+                    ${classNames.icon}
+                    ${errors.pk_username ? 'text-red-400' : ''}
+                  `}
+                />
                 <input
                   type="text"
-                  name='username'
                   placeholder="Usuario"
-                  className={classNames.inputBase}
-                  autoComplete="new-password"
+                  className={
+                    classNames.inputBase
+                    + (errors.pk_username ? inputErrors : '')}
+                  autoComplete="off"
+                  {...register('pk_username', { required: true })}
                 />
               </div>
 
               <div className="relative">
-                <MdLock className={classNames.icon} />
+                <MdLock 
+                  className={`
+                    ${classNames.icon}
+                    ${errors.pk_password ? 'text-red-400' : ''}
+                  `} 
+                />
                 <input
-                  type="password"
-                  name='pass'
+                  type="text"
                   placeholder="Contraseña"
-                  className={classNames.inputBase}
-                  autoComplete="new-password"
+                  className={`
+                    ${classNames.inputBase} password-look
+                    ${errors.pk_password ? inputErrors : ''}
+                  `}
+                  autoComplete="off"
+                  {...register('pk_password', { required: true })}
                 />
               </div>
 
-              <a href="#" className="block text-right text-sm text-gray-600 hover:text-gray-900 mb-4">
+              <a href="#" className={classNames.passwordForgot}>
                 ¿Olvidaste tu contraseña?
               </a>
 
