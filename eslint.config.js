@@ -19,5 +19,13 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // Regla de TypeScript que deseas forzar como "error"
+      "@typescript-eslint/no-explicit-any": "off"
+      
+      // Opcional: Si quieres desactivar o modificar alguna regla de los 'extends'
+      // Por ejemplo, para forzar el uso de imports nombrados en React
+      // "react/destructuring-assignment": ["error", "always"] 
+    }
   },
 ])
