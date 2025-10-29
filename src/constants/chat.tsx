@@ -1,3 +1,6 @@
+/* 
+* Messages for PRESENTATION ONLY 
+*/
 export const messages = [
   {
     type: 'guest',
@@ -40,3 +43,6 @@ export const guestMessage = (message: string) => (<>
     <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0" title="Dev"></div>
   </div>
 </>)
+
+/* Classnames for errors on inputs */
+export const inputErrors = '!border-transparent !ring-1 !ring-red-400 focus-visible:!ring-red-400 focus:!ring-red-400 placeholder:text-red-400'
