@@ -1,11 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { authSlice } from './slices/auth'
+import { mockApi } from '../services/service'
 
 export const store = configureStore({
   reducer: {
+    // Slices
     auth: authSlice.reducer,
+    // RTK Query APIs
+    [mockApi.reducerPath]: mockApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(mockApi.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
