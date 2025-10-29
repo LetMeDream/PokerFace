@@ -25,10 +25,16 @@ export const chatProfileSlice = createSlice({
       state.is_online = action.payload.is_online;
       state.last_seen = action.payload.last_seen;
       state.full_name = action.payload.full_name;
+    },
+    unsetChatProfile: (state) => {
+      state.id = null;
+      state.is_online = null;
+      state.last_seen = null;
+      state.full_name = null;
     }
   },
 });
 
-export const { setChatProfile } = chatProfileSlice.actions;
+export const { setChatProfile, unsetChatProfile } = chatProfileSlice.actions;
 
 export default chatProfileSlice.reducer;
