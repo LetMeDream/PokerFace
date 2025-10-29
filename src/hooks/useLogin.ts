@@ -20,7 +20,7 @@ interface LoginForm {
   }); 
 
 const useLogin = () => {
-  const [loginMutation] = useLoginMutation();
+  const [loginMutation, resMutation] = useLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
@@ -45,23 +45,14 @@ const useLogin = () => {
     submitBtn: "w-full py-3 bg-gray-900 hover:text-gray-300 text-white font-medium rounded-xl hover:bg-gray-800 shadow-lg caret-transparent"
   }
 
-  /* const onSubmit = async (data: LoginForm) => {
-    const res = await loginMutation(data);
-    console.log(res);
-    if (res.error) {
-      toast.error(res.error?.data as string || 'Error en el login');
-    } else {
-      toast.success('Login exitoso');
-    }
-  } */
-
   const onSubmit = async (data: LoginForm) => {
     console.log(data)
     const promise = loginMutation(data).unwrap(); // returns typed payload or throws
+    const error = (resMutation as any).error;
     toast.promise(promise, {
       loading: 'Logging in...',
       success: 'Login exitoso',
-      error: 'Error en el login'
+      error: error?.data || 'Error en el login',
     });
     try {
         const result = await promise; // no second request, sólo espera el mismo promise
