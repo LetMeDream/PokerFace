@@ -77,7 +77,7 @@ const useLogin = () => {
         dispatch(login());
         dispatch(setChatProfile(result?.data?.chat_profile));
         dispatch(setUser(result?.data?.user));
-        navigate('/agent')
+        navigate('/dashboard')
       } catch (err: any) {
         console.error('login failed', err);
         // already handled by toast.promise, but you can add extra handling here
