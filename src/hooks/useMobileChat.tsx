@@ -20,21 +20,44 @@ const useMobileChat = ({
   
     /* Adjusting Body Size to be fullscreen */
     useEffect(() => {
-      if (isOpen) {
-        console.log(bannerRef.current);
-        console.log(inputRef.current);
-        console.log(chatBodyRef.current);
-        // Adjust chat body height for mobile, equal to 100% vh mins banner and input heights
+      const adjustChatBody = () => {
+        if (!isOpen) return;
+
+        // Ajustar chat body height para mobile: 100% vh menos banner y input
         if (isMobile && chatBodyRef.current && bannerRef.current && inputRef.current) {
           const bannerHeight = bannerRef.current.offsetHeight;
           const inputHeight = inputRef.current.offsetHeight;
-          const chatBodyHeight = window.innerHeight - bannerHeight - inputHeight;
+          // Use visualViewport when esté disponible (maneja barra/teclado en móvil)
+          const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+          const chatBodyHeight = viewportHeight - bannerHeight - inputHeight;
           chatBodyRef.current.style.height = `${chatBodyHeight}px`;
         } else if (chatBodyRef.current) {
-          // Reset to default height for non-mobile
-          chatBodyRef.current.style.height = '450px'; 
+          // Reset a altura por defecto para non-mobile
+          chatBodyRef.current.style.height = '450px';
         }
+      };
+
+      // Call once immediately
+      adjustChatBody();
+
+      const vp = window.visualViewport;
+      if (vp) {
+        vp.addEventListener('resize', adjustChatBody);
+        vp.addEventListener('scroll', adjustChatBody);
+      } else {
+        window.addEventListener('resize', adjustChatBody);
+        window.addEventListener('orientationchange', adjustChatBody);
       }
+
+      return () => {
+        if (vp) {
+          vp.removeEventListener('resize', adjustChatBody);
+          vp.removeEventListener('scroll', adjustChatBody);
+        } else {
+          window.removeEventListener('resize', adjustChatBody);
+          window.removeEventListener('orientationchange', adjustChatBody);
+        }
+      };
     }, [isOpen, isMobile, bannerRef, inputRef, chatBodyRef]);
   
     const [isBannerHidden, setIsBannerHidden] = useState(isMobile);
