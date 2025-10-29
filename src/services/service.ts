@@ -36,6 +36,8 @@ type LoginFailure = {
 
 type LoginResponse = LoginSuccess | LoginFailure;
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
 const mockData = {
   users: [
@@ -82,7 +84,9 @@ export const mockApi = createApi({
     }),
     // `POST /api/auth/login/`
     login: builder.mutation<LoginResponse, { pk_username: string; pk_password: string }>({
-      queryFn(credentials) {
+      async queryFn(credentials) {
+        await sleep(800); // 800ms delay
+
         const result = mockData.login(credentials);
         if (result.success) {
           return { data: result };
