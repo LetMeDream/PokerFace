@@ -6,10 +6,10 @@ const Header = () => {
   const user = useSelector((state: any) => state.user) as UserState;
 
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-300 shadow-sm">
       <div className="navbar-start">
 
-        <a className="btn btn-ghost text-xl !text-primary">Logo</a>
+        <a className="btn btn-ghost text-lg !text-sky-50">Agente</a>
       </div>
 
       <div className="navbar-end gap-4">
