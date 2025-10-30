@@ -1,5 +1,6 @@
 // Import the 'Navigate' component from the 'react-router-dom' library.
 import { Navigate } from 'react-router-dom'
+import AutoLogoutWrapper from './AutoLogout'
 
 import { useSelector } from 'react-redux'
 
@@ -15,7 +16,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 
   // Conditionally render the children if the user is authenticated.
   // If the user is not authenticated, redirect them to the login page.
-  return isLoggedIn ? <>{children}</> : <Navigate to='/login' />
+  return isLoggedIn ? <AutoLogoutWrapper>{children}</AutoLogoutWrapper> : <Navigate to='/login' />
 }
 
 // Export the 'PrivateRoute' component to make it available for use in other parts of the application.
