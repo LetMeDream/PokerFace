@@ -17,6 +17,9 @@
   --color-secondary: var(--color-secondary);
 }
 
+#root {
+  min-width: 100%;
+}
 
 
 /* FONTS */
