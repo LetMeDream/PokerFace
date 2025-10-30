@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { authSlice } from './slices/auth'
 import { userSlice } from './slices/user'
+import { baseSlice } from './slices/base'
 import { chatProfileSlice } from './slices/chat_profile'
 import { mockApi } from '../services/service'
 import localforage from 'localforage'
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   auth: authSlice.reducer,
   user: userSlice.reducer,
   chatProfile: chatProfileSlice.reducer,
+  base: baseSlice.reducer,
   // RTK Query APIs
   [mockApi.reducerPath]: mockApi.reducer,
 });
