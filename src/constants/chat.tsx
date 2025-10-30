@@ -101,7 +101,7 @@ export const allTickets = [
     "avatarSrc": "",
     "messages": [
       { "message_type": "guest", "content": "¿Cuánto tarda el envío a Madrid?" },
-      { "message_type": "guest", "content": "¿Tienen número de seguimiento disponible?" }
+      { "message_type": "guest", "content": "¿Tienen número de seguimiento disponibles?" }
     ]
   },
   {
@@ -144,6 +144,42 @@ export const allTickets = [
       { "message_type": "guest", "content": "Necesito asistencia urgente con mi factura." },
       { "message_type": "guest", "content": "El importe no coincide con lo acordado." },
       { "message_type": "guest", "content": "¿Pueden revisarlo por favor?" }
+    ]
+  }, {
+    "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
+    "nickname": "Laura P.",
+    "status": "active",
+    "unread_count": 2,
+    "agent_assigned": true,
+    "agent_name": "Marcos A.",
+    "avatarSrc": "https://i.pravatar.cc/150?img=11",
+    "messages": [
+      { "message_type": "guest", "content": "Hola, tengo un cargo desconocido en mi tarjeta." },
+      { "message_type": "agent", "content": "Hola Laura, ¿puedes compartir la fecha y el importe del cargo?" },
+      { "message_type": "guest", "content": "Ayer, 29/10, por 49.99€." },
+      { "message_type": "agent", "content": "Gracias. Estoy comprobando el historial de pagos y autorizaciones." },
+      { "message_type": "agent", "content": "Veo una orden pendiente a nombre de 'Suscripción Pro'. ¿Eres tú quien la autorizó?" },
+      { "message_type": "guest", "content": "No, no reconozco esa suscripción." },
+      { "message_type": "agent", "content": "Lo bloquearemos y gestionaremos reembolso si procede. Te aviso en cuanto tenga confirmación." }
+    ]
+  },
+  {
+    "chat_room_id": "b1c2d3e4-f5g6-7890-bbbb-777777777777",
+    "nickname": "UsuarioAnon",
+    "status": "pending",
+    "unread_count": 0,
+    "agent_assigned": false,
+    "agent_name": null,
+    "avatarSrc": "https://i.pravatar.cc/150?img=14",
+    "messages": [
+      { "message_type": "guest", "content": "¿Cómo instalo la app en mi SmartTV?" },
+      { "message_type": "guest", "content": "En la tienda no aparece disponible para mi modelo." },
+      { "message_type": "agent", "content": "¿Qué modelo de televisor tienes?" },
+      { "message_type": "guest", "content": "Samsung UE55NU7100." },
+      { "message_type": "agent", "content": "Entendido. Para ese modelo la app está en la sección 'Apps' -> Buscar -> 'PokerFace'." },
+      { "message_type": "guest", "content": "Lo intento pero me sale error al descargar." },
+      { "message_type": "agent", "content": "Prueba reiniciar el televisor y verificar la conexión a internet. Si persiste, envíame el código de error." },
+      { "message_type": "guest", "content": "Perfecto, lo reinicié y ya aparece. Gracias!" }
     ]
   }
 ];
