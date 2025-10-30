@@ -46,7 +46,7 @@ const Login = () => {
                   className={
                     classNames.inputBase
                     + (errors.pk_username ? inputErrors : '')}
-                  autoComplete="off"
+                  autoComplete="on"
                   {...register('pk_username', { required: true })}
                 />
               </div>
@@ -59,7 +59,7 @@ const Login = () => {
                   `} 
                 />
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Contraseña"
                   className={`
                     ${classNames.inputBase} password-look
