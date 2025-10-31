@@ -1,12 +1,14 @@
-import { MdLock, MdArrowBack } from 'react-icons/md'
+import { MdLock, MdArrowBack, MdVisibilityOff, MdVisibility } from 'react-icons/md'
 import { FaUserCog } from "react-icons/fa";
 import useLogin from '../hooks/useLogin'
 import '../components/liveChat/MaskedInput/MaskedInput.css'
 import { inputErrors } from '../constants/chat';
+import { useState } from 'react';
 // import MaskedInput from '../components/liveChat/MaskedInput/MaskedInput';
 
 const Login = () => {
   const { classNames, register, handleSubmit, onSubmit, errors } = useLogin()
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <>
@@ -59,15 +61,24 @@ const Login = () => {
                   `} 
                 />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
+                  id='password-input'
                   placeholder="Contraseña"
                   className={`
-                    ${classNames.inputBase} password-look
+                    ${classNames.inputBase}
                     ${errors.pk_password ? inputErrors : ''}
                   `}
                   autoComplete="off"
                   {...register('pk_password', { required: true })}
                 />
+                {/* Eye toggle */}
+                <span
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  onClick={() => setShowPassword(s => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+                >
+                  {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
+                </span>
               </div>
 
               <a href="#" className={classNames.passwordForgot}>
