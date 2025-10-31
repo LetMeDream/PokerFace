@@ -29,12 +29,13 @@ const useDashboard = () => {
         const drawerCheckbox = document.getElementById('my-drawer-1') as HTMLInputElement;
         if (drawerCheckbox) drawerCheckbox.checked = true;
         dispatch(setHasAutoOpened(true));
-      }, 1500);
+      }, 100);
     }
   }, [hasAutoOpened, dispatch]);
+  /* Opening drawer automatically upon login in END */
 
   const classnames = {
-    container: 'bg-secondary container !min-w-full md:min-h-screen',
+    container: 'bg-secondary container !min-w-full !min-h-[100dvh]',
     drawerBtn: 'btn drawer-button bg-base-300 rounded-none absolute bottom-[0.5px] left-[0.25px] px-10 py-6',
     searchInput: "input input-bordered w-full mb-4 caret-primary active:!ring-1 focus-within:!ring-1 focus-visible:!ring-1 focus:!ring-1 active:!outline-none focus-within:!outline-none focus-visible:!outline-none focus:!outline-none active:!border-none focus-within:!border-none focus-visible:!border-none focus:!border-none"
   }
