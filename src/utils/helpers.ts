@@ -67,3 +67,11 @@ export const selectFilteredTickets = createSelector(
         )
       : tickets // if no search value, return all tickets
 );
+
+
+/* Selector for getting a specific ticket by ID */
+export const selectTicketById = createSelector(
+  (state: RootState) => state.tickets.byId,
+  (_, ticketId: string) => ticketId,
+  (byId, ticketId) => byId[ticketId]
+);
