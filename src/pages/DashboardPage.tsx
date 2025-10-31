@@ -2,18 +2,16 @@ import useDashboard from "../hooks/useDashboard";
 import { setSelectedTicket } from "../store/slices/base";
 import { useDispatch } from "react-redux";
 import type { ChatTicket } from "../types/Slices";
-import { useSelector } from "react-redux";
 import SideBar from "../components/Dashboard/SideBar";
 import DrawersContent from "../components/Dashboard/DrawersContent";
 
 export default function DashboardPage() {
   const { drawerButtonRef, containerRef, searchValue, setSearchValue, classnames } = useDashboard();
-  const selectedTicket = useSelector((state: any) => state.base.selectedTicket);
 
   const dispatch = useDispatch();
 
   const handleTicketClick = (ticket: ChatTicket) => {
-    dispatch(setSelectedTicket(ticket));
+    dispatch(setSelectedTicket(ticket.chat_room_id));
   };
 
   return (
@@ -25,7 +23,6 @@ export default function DashboardPage() {
           <DrawersContent
             classnames={classnames}
             containerRef={containerRef}
-            selectedTicket={selectedTicket}
             drawerButtonRef={drawerButtonRef}
           />
         </div>
