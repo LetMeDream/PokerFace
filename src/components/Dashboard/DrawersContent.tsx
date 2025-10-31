@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from './Header';
-
+import GeneralInbox from './GeneralInbox/GeneralInbox';
 import { useSelector } from 'react-redux';
 /* We NORMALIZED tickets in our store, so now we need to SELECT them properly */
 import { selectTicketsArray } from '../../utils/helpers';
@@ -28,10 +28,7 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
             {selectedTicketId ? (                
               <AgentChat selectedTicketId={selectedTicketId} />
             ) : (
-                <div className="flex flex-col items-center justify-center h-full pt-6 text-white">
-                  <h1 className="!text-xl md:!text-3xl  font-bold mb-4">Selecciona una conversación</h1>
-                  <p className="text-lg text-center">Elige una conversación de la barra lateral para ver los mensajes aquí.</p>
-                </div>
+                <GeneralInbox />
             )}
 
             {/* Button for drawer */}
