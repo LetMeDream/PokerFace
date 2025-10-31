@@ -35,7 +35,6 @@ const useChat = () => {
   const [beep] = useSound(guest);
   const send = () => {
     if (messageInput.trim() === "") return;
-    console.log(messageInput)
     setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
     (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
     setMessageInput("");  

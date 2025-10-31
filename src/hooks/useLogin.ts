@@ -44,7 +44,6 @@ const useLogin = () => {
   }
 
   const onSubmit = async (data: LoginForm) => {
-    console.log(data)
     const promise = loginMutation(data).unwrap(); // returns typed payload or throws
     const error = (resMutation as any).error;
     toast.promise(promise, {
@@ -54,15 +53,12 @@ const useLogin = () => {
     });
     try {
         const result = await promise; // no second request, sólo espera el mismo promise
-        console.log('result', result);
         // if your endpoint returns { success, data }, access it:
         if (!result.success) {
           // failure branch — LoginFailure
           toast.error(result.error || 'Invalid credentials');
           return;
         }
-        const token = result?.data?.token;
-        console.log('token', token);
 
         await setLoggedInUser(result);
         navigate('/dashboard')
