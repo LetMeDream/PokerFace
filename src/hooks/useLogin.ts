@@ -33,7 +33,7 @@ const useLogin = () => {
   /* Classes for Login */
   const classNames = {
     container: "relative min-h-screen flex items-center justify-center p-4 pt-0 w-[100vw]",
-    passwordForgot: "block text-right text-sm text-gray-600 hover:text-gray-900 mb-4 max-w-max float-end",
+    passwordForgot: "block text-right text-sm text-gray-600 hover:text-gray-900 mb-4 max-w-max float-end caret-transparent",
     welcome: "!text-2xl font-bold text-gray-900 mb-2",
     back: "w-5 h-5 text-white-700 hover:text-gray-300",
     inputBase: "w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-600 transition-all text-gray-900",
