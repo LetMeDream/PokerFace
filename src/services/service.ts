@@ -1,5 +1,6 @@
 // api/mockApi.ts
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { allTickets } from '../constants/chat';
 
 // Tipos
 type User = {
@@ -8,7 +9,7 @@ type User = {
   email: string;
 };
 
-type LoginSuccess = {
+export type LoginSuccess = {
   success: true
   data: {
     token: string;
@@ -34,7 +35,18 @@ type LoginFailure = {
   error: string;
 };
 
-type LoginResponse = LoginSuccess | LoginFailure;
+export type LoginResponse = LoginSuccess | LoginFailure;
+
+type ticketsSuccess = {
+  success: true;
+  data: any[];
+}
+
+type ticketsFailure = {
+  success: false;
+  error: string;
+}
+type TicketsResponse = ticketsSuccess | ticketsFailure;
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -71,6 +83,12 @@ const mockData = {
     }
     return { success: false, error: 'Credenciales inválidas' };
   },
+
+  /* Mocks para tickets */
+  tickets: {
+    success: true,
+    data: allTickets
+  } as ticketsSuccess
 };
 
 export const mockApi = createApi({
@@ -95,7 +113,21 @@ export const mockApi = createApi({
         }
       },
     }),
+
+    // `GET /api/tickets/`
+    getTickets: builder.query<TicketsResponse, void>({
+      async queryFn() {
+        await sleep(800); // 800ms delay
+        const result = mockData.tickets as TicketsResponse;
+        if (result && result.success) {
+          return { data: result };
+        } else {
+          return { error: { status: 500, data: 'Error al obtener los tickets' } };
+        }
+      }
+    })
+    
   }),
 });
 
-export const { useLoginMutation } = mockApi;
+export const { useLoginMutation, useGetTicketsQuery } = mockApi;
