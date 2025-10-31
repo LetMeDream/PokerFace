@@ -12,7 +12,6 @@ function AutoLogoutWrapper({ children }: { children: React.ReactNode }) {
   const logoutUser = useCallback(() => {
     // Clear user session data (e.g., localStorage.removeItem('authToken'))
     // Redirect to login page
-    console.log('User logged out due to inactivity.');
     logUserOut()
     navigate('/login');
   }, [navigate]);
