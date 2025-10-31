@@ -34,3 +34,8 @@ export interface ChatTicket {
 }
 
 export type AllTickets = ChatTicket[];
+
+export type NormalizedTickets = {
+    byId: Record<string, AllTickets[number]>,
+    allIds: string[]
+}
