@@ -1,52 +1,51 @@
 import {  useState, useRef } from 'react'
 import Messages from '../liveChat/Messages/Messages';
-import { RiSearchLine, RiSettingsLine } from 'react-icons/ri';
+import { RiSearchLine, RiSettingsLine, RiCloseLargeFill } from 'react-icons/ri';
 import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectTicketById } from '../../utils/helpers';
 import type { RootState } from '../../store/store';
-import { addMessageToTicket } from '../../store/slices/base';
+import { addMessageToTicket, unsetSelectedTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
 
 const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
   /* Input state */
   const [newMessage, setNewMessage] = useState<string>("");
+  /* Get selected ticket using supah cool selector */
   const selectedTicket = useSelector((state: RootState) => 
     selectTicketById(state.base, selectedTicketId));
-
-  /* Logic for Messages, to be changed */
-  /* const [messages, setMessages] = useState<ChatMessage[]>([]);
-  useEffect(() => {
-    setMessages(selectedTicket.messages);
-  }, [selectedTicket]); */
-
 
   /* Ref to scroll */
   const chatBodyRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
   const handleSendMessage = () => {
-  /* setMessages(prevMessages => [...prevMessages, { type: 'agent', message_type: 'agent', content: newMessage }]); */
-  dispatch(addMessageToTicket({
-    chatRoomId: selectedTicketId,
-    message: { type: 'agent', message_type: 'agent', content: newMessage }
-  }));
-  setNewMessage("");
-  /* Scroll to bottom in chat body */
-  setTimeout(() => {
+    dispatch(addMessageToTicket({
+      chatRoomId: selectedTicketId,
+      message: { type: 'agent', message_type: 'agent', content: newMessage }
+    }));
+    setNewMessage("");
+    /* Scroll to bottom in chat body */
+    setTimeout(() => {
     if (chatBodyRef.current) {
         chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
       }
-  }, 100);
+    }, 100);
   };
+
+  const closeChat = () => {
+    // Logic to close the chat (e.g., unset selected ticket)
+    dispatch(unsetSelectedTicket());
+  }
 
   return (
     <div>
       {/* Placeholder for selected chat conversation */}
-      <div className="flex flex-col items-start justify-start h-full p-4">
+      <div className="flex flex-col items-start justify-start h-full p-4 mt-4-
+      ">
         {/* Placeholder for selected chat messages */}
         <div className="flex flex-col text-secondary w-full items-center">
           {/* Chat Body */}
-          <div className=" bg-cyan-50 rounded-xl max-w-[90vw] w-6xl py-5 pb-2" >
+          <div className=" bg-cyan-50 rounded-xl max-w-[90vw] w-6xl py-5 pb-2 relative" >
               {/* Title and name */}
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
                 <p className="text-sm text-gray-600 md:text-end text-nowrap">Nombre del usuario: 
@@ -56,8 +55,9 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
                 </p>
                 {/* Icons for look for message, and settings */}
                 <div className="flex gap-2">
-                    <RiSearchLine className="w-5 md:w-6 md:h-6 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
-                    <RiSettingsLine className="w-5 md:w-6 md:h-6 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
+                  <RiSearchLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
+                  <RiSettingsLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
+                  <RiCloseLargeFill className="!w-5 md:!w-6 md:!h-5 text-gray-600 hover:text-gray-800 cursor-pointer hover:scale-105 transition" onClick={closeChat} />
                 </div>
               </div>
               {/* Messages Area */}

@@ -28,6 +28,9 @@ export const baseSlice = createSlice({
     setSelectedTicket(state, action) {
       state.selectedTicketId = action.payload
     },
+    unsetSelectedTicket(state) {
+      state.selectedTicketId = null
+    },
     setHasAutoOpened(state, action) {
       state.hasAutoOpened = action.payload
     },
@@ -55,5 +58,5 @@ export const baseSlice = createSlice({
   }
 })
 
-export const { setSelectedTicket, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket } = baseSlice.actions
+export const { setSelectedTicket, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicket } = baseSlice.actions
 export default baseSlice.reducer
