@@ -3,11 +3,9 @@ import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLoginMutation } from "../services/service";
 import toast from "react-hot-toast";
-import { setChatProfile } from "../store/slices/chat_profile";
-import { setUser } from "../store/slices/user";
-import { login } from "../store/slices/auth";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { setLoggedInUser } from "../utils/actions";
+
 interface LoginForm {
   pk_username: string;
   pk_password: string;
@@ -21,7 +19,7 @@ interface LoginForm {
 
 const useLogin = () => {
   const [loginMutation, resMutation] = useLoginMutation();
-  const dispatch = useDispatch();
+    /* Fetch tickets */
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     defaultValues: {
@@ -65,9 +63,8 @@ const useLogin = () => {
         }
         const token = result?.data?.token;
         console.log('token', token);
-        dispatch(login());
-        dispatch(setChatProfile(result?.data?.chat_profile));
-        dispatch(setUser(result?.data?.user));
+
+        await setLoggedInUser(result);
         navigate('/dashboard')
       } catch (err: any) {
         console.error('login failed', err);
