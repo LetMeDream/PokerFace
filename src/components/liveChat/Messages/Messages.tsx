@@ -50,7 +50,7 @@ const Messages: FC<MessagesProps> = ({
     // * Messages for the Agent user, in the Dashboard chat conversation
     return (
       <>
-        {chatMessages.map((msg, index) => (
+        {chatMessages?.map((msg, index) => (
             <div 
               key={index}
             >

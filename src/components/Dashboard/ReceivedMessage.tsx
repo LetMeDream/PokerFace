@@ -19,18 +19,18 @@ const ReceivedMessage = ({
     <li className="flex-row items-center flex-nowrap group !rounded-sm border min-h-[80px] max-w-full" onClick={onClick}>
       {/* Avatar */}
       {avatarSrc && !imgError ? (
-            /* Avatar image */
-            <div className="rounded-l-sm rounded-r-none !basis-3/12 group-hover:!bg-slate-600 self-stretch flex justify-center items-center">
-              <div className="mask mask-squircle w-12">
-                <img src={avatarSrc} onError={() => setImgError(true)} />
-              </div>
-            </div>
-          ) : (
-            /* Fallback avatar */
-            <div className="rounded-l-sm self-stretch flex justify-center group-hover:!bg-slate-600">
-              <FaUserAstronaut className="text-white w-12 h-12" />
-            </div>
-          )}
+        /* Avatar image */
+        <div className="rounded-l-sm rounded-r-none !basis-3/12 group-hover:!bg-slate-600 self-stretch flex justify-center items-center">
+          <div className="mask mask-squircle w-12">
+            <img src={avatarSrc} onError={() => setImgError(true)} />
+          </div>
+        </div>
+      ) : (
+        /* Fallback avatar */
+        <div className="rounded-l-sm self-stretch flex justify-center group-hover:!bg-slate-600">
+          <FaUserAstronaut className="text-white w-12 h-12" />
+        </div>
+      )}
 
       {/* Content */}
       <div className="content rounded-r-sm rounded-l-none flex flex-col overflow-hidden items-start grow group-hover:!bg-slate-600 relative -left-[0.75px] self-stretch">
