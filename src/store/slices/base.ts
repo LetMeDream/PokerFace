@@ -4,15 +4,17 @@ import { normalizeTickets } from '../../utils/helpers';
 
 export interface BaseState {
   tickets: {
-    byId: Record<string, ChatTicket>,
-    allIds: string[]
+    byId: Record<number, ChatTicket>,
+    allIds: number[]
   };
-  selectedTicketId: string | null
+  selectedTicketId: string | null // Id for the currently established conversation/ticket
+  assigningTicketId?: string | null // Id for the ticket being assigned right now
   hasAutoOpened: boolean
 }
 
 const initialState: BaseState = {
   selectedTicketId: null,
+  assigningTicketId: null,
   hasAutoOpened: false,
   /* Normalizing tickets */
   tickets: {
@@ -25,18 +27,32 @@ export const baseSlice = createSlice({
   name: 'base',
   initialState,
   reducers: {
-    setSelectedTicket(state, action) {
+    /* Set the currently selected ticket */
+    setSelectedTicketId(state, action) {
       state.selectedTicketId = action.payload
     },
-    unsetSelectedTicket(state) {
+    /* Unset the currently selected ticket */
+    unsetSelectedTicketId(state) {
       state.selectedTicketId = null
     },
+    /* Set the currently assigning ticket */
+    setAssigningTicketId(state, action) {
+      state.assigningTicketId = action.payload
+    },
+    /* Unset the currently assigning ticket */
+    unsetAssigningTicketId(state) {
+      state.assigningTicketId = null
+    },
+    /* Set whether the chat has auto-opened */
     setHasAutoOpened(state, action) {
       state.hasAutoOpened = action.payload
     },
+    // Unset base state (on logout, mainly)
     unsetBase (state) {
       state.selectedTicketId = null
+      state.assigningTicketId = null
       state.hasAutoOpened = false
+      state.tickets = { byId: {}, allIds: [] }
     },
     // Set all tickets (on login, mainly)
     setTickets(state, action) {
@@ -45,7 +61,15 @@ export const baseSlice = createSlice({
       state.tickets.allIds = allIds;
     },
 
-
+    // Assign agent to ticket
+    assignAgentToTicket(state, action) {
+      const { ticketId, agentChatId } = action.payload;
+      const ticket = state.tickets.byId[ticketId];
+      if (ticket) {
+        ticket.agent_assigned = true;
+        ticket.chat_room_id = agentChatId;
+      }
+    },
 
     // Add message to a ticket
     addMessageToTicket(state, action) {
@@ -58,5 +82,5 @@ export const baseSlice = createSlice({
   }
 })
 
-export const { setSelectedTicket, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicket } = baseSlice.actions
+export const { setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicketId, assignAgentToTicket, setAssigningTicketId } = baseSlice.actions
 export default baseSlice.reducer
