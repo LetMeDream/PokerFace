@@ -3,7 +3,7 @@ import Header from './Header';
 import GeneralInbox from './GeneralInbox/GeneralInbox';
 import { useSelector } from 'react-redux';
 /* We NORMALIZED tickets in our store, so now we need to SELECT them properly */
-import { selectTicketsArray } from '../../utils/helpers';
+import { selectTicketsByChatRoomId } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
 import AgentChat from './AgentChat';
 
@@ -13,8 +13,15 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
   drawerButtonRef: React.RefObject<HTMLLabelElement | null>; 
 }) => {
   const selectedTicketId = useSelector((state: any) => state.base.selectedTicketId);
-  const tickets = useSelector((state: RootState) => selectTicketsArray(state.base));
+  const chatRoomId = useSelector((state: RootState) => state.chatProfile.chat_id);
+  const tickets = useSelector((state: RootState) => selectTicketsByChatRoomId(state.base, chatRoomId));
   const ticketsQty = tickets.length;
+  /*
+  TODO: Commented since we would need to pass searchValue from DashboardPage to here
+  TODO: and currently 'searchValue' is a local state of DashboardPage only used in SideBar component.
+  TODO: Would need to change that to a global state or context to be able to use it here.
+  */
+  // const filteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, chatRoomId));
 
   return (
     <div 
