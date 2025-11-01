@@ -33,6 +33,7 @@
 
 /* Apply animation */
 .animate-compress-spin {
-  animation: compressAndSpin 2.5s ease-in-out forwards; /* Total duration: 2.5s */
+  animation: compressAndSpin 2.5s ease-in-out infinite; /* Total duration: 2.5s */
+  border: none !important;
 }
 
