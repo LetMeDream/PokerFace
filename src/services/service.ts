@@ -1,6 +1,7 @@
 // api/mockApi.ts
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { allTickets } from '../constants/chat';
+import { sleep } from '../utils/helpers';
 
 // Tipos
 type User = {
@@ -22,7 +23,7 @@ export type LoginSuccess = {
       is_active: boolean;
     };
     chat_profile: {
-      id: number;
+      chat_id: string;
       is_online: boolean;
       last_seen: string;
       full_name: string;
@@ -48,8 +49,6 @@ type ticketsFailure = {
 }
 type TicketsResponse = ticketsSuccess | ticketsFailure;
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 // Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
 const mockData = {
   users: [
@@ -73,7 +72,7 @@ const mockData = {
             "is_active": true
           },
           "chat_profile": {
-            "id": 1,
+            "chat_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
             "is_online": true,
             "last_seen": "2024-01-15T10:30:00Z",
             "full_name": "Juan Pérez"
