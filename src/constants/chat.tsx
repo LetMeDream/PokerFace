@@ -78,7 +78,8 @@ export const individualChatDemo = {
 
 export const allTickets = [
   {
-    "chat_room_id": "a1b2c3d4-e5f6-7890-abcd-111111111111",
+    "id": 1,
+    "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
     "nickname": "Carlos M.",
     "status": "active",
     "unread_count": 1,
@@ -92,6 +93,7 @@ export const allTickets = [
     ]
   },
   {
+    "id": 2,
     "chat_room_id": "f2e3d4c5-b6a7-8901-cccc-222222222222",
     "nickname": "María G.",
     "status": "pending",
@@ -105,13 +107,14 @@ export const allTickets = [
     ]
   },
   {
-    "chat_room_id": "c3d4e5f6-7890-abcd-3333-333333333333",
+    "id": 3,
+    "chat_room_id": "",
     "nickname": "Invitado987",
     "status": "closed",
     "unread_count": 0,
-    "agent_assigned": true,
-    "agent_name": "Sofía Núñez",
-    "avatarSrc": "https://i.pravatar.cc/150?img=2",
+    "agent_assigned": false,
+    "agent_name": "",
+    "avatarSrc": "",
     "messages": [
       { "message_type": "guest", "content": "Reporto un problema con mi pedido #4521." },
       { "message_type": "agent", "content": "Ya se resolvió y se reembolsó el importe. ¿Todo correcto?" },
@@ -119,12 +122,13 @@ export const allTickets = [
     ]
   },
   {
-    "chat_room_id": "d4e5f6a7-8901-bcde-4444-444444444444",
+    "id": 4,
+    "chat_room_id": "",
     "nickname": "SoporteTest",
     "status": "on_hold",
     "unread_count": 3,
-    "agent_assigned": true,
-    "agent_name": "Diego P.",
+    "agent_assigned": false,
+    "agent_name": "",
     "avatarSrc": "https://i.pravatar.cc/150?img=1",
     "messages": [
       { "message_type": "guest", "content": "Mi pago aparece como pendiente desde ayer." },
@@ -133,12 +137,13 @@ export const allTickets = [
     ]
   },
   {
-    "chat_room_id": "e5f6a7b8-9012-cdef-5555-555555555555",
+    "id": 5,
+    "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
     "nickname": "ClienteVIP",
     "status": "active",
     "unread_count": 5,
-    "agent_assigned": false,
-    "agent_name": null,
+    "agent_assigned": true,
+    "agent_name": "Marcos A.",
     "avatarSrc": "https://i.pravatar.cc/150?img=6",
     "messages": [
       { "message_type": "guest", "content": "Necesito asistencia urgente con mi factura." },
@@ -146,6 +151,7 @@ export const allTickets = [
       { "message_type": "guest", "content": "¿Pueden revisarlo por favor?" }
     ]
   }, {
+    "id": 6,
     "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
     "nickname": "Laura P.",
     "status": "active",
@@ -164,12 +170,13 @@ export const allTickets = [
     ]
   },
   {
-    "chat_room_id": "b1c2d3e4-f5g6-7890-bbbb-777777777777",
+    "id": 7,
+    "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
     "nickname": "UsuarioAnon",
     "status": "pending",
     "unread_count": 0,
-    "agent_assigned": false,
-    "agent_name": null,
+    "agent_assigned": true,
+    "agent_name": "Marcos A.",
     "avatarSrc": "https://i.pravatar.cc/150?img=14",
     "messages": [
       { "message_type": "guest", "content": "¿Cómo instalo la app en mi SmartTV?" },
