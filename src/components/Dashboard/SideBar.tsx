@@ -1,7 +1,8 @@
 import ReceivedMessage from '../Dashboard/ReceivedMessage';
-import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { selectFilteredTickets } from '../../utils/helpers';
+import { useSelector } from 'react-redux';
+import type { ChatTicket } from '../../types/Slices';
+import { selectFilteredTicketsByChatRoomId } from '../../utils/selectors';
 
 const SideBar = (
   { 
@@ -13,7 +14,8 @@ const SideBar = (
     classnames: { searchInput: string };
     handleTicketClick: (ticket: any) => void;
   }) => {
-    const filteredTickets = useSelector((state: RootState) => selectFilteredTickets(state.base, searchValue));
+    const { chat_id: chat_room_id } = useSelector((state: RootState) => state.chatProfile);
+    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, chat_room_id));
 
     return (
       <ul className="menu bg-secondary min-h-full p-4 max-w-80">
@@ -32,10 +34,10 @@ const SideBar = (
         </div>
         {/* Message */}
         <div className="flex flex-col gap-2 max-w-full">
-          {filteredTickets?.map((ticket) => (
+          {assignedFilteredTickets?.map((ticket: ChatTicket) => (
               /* Mensajes de la Bandeja de conversaciones */
               <ReceivedMessage 
-                key={ticket.chat_room_id}
+                key={ticket.id}
                 avatarSrc={ticket?.avatarSrc || ''}
                 name={`${ticket.nickname}`}
                 messages={ticket.messages}
