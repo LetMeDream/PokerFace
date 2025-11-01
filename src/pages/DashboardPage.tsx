@@ -1,5 +1,5 @@
 import useDashboard from "../hooks/useDashboard";
-import { setSelectedTicket } from "../store/slices/base";
+import { setSelectedTicketId } from "../store/slices/base";
 import { useDispatch } from "react-redux";
 import type { ChatTicket } from "../types/Slices";
 import SideBar from "../components/Dashboard/SideBar";
@@ -11,7 +11,7 @@ export default function DashboardPage() {
   const dispatch = useDispatch();
 
   const handleTicketClick = (ticket: ChatTicket) => {
-    dispatch(setSelectedTicket(ticket.chat_room_id));
+    dispatch(setSelectedTicketId(ticket.id));
   };
 
   return (
