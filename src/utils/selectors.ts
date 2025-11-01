@@ -36,7 +36,7 @@ export const selectTicketsArray = createSelector(
   (byId, allIds) => allIds.map(id => byId[id]).filter((t): t is Ticket => t !== undefined)
 );
 
-/* Selector for filtering tickets */
+/* Selector for filtering ALL tickets */
 export const selectFilteredTickets = createSelector(
   selectTicketsArray,
   (_, searchValue) => searchValue.toLowerCase(), // parámetro externo
@@ -48,7 +48,6 @@ export const selectFilteredTickets = createSelector(
         )
       : tickets // if no search value, return all tickets
 );
-
 
 /* Selector for getting a specific ticket by ID */
 export const selectTicketById = createSelector(

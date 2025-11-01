@@ -5,7 +5,7 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectTicketById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
-import { addMessageToTicket, unsetSelectedTicket } from '../../store/slices/base';
+import { addMessageToTicket, unsetSelectedTicketId } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
 
 const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
@@ -34,7 +34,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
 
   const closeChat = () => {
     // Logic to close the chat (e.g., unset selected ticket)
-    dispatch(unsetSelectedTicket());
+    dispatch(unsetSelectedTicketId());
   }
 
   return (
