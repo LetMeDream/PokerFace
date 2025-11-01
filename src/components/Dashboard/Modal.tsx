@@ -1,6 +1,4 @@
-import React from 'react'
-
-const Modal = () => {
+const Modal = ({ assignAndGo }: { assignAndGo: (e: React.MouseEvent<HTMLDivElement>) => void }) => {
   return (
     <div>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
@@ -12,8 +10,8 @@ const Modal = () => {
           <div className="modal-action mt-1">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <div className="btn btn-primary mr-2">Sí, asignarme e ir</div>
-              <button className="btn">Cerrar</button>
+              <div className="btn btn-primary mr-2" onClick={assignAndGo}>Sí, asignarme e ir</div>
+              <button className="btn" id='close_modal'>Cerrar</button>
             </form>
           </div>
         </div>
