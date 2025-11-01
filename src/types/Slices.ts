@@ -23,6 +23,7 @@ export interface ChatMessage {
 export type TicketStatus = 'active' | 'pending' | 'closed' | 'on_hold' | string;
 
 export interface ChatTicket {
+  id: number;
   chat_room_id: string;
   nickname: string;
   status: TicketStatus;
@@ -36,6 +37,6 @@ export interface ChatTicket {
 export type AllTickets = ChatTicket[];
 
 export type NormalizedTickets = {
-    byId: Record<string, AllTickets[number]>,
-    allIds: string[]
+    byId: Record<number, AllTickets[number]>,
+    allIds: number[]
 }
