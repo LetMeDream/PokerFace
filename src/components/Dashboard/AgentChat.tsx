@@ -3,7 +3,7 @@ import Messages from '../liveChat/Messages/Messages';
 import { RiSearchLine, RiSettingsLine, RiCloseLargeFill } from 'react-icons/ri';
 import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
-import { selectTicketById } from '../../utils/helpers';
+import { selectTicketById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
 import { addMessageToTicket, unsetSelectedTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
@@ -50,7 +50,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
                 <p className="text-sm text-gray-600 md:text-end text-nowrap">Nombre del usuario: 
                   <span className="font-medium text-gray-800 ml-1">
-                  {selectedTicket.nickname}
+                  {selectedTicket?.nickname}
                   </span>
                 </p>
                 {/* Icons for look for message, and settings */}
@@ -63,7 +63,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
               {/* Messages Area */}
               <div className="p-4 h-96 overflow-y-auto scroll-smooth" ref={chatBodyRef} >
                   <Messages
-                    chatMessages={selectedTicket.messages}
+                    chatMessages={selectedTicket?.messages}
                     type='agent'
                   />
               </div>
