@@ -5,7 +5,7 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectTicketById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
-import { addMessageToTicket, unsetSelectedTicketId } from '../../store/slices/base';
+import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
 
 const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
@@ -37,11 +37,16 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
     dispatch(unsetSelectedTicketId());
   }
 
+  const unassignAgentFromTicketHandler = () => {
+    if (selectedTicketId) {
+      dispatch(unassignAgentFromTicket({ ticketId: selectedTicketId }));
+    }
+  }
+
   return (
     <div>
       {/* Placeholder for selected chat conversation */}
-      <div className="flex flex-col items-start justify-start h-full p-4 mt-4-
-      ">
+      <div className="flex flex-col items-start justify-start h-full p-4 mt-4-">
         {/* Placeholder for selected chat messages */}
         <div className="flex flex-col text-secondary w-full items-center">
           {/* Chat Body */}
@@ -50,13 +55,30 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
                 <p className="text-sm text-gray-600 md:text-end text-nowrap">Nombre del usuario: 
                   <span className="font-medium text-gray-800 ml-1">
-                  {selectedTicket?.nickname}
+                    {selectedTicket?.nickname}
                   </span>
                 </p>
                 {/* Icons for look for message, and settings */}
                 <div className="flex gap-2">
                   <RiSearchLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
-                  <RiSettingsLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
+                  <div className="dropdown dropdown-bottom dropdown-end">
+                    {/* unset all styles for this button */}
+                    <div className=' !bg-[unset]' role='button' tabIndex={0} >
+                      <RiSettingsLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
+                    </div>
+                    <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                      <li>
+                        <a>
+                          Marcar como Resuelto
+                        </a>
+                      </li>
+                      <li onClick={unassignAgentFromTicketHandler}>
+                        <a>
+                          Desasignar
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                   <RiCloseLargeFill className="!w-5 md:!w-6 md:!h-5 text-gray-600 hover:text-gray-800 cursor-pointer hover:scale-105 transition" onClick={closeChat} />
                 </div>
               </div>

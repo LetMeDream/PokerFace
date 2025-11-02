@@ -62,13 +62,26 @@ export const baseSlice = createSlice({
     },
 
     // Assign agent to ticket
-    assignAgentToTicket(state, action) {
-      const { ticketId, agentChatId } = action.payload;
+    assignTicketToAgent(state, action) {
+      const { ticketId, agentChatId, agentName } = action.payload;
       const ticket = state.tickets.byId[ticketId];
       if (ticket) {
         ticket.agent_assigned = true;
+        ticket.agent_name = agentName
         ticket.chat_room_id = agentChatId;
       }
+    },
+
+    // Unassign agent from ticket
+    unassignAgentFromTicket(state, action) {
+      const { ticketId } = action.payload;
+      const ticket = state.tickets.byId[ticketId];
+      if (ticket) {
+        ticket.agent_assigned = false;
+        ticket.chat_room_id = null;
+        ticket.agent_name = null;
+      }
+      state.selectedTicketId = null;
     },
 
     // Add message to a ticket
@@ -82,5 +95,5 @@ export const baseSlice = createSlice({
   }
 })
 
-export const { setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicketId, assignAgentToTicket, setAssigningTicketId } = baseSlice.actions
+export const { setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket } = baseSlice.actions
 export default baseSlice.reducer
