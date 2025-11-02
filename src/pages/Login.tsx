@@ -3,12 +3,17 @@ import { FaUserCog } from "react-icons/fa";
 import useLogin from '../hooks/useLogin'
 import '../components/liveChat/MaskedInput/MaskedInput.css'
 import { inputErrors } from '../constants/chat';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import MaskedInput from '../components/liveChat/MaskedInput/MaskedInput';
+import '../components/liveChat/ContactForm/ContactForm.css'
 
 const Login = () => {
-  const { classNames, register, handleSubmit, onSubmit, errors } = useLogin()
+  const { classNames, register, handleSubmit, onSubmit, errors, isLoading } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
+
+  useEffect(() => {
+    console.log('isLoading changed:', isLoading);
+  }, [isLoading])
 
   return (
     <>
@@ -80,17 +85,47 @@ const Login = () => {
                   {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
                 </span>
               </div>
+              
+              <div className="text-right border border-transparent">
+                <a href="#" className={classNames.passwordForgot}>
+                  ¿Olvidaste tu contraseña?
+                </a>
+              </div>
 
-              <a href="#" className={classNames.passwordForgot}>
-                ¿Olvidaste tu contraseña?
-              </a>
-
-              <button
+              {/* <button
                 type="submit"
-                className={classNames.submitBtn}
+                className={classNames.submitBtn + ` 
+                  ${isLoading ? 'animate-compress-spin ' : ''}
+                  focus:!outline-none focus:!ring-2 focus:!ring-opacity-75 
+                text-white py-2.5 px-4 font-semibold
+                  mt-2 relative overflow-hidden mx-auto w-full transition duration-100
+                  `}
               >
-                Iniciar sesión
-              </button>
+                {isLoading ? <div className="loading-spinner" /> : 'Iniciar sesión'}
+              </button> */}
+
+              <div className='flex items-center w-full'>
+                <button
+                  type="submit" 
+                  className={`
+                    focus:!outline-none focus:!ring-2 focus:!ring-green-400 focus:!ring-opacity-75 
+                  text-white py-2.5 px-4 rounded-lg font-semibold
+                    mt-2 relative overflow-hidden w-full transition duration-100 mx-auto`
+                  }
+                  disabled={isLoading}
+                >
+                  {/* text toggled during animation */}
+                  <span 
+                    className={`transition-opacity duration-75 ${!isLoading ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    Iniciar sesión
+                  </span>
+                  {/* spinner shown while animating */}
+                  <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isLoading ? 'opacity-100' : 'opacity-0'}`}>
+                      <div className="border-2 border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
+                  </div>
+                </button>
+              </div>
             </form>
 
           </div>

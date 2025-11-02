@@ -19,6 +19,7 @@ interface LoginForm {
 
 const useLogin = () => {
   const [loginMutation, resMutation] = useLoginMutation();
+  const { isLoading } = resMutation;
     /* Fetch tickets */
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
@@ -73,7 +74,8 @@ const useLogin = () => {
     register,
     handleSubmit,
     onSubmit,
-    errors
+    errors,
+    isLoading
   }
 }
 
