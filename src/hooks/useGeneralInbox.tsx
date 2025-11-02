@@ -4,12 +4,11 @@ import { useAssignTicketMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
 import { deleteTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
-import { selectTicketsArray, selectFilteredUnassignedTickets } from '../utils/selectors';
+import { selectFilteredUnassignedTickets } from '../utils/selectors';
 import type { RootState } from '../store/store';
 import { useState } from 'react';
 
 const useGeneralInbox = () => {
-  const tickets = useSelector((state: RootState) => selectTicketsArray(state.base));
   const dispatch = useDispatch();
   const { assigningTicketId } = useSelector((state: RootState) => state.base);
   const { chat_id } = useSelector((state: RootState) => state.chatProfile);
@@ -52,7 +51,6 @@ const useGeneralInbox = () => {
 
 
   return {
-    tickets,
     isLoading,
     handleAssign,
     modalId,

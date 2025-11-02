@@ -4,7 +4,6 @@ import useGeneralInbox from '../../../hooks/useGeneralInbox';
 
 const GeneralInbox = () => {
   const {
-    tickets,
     isLoading,
     handleAssign,
     modalId,
@@ -22,7 +21,7 @@ const GeneralInbox = () => {
         <h1 className="!text-xl md:!text-3xl  font-bold mb-4">Gestión de Tickets</h1>
       </div>
 
-      <div className=' rounded-xs md:max-w-4xl !max-w-[90vw] sm:!max-w-[70vw] mt-2'>
+      <div className=' rounded-xs md:max-w-4xl !w-[90vw] sm:!w-[70vw] mt-2'>
         <div className=" text-xs md:text-lg text-center text-gray-800 rounded-t-md px-4 py-6 bg-cyan-50 border-b border-gray-300">
           <p>
             Aquí puedes ver y gestionar todos los tickets sin asignar. 
@@ -38,7 +37,7 @@ const GeneralInbox = () => {
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
               Tickets sin asignar:
               <span className="font-medium badge text-white ml-1">
-                {tickets.filter(ticket => !ticket.agent_assigned).length}
+                {filteredUnassignedTickets.filter(ticket => !ticket.agent_assigned).length}
               </span>
             </li>
             
