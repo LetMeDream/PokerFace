@@ -7,8 +7,8 @@ export interface BaseState {
     byId: Record<number, ChatTicket>,
     allIds: number[]
   };
-  selectedTicketId: string | null // Id for the currently established conversation/ticket
-  assigningTicketId?: string | null // Id for the ticket being assigned right now
+  selectedTicketId: number | null // Id for the currently established conversation/ticket
+  assigningTicketId?: number | null // Id for the ticket being assigned right now
   hasAutoOpened: boolean
 }
 
@@ -84,6 +84,13 @@ export const baseSlice = createSlice({
       state.selectedTicketId = null;
     },
 
+    // Delete ticket
+    deleteTicket(state, action) {
+      const { ticketId } = action.payload;
+      state.tickets.allIds = state.tickets.allIds.filter(id => id !== ticketId);
+      delete state.tickets.byId[ticketId];
+    },
+
     // Add message to a ticket
     addMessageToTicket(state, action) {
       const { chatRoomId, message } = action.payload;
@@ -95,5 +102,5 @@ export const baseSlice = createSlice({
   }
 })
 
-export const { setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket } = baseSlice.actions
+export const { setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket, deleteTicket } = baseSlice.actions
 export default baseSlice.reducer
