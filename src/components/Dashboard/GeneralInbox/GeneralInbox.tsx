@@ -3,9 +3,9 @@ import type { RootState } from '../../../store/store';
 import Modal from '../Modal';
 import InboxEntry from './InboxEntry';
 import { useSelector } from 'react-redux';
-import { sleep } from '../../../utils/helpers';
 import { useDispatch } from 'react-redux';
-import { assignAgentToTicket } from '../../../store/slices/base';
+import { assignTicketToAgent } from '../../../store/slices/base';
+import { useAssignTicketMutation } from '../../../services/service';
 
 const GeneralInbox = () => {
   const tickets = useSelector((state: RootState) => selectTicketsArray(state.base));
@@ -13,18 +13,22 @@ const GeneralInbox = () => {
   const dispatch = useDispatch();
   const { assigningTicketId } = useSelector((state: RootState) => state.base);
   const { chat_id } = useSelector((state: RootState) => state.chatProfile);
+  const { first_name, last_name } = useSelector((state: RootState) => state.user);
+  const [ assignTicket, { isLoading } ] = useAssignTicketMutation();
+  
 
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
-    // TODO: Here we could await, pretending to await for the API response
-    await sleep(1500);
-    dispatch(assignAgentToTicket({ ticketId: assigningTicketId, agentChatId: chat_id }));
-  
+    dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: chat_id, agentName: `${first_name} ${last_name}` }));
     // Close modal
     const closeModalButton = document.getElementById('close_modal') as HTMLButtonElement | null;
     if (closeModalButton) closeModalButton.click();
-
   }  
+
+  const handleAssign = async () => {
+    await assignTicket({ ticketId: assigningTicketId, agentId: chat_id });
+    assignAndGo();
+  }
 
   return (
     <div className='flex flex-col items-center justify-center'>
@@ -66,7 +70,8 @@ const GeneralInbox = () => {
       </div>
 
       <Modal 
-        assignAndGo={assignAndGo}
+        handleAssign={handleAssign}
+        isLoading={isLoading}
       />
     </div>
   )
