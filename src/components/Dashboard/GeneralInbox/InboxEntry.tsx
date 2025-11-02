@@ -1,37 +1,20 @@
-import React from 'react'
 import { SlOptionsVertical } from "react-icons/sl";
 import { HiUserAdd } from "react-icons/hi";
 import type { ChatTicket } from '../../../types/Slices';
 import { FaUserAstronaut } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import { setAssigningTicketId } from '../../../store/slices/base';
+import useInboxEntry from "../../../hooks/useInboxEntry";
+import { useDispatch } from "react-redux";
+import { setAssigningTicketId } from "../../../store/slices/base";
 
-const InboxEntry = ({ ticket }: { ticket: ChatTicket }) => {
-  const [imgError, setImgError] = React.useState(false);
-
-  const lastMessage = (ticket.messages && ticket.messages.length > 0)
-    ? ticket.messages[ticket.messages.length - 1].content
-    : 'No hay mensajes aún.';
-
-  const lastRemitent = (ticket.messages && ticket.messages.length > 0)
-    ? ticket.messages[ticket.messages.length - 1].message_type
-    : 'Desconocido';
-
+const InboxEntry = ({ ticket, modalId }: { ticket: ChatTicket, modalId: string }) => {
+  const { imgError, lastMessage, lastRemitent, showModal, showOptions, setImgError } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
-  const showModal = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const dialog = document.getElementById('my_modal_1') as HTMLDialogElement | null;
-    dispatch(setAssigningTicketId(ticket.id));
-    
-    if (dialog) dialog.showModal();
-  }
 
-  const showOptions = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const optionsButton = document.getElementById(`options-button-${ticket.id}`);
-    if (!optionsButton) return;
-    // DaisyUI's dropdowns are triggered by focus, so we focus the button to open the menu
-    optionsButton.focus();
+  const handleDeleteTicket = () => {
+    // Implement ticket deletion logic here
+    dispatch(setAssigningTicketId(ticket.id));
+    const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
+    if (dialog) dialog.showModal();
   }
 
   return (
@@ -40,7 +23,7 @@ const InboxEntry = ({ ticket }: { ticket: ChatTicket }) => {
           <div 
             className="flex items-center gap-3 p-3 bg-cyan-50 hover:bg-indigo-100 duration-300 text-secondary transition-colors cursor-pointer" 
             onClick={showOptions}
-            data-id={ticket.id}
+            data-custom-id={ticket.id}
           >
             {/* Avatar */}
             {ticket?.avatarSrc && !imgError ? (
@@ -124,7 +107,7 @@ const InboxEntry = ({ ticket }: { ticket: ChatTicket }) => {
                         Marcar como Resuelto
                       </a>
                     </li>
-                    <li>
+                    <li onClick={handleDeleteTicket}>
                       <a>
                         Eliminar
                       </a>
@@ -134,7 +117,7 @@ const InboxEntry = ({ ticket }: { ticket: ChatTicket }) => {
               </div>
             </div>
           </div>
-        </div>
+      </div>
     </>
   )
 }
