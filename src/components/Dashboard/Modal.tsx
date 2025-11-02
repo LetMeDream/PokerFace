@@ -5,7 +5,8 @@ const Modal = ({
     message,
     acceptFunction,
     id,
-    closeBtnId = 'close_modal'
+    closeBtnId = 'close_modal',
+    btnMessage
   }: { 
     isLoading: boolean,
     type?: 'confirm' | 'info' | 'danger',
@@ -13,6 +14,7 @@ const Modal = ({
     acceptFunction?: (e: React.MouseEvent<HTMLDivElement>) => void,
     id: string,
     closeBtnId?: string
+    btnMessage?: string
   }) => {
 
   let typeClass
@@ -37,7 +39,7 @@ const Modal = ({
       <dialog id={id} className="modal">
         <div className="modal-box">
           {/* <h3 className="font-bold text-lg">Hello!</h3> */}
-          <p className="py-4">¿Desea auto-asignarse el ticket e ir a la conversación?</p>
+          <p className="py-4">{message}</p>
           <div className="modal-action mt-1">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
@@ -47,7 +49,7 @@ const Modal = ({
                 <span 
                   className={`transition-opacity duration-75 ${!isLoading ? 'opacity-100' : 'opacity-0'}`}
                 >
-                  {message}
+                  {btnMessage}
                 </span>
                 {/* spinner shown while animating */}
                 <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isLoading ? 'opacity-100' : 'opacity-0'}`}>

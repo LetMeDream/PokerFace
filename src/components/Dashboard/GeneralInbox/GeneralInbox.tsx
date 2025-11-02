@@ -70,7 +70,8 @@ const GeneralInbox = () => {
         acceptFunction={handleAssign} 
         isLoading={isLoading}
         type='confirm'
-        message='Sí, asignarme e ir'
+        message='¿Desear auto-asignarse el ticket e ir a la conversación?'
+        btnMessage='Asignar e Ir'
         id={'my_modal_1'}
       />
       <Modal 
@@ -79,6 +80,7 @@ const GeneralInbox = () => {
         type='danger'
         message='¿Estás seguro de que deseas eliminar este ticket?'
         id={modalId}
+        btnMessage='Eliminar'
         closeBtnId={deleteTicketBtnId}
       />
     </div>
