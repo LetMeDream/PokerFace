@@ -1,30 +1,53 @@
 
 const Modal = ({ 
-    handleAssign, 
-    isLoading 
+    isLoading,
+    type,
+    message,
+    acceptFunction,
+    id,
+    closeBtnId = 'close_modal'
   }: { 
-    handleAssign: (e: React.MouseEvent<HTMLDivElement>) => void, 
-    isLoading: boolean 
+    isLoading: boolean,
+    type?: 'confirm' | 'info' | 'danger',
+    message?: string,
+    acceptFunction?: (e: React.MouseEvent<HTMLDivElement>) => void,
+    id: string,
+    closeBtnId?: string
   }) => {
- 
+
+  let typeClass
+  switch (type) {
+    case 'confirm':
+      typeClass = 'bg-green-500'
+      break;
+    case 'info':
+      typeClass = 'bg-blue-500'
+      break;
+    case 'danger':
+      typeClass = 'bg-red-500'
+      break;
+    default:
+      typeClass = 'bg-secondary'
+  }
+
   return (
     <div>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
       {/* <button className="btn" onClick={()=>document!.getElementById('my_modal_1')!.showModal()}>open modal</button> */}
-      <dialog id="my_modal_1" className="modal">
+      <dialog id={id} className="modal">
         <div className="modal-box">
           {/* <h3 className="font-bold text-lg">Hello!</h3> */}
           <p className="py-4">¿Desea auto-asignarse el ticket e ir a la conversación?</p>
           <div className="modal-action mt-1">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <div className="btn btn-primary mr-2 relative" onClick={handleAssign}>
+              <div className={`btn ${typeClass} mr-2 relative`} onClick={acceptFunction}>
 
                 {/* text toggled during animation */}
                 <span 
                   className={`transition-opacity duration-75 ${!isLoading ? 'opacity-100' : 'opacity-0'}`}
                 >
-                  Sí, asignarme e ir
+                  {message}
                 </span>
                 {/* spinner shown while animating */}
                 <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isLoading ? 'opacity-100' : 'opacity-0'}`}>
@@ -33,7 +56,7 @@ const Modal = ({
 
               </div>
               
-              <button className="btn" id='close_modal'>Cerrar</button>
+              <button className="btn" id={closeBtnId}>Cerrar</button>
             </form>
           </div>
         </div>
