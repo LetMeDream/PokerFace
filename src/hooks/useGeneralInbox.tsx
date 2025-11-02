@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { assignTicketToAgent } from '../store/slices/base';
+import { assignTicketToAgent, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
 import { useAssignTicketMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
 import { deleteTicket } from '../store/slices/base';
@@ -24,6 +24,9 @@ const useGeneralInbox = () => {
     // Close modal
     const closeModalButton = document.getElementById('close_modal') as HTMLButtonElement | null;
     if (closeModalButton) closeModalButton.click();
+    // Navigate to chat view
+    dispatch(setSelectedTicketId(assigningTicketId));
+    dispatch(setHasAutoOpened(false));
   }  
 
   const handleAssign = async () => {
