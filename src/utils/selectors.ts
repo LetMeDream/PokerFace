@@ -63,6 +63,19 @@ export const selectUnassignedTickets = createSelector(
   (tickets) => tickets.filter(ticket => !ticket.agent_assigned)
 );
 
+/* Selector for filtering unassigned tickets */
+export const selectFilteredUnassignedTickets = createSelector(
+  selectUnassignedTickets,
+  (_, searchValue) => searchValue.toLowerCase(),
+  (tickets: Ticket[], searchLower: string) =>
+    searchLower
+      ? tickets.filter((ticket: Ticket) =>
+          ticket.nickname?.toLowerCase().includes(searchLower)
+        )
+      : tickets 
+)
+
+
 /* Selector for getting all tickets with the given chat_room_id */
 export const selectTicketsByChatRoomId = createSelector(
   selectTicketsArray,
