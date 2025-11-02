@@ -124,9 +124,20 @@ export const mockApi = createApi({
           return { error: { status: 500, data: 'Error al obtener los tickets' } };
         }
       }
-    })
+    }),
+
+
+    // Assign ticket to agent
+    assignTicket: builder.mutation<boolean, { ticketId: string | null | undefined; agentId: string | null }>({
+      async queryFn({ ticketId, agentId }) {
+        await sleep(1500); // Simula un retardo
+        // Aquí podrías agregar lógica para asignar el ticket en tu mock
+        console.log(`Ticket ${ticketId} asignado al agente ${agentId}`);
+        return { data: true };
+      },
+    }),
     
   }),
 });
 
-export const { useLoginMutation, useGetTicketsQuery } = mockApi;
+export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation } = mockApi;
