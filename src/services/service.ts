@@ -128,7 +128,7 @@ export const mockApi = createApi({
 
 
     // Assign ticket to agent
-    assignTicket: builder.mutation<boolean, { ticketId: string | null | undefined; agentId: string | null }>({
+    assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: string | null }>({
       async queryFn({ ticketId, agentId }) {
         await sleep(1500); // Simula un retardo
         // Aquí podrías agregar lógica para asignar el ticket en tu mock
@@ -136,8 +136,18 @@ export const mockApi = createApi({
         return { data: true };
       },
     }),
-    
+
+    // Delete Ticket
+    deleteTicket: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+      async queryFn({ ticketId }) {
+        await sleep(1000); // Simula un retardo
+        // Aquí podrías agregar lógica para eliminar el ticket en tu mock
+        console.info(`Ticket ${ticketId} eliminado`);
+        console.log(typeof ticketId);
+        return { data: true, success: true};
+      }
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation } = mockApi;
+export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation } = mockApi;
