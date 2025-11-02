@@ -78,14 +78,16 @@ export const individualChatDemo = {
 
 export const allTickets = [
   {
-    "id": 1,
-    "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
+    "id": 1,  /* Unique ID */
+    "chat_room_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666", /* 'Foreign key' for chat */
+    /* User info */
     "nickname": "Carlos M.",
     "status": "active",
     "unread_count": 1,
+    "avatarSrc": "",
+    /* Agent info */
     "agent_assigned": true,
     "agent_name": "Luis Ramos",
-    "avatarSrc": "",
     "messages": [
       { "message_type": "guest", "content": "No puedo acceder a mi cuenta, me pide código." },
       { "message_type": "agent", "content": "¿Has intentado restablecer la contraseña desde el enlace?" },

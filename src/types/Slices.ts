@@ -24,7 +24,7 @@ export type TicketStatus = 'active' | 'pending' | 'closed' | 'on_hold' | string;
 
 export interface ChatTicket {
   id: number;
-  chat_room_id: string;
+  chat_room_id: string | null;
   nickname: string;
   status: TicketStatus;
   unread_count: number;
