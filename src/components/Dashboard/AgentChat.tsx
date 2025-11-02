@@ -12,8 +12,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
   /* Input state */
   const [newMessage, setNewMessage] = useState<string>("");
   /* Get selected ticket using supah cool selector */
-  const selectedTicket = useSelector((state: RootState) => 
-    selectTicketById(state.base, selectedTicketId));
+  const selectedTicket = useSelector((state: RootState) => selectTicketById(state.base, selectedTicketId));
 
   /* Ref to scroll */
   const chatBodyRef = useRef<HTMLDivElement | null>(null);
