@@ -60,7 +60,6 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   }
 
   // * Close Ticket Logic
-  // TODO: Add loading state by faking API call using mockup from rtk query
   const closeBtnId = 'close_ticket_btn'
   const [closeTicketMutation, { isLoading: isClosing }] = useCloseTicketMutation();
   const closeTicketHandler = async () => {

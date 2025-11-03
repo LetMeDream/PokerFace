@@ -150,7 +150,8 @@ const InboxEntry = ({
                     tabIndex={0} 
                     id={`options-button-${ticket.id}`}
                     className={`!bg-[unset]
-                      ${ticket.status.toLocaleLowerCase() === 'closed' ? ' hover:!border-gray-400' : ' '}
+                      ${ticket.status.toLocaleLowerCase() === 'closed' ? 'hover:!border-transparent' : ''}
+                    
                     `} 
                   >
                     <SlOptionsVertical 
