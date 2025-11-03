@@ -69,7 +69,7 @@ const InboxEntry = ({
     <>
       <div className=" border-b border-gray-300">
           <div 
-            className="flex items-center gap-3 p-3 bg-cyan-50 hover:bg-indigo-100 duration-300 text-secondary transition-colors cursor-pointer" 
+            className="flex items-center gap-3 px-3 py-0.5 bg-cyan-50 hover:bg-indigo-100 duration-300 text-secondary transition-colors cursor-pointer" 
             onClick={showOptions}
             data-custom-id={ticket.id}
           >
@@ -130,7 +130,9 @@ const InboxEntry = ({
             <div className="flex flex-1 items-center md:px-4 basis-1/6 md:basis-1/6">
               {/* Asignar e ir */}
               <div
-                className="text-indigo-700 hover:text-indigo-900 transition-colors px-3 py-2.5"
+                className={`text-indigo-700 hover:text-indigo-900 transition-colors px-3 py-2.5
+                  ${ticket.status.toLocaleLowerCase() === 'closed' ? ' !text-gray-400 hover:!text-gray-600 focus:!text-gray-600 ' : ' !text-indigo-700 hover:!text-indigo-900 focus:!text-indigo-900'}  
+                `}
                 title="Asignar e Ir a conversación"
                 aria-label="Asignar ticket y abrir conversación"
                 onClick={showModal}
@@ -143,10 +145,18 @@ const InboxEntry = ({
               <div className="relative">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   {/* unset all styles for this button */}
-                  <button className=' !bg-[unset]' role='button' tabIndex={0} 
+                  <button 
+                    role='button' 
+                    tabIndex={0} 
                     id={`options-button-${ticket.id}`}
+                    className={`!bg-[unset]
+                      ${ticket.status.toLocaleLowerCase() === 'closed' ? ' hover:!border-gray-400' : ' '}
+                    `} 
                   >
-                    <SlOptionsVertical className="!w-5 !h-5 text-indigo-700 hover:text-indigo-900 focus:text-indigo-900" 
+                    <SlOptionsVertical 
+                      className={`!w-5 !h-5 text-indigo-700 hover:text-indigo-900 focus:text-indigo-900
+                        ${ticket.status.toLocaleLowerCase() === 'closed' ? ' !text-gray-400 hover:!text-gray-600 focus:!text-gray-600 ' : ' !text-indigo-700 hover:!text-indigo-900 focus:!text-indigo-900'}
+                      `}
                     />
                   </button>
                   <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
