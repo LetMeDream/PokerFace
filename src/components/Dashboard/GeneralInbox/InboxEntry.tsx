@@ -6,14 +6,22 @@ import useInboxEntry from "../../../hooks/useInboxEntry";
 import { useDispatch } from "react-redux";
 import { setAssigningTicketId } from "../../../store/slices/base";
 
-const InboxEntry = ({ ticket, modalId }: { ticket: ChatTicket, modalId: string }) => {
+const InboxEntry = ({ ticket, deleteModalId, closeTicketModalId }: { ticket: ChatTicket, deleteModalId: string, closeTicketModalId: string }) => {
   const { imgError, lastMessage, lastRemitent, showModal, showOptions, setImgError } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
+
 
   const handleDeleteTicket = () => {
     // Implement ticket deletion logic here
     dispatch(setAssigningTicketId(ticket.id));
-    const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
+    const dialog = document.getElementById(deleteModalId) as HTMLDialogElement | null;
+    if (dialog) dialog.showModal();
+  }
+
+  const handleCloseTicket = () => {
+    // Implement ticket closing logic here
+    dispatch(setAssigningTicketId(ticket.id));
+    const dialog = document.getElementById(closeTicketModalId) as HTMLDialogElement | null;
     if (dialog) dialog.showModal();
   }
 
@@ -109,8 +117,8 @@ const InboxEntry = ({ ticket, modalId }: { ticket: ChatTicket, modalId: string }
                       </a>
                     </li>
                     {/* give appearance of disabled button */}
-                    <li className="pointer-events-none">
-                      <a className=" !text-gray-600">
+                    <li onClick={handleCloseTicket}>
+                      <a>
                         Marcar como Resuelto
                       </a>
                     </li>

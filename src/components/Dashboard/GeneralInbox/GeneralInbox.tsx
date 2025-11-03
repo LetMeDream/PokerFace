@@ -6,14 +6,19 @@ const GeneralInbox = () => {
   const {
     isLoading,
     handleAssign,
-    modalId,
+    deleteModalId,
     handleDelete,
     isDeleting,
     closeDeleteTicketBntId,
     inboxSearchValue,
     setInboxSearchValue,
-    filteredUnassignedTickets
+    filteredUnassignedTickets,
+    closeTicketModalId,
+    handleCloseTicket,
+    isClosingTicket,
+    closeCloseTicketBntId
   } = useGeneralInbox();
+
 
   return (
     <div className='flex flex-col items-center justify-center pb-14'>
@@ -59,14 +64,15 @@ const GeneralInbox = () => {
             <InboxEntry 
               key={ticket.id} 
               ticket={ticket} 
-              modalId={modalId}
+              deleteModalId={deleteModalId}
+              closeTicketModalId={closeTicketModalId}
             />
           ))}
         </ul>
 
       </div>
 
-      <Modal 
+      <Modal // Modal for auto-assign ticket and go to chat
         acceptFunction={handleAssign} 
         isLoading={isLoading}
         type='confirm'
@@ -74,14 +80,23 @@ const GeneralInbox = () => {
         btnMessage='Asignar e Ir'
         id={'my_modal_1'}
       />
-      <Modal 
+      <Modal // Modal for deleting ticket
         acceptFunction={handleDelete}
         isLoading={isDeleting}
         type='danger'
         message='¿Estás seguro de que deseas eliminar este ticket?'
-        id={modalId}
+        id={deleteModalId}
         btnMessage='Eliminar'
         closeBtnId={closeDeleteTicketBntId}
+      />
+      <Modal // Modal for closing ticket
+        acceptFunction={handleCloseTicket}
+        isLoading={isClosingTicket}
+        type='info'
+        message='¿Estás seguro de que deseas marcar este ticket como cerrado?'
+        id={closeTicketModalId}
+        btnMessage='Cerrar'
+        closeBtnId={closeCloseTicketBntId}
       />
     </div>
   )

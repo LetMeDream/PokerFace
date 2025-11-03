@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { assignTicketToAgent, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
-import { useAssignTicketMutation } from '../services/service';
+import { useAssignTicketMutation, useCloseTicketMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
-import { deleteTicket } from '../store/slices/base';
+import { deleteTicket, closeTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
 import { selectFilteredUnassignedTickets } from '../utils/selectors';
 import type { RootState } from '../store/store';
@@ -38,7 +38,7 @@ const useGeneralInbox = () => {
   * In order to re-use the Modal component for deleting tickets, we need to create a unique ID for the delete button within the modal.
   * as well as a unique modal ID.
   */
-  const modalId = 'delete_ticket_modal'
+  const deleteModalId = 'delete_ticket_modal'
   const closeDeleteTicketBntId = `delete_ticket_btn_${assigningTicketId}`;
   const handleDelete = async () => {
     try {
@@ -52,17 +52,41 @@ const useGeneralInbox = () => {
     }
   }
 
+  /* 
+  * In order to re-use the Modal component for CLOSING tickets, we need to create a unique ID for the delete button within the modal.
+  * as well as a unique modal ID.
+  */
+  const closeTicketModalId = 'close_ticket_modal'
+  const closeCloseTicketBntId = `close_ticket_btn_${assigningTicketId}`;
+  const [ closeTicketApiCall, { isLoading: isClosingTicket } ] = useCloseTicketMutation();
+  const handleCloseTicket = async () => {
+    try {
+      await closeTicketApiCall({ ticketId: assigningTicketId });
+      dispatch(closeTicket({ ticketId: assigningTicketId }));
+      // Close modal
+      const closeModalButton = document.getElementById(closeCloseTicketBntId) as HTMLButtonElement | null;
+      if (closeModalButton) closeModalButton.click();
+    } catch (error) {
+      console.error('Error closing ticket:', error);
+    }
+  }
+
+
 
   return {
     isLoading,
     handleAssign,
-    modalId,
+    deleteModalId,
     handleDelete,
     isDeleting,
     closeDeleteTicketBntId,
     inboxSearchValue,
     setInboxSearchValue,
-    filteredUnassignedTickets
+    filteredUnassignedTickets,
+    closeTicketModalId,
+    handleCloseTicket,
+    isClosingTicket,
+    closeCloseTicketBntId
   }
 }
 
