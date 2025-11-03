@@ -5,11 +5,12 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectTicketById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
-import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket } from '../../store/slices/base';
+import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket, closeTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
 import Modal from './Modal';
+import { useUnassignTicketMutation, useCloseTicketMutation } from '../../services/service';
 
-const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
+const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   /* Input state */
   const [newMessage, setNewMessage] = useState<string>("");
   /* Get selected ticket using supah cool selector */
@@ -37,15 +38,48 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
     dispatch(unsetSelectedTicketId());
   }
 
-  const unassignAgentFromTicketHandler = () => {
-    if (selectedTicketId) {
-      dispatch(unassignAgentFromTicket({ ticketId: selectedTicketId }));
+  // * Unassigning Ticket Logic
+  const [unassignTicket, { isLoading: isUnassigning }] = useUnassignTicketMutation();
+  const unassignAgentFromTicketHandler = async () => {
+    try {
+      if (selectedTicketId) {
+        await unassignTicket({ ticketId: selectedTicketId });
+        dispatch(unassignAgentFromTicket({ ticketId: selectedTicketId }));
+      }
+    } catch (error) {
+      console.error('Error desasignando el ticket:', error);
     }
+
+ 
   }
 
   const unassignModalId = 'unassign_ticket_modal'
   const handleUnassign = () => {
     const dialog = document.getElementById(unassignModalId) as HTMLDialogElement | null;
+    if (dialog) dialog.showModal();
+  }
+
+  // * Close Ticket Logic
+  // TODO: Add loading state by faking API call using mockup from rtk query
+  const closeBtnId = 'close_ticket_btn'
+  const [closeTicketMutation, { isLoading: isClosing }] = useCloseTicketMutation();
+  const closeTicketHandler = async () => {
+    try {
+      if (selectedTicketId) {
+        await closeTicketMutation({ ticketId: selectedTicketId }).unwrap();
+        dispatch(closeTicket({ ticketId: selectedTicketId }));
+      }
+      const closeBtn = document.getElementById(closeBtnId) as HTMLButtonElement | null;
+      if (closeBtn) closeBtn.click();
+    } catch (error) {
+      console.error('Error cerrando el ticket:', error);
+    }
+
+  }
+
+  const closeTicketModalId = 'close_ticket_modal'
+  const handleCloseTicket = () => {
+    const dialog = document.getElementById(closeTicketModalId) as HTMLDialogElement | null;
     if (dialog) dialog.showModal();
   }
 
@@ -63,7 +97,13 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
                   <span className="font-medium text-gray-800 ml-1">
                     {selectedTicket?.nickname}
                   </span>
+                  <div>
+                    Status: <span className="font-medium text-gray-800">{
+                      selectedTicket?.status.split('_').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                    }</span>
+                  </div>
                 </p>
+                
                 {/* Icons for look for message, and settings */}
                 <div className="flex gap-2">
                   <RiSearchLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
@@ -73,8 +113,8 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
                       <RiSettingsLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
                     </div>
                     <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                      <li className="pointer-events-none">
-                        <a className=" !text-gray-600 ">
+                      <li onClick={handleCloseTicket}>
+                        <a>
                           Marcar como Resuelto
                         </a>
                       </li>
@@ -125,11 +165,20 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
       </div>
       <Modal 
         acceptFunction={unassignAgentFromTicketHandler} 
-        isLoading={false}
+        isLoading={isUnassigning}
         type='info'
         message='¿Desear desasignarse del ticket y volver a la bandeja de entrada?'
         btnMessage='Desasignar'
         id={unassignModalId}
+      />
+      <Modal
+        acceptFunction={closeTicketHandler}
+        isLoading={isClosing}
+        type='info'
+        message='¿Desea marcar el ticket como resuelto y cerrarlo?'
+        btnMessage='Cerrar Ticket'
+        id={closeTicketModalId}
+        closeBtnId={closeBtnId}
       />
     </div>
   )
