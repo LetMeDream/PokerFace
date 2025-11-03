@@ -3,6 +3,8 @@ import type { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import type { ChatTicket } from '../../types/Slices';
 import { selectFilteredTicketsByChatRoomId } from '../../utils/selectors';
+import Pagination from './Pagination';
+import usePagination from '../../hooks/usePagination';
 
 const SideBar = (
   { 
@@ -16,6 +18,13 @@ const SideBar = (
   }) => {
     const { chat_id: chat_room_id } = useSelector((state: RootState) => state.chatProfile);
     const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, chat_room_id));
+
+    const {
+      currentItems: paginatedTickets,
+      totalPages,
+      goToPage,
+      currentPage
+    } = usePagination({elements: assignedFilteredTickets, itemsPerPage: 5, inboxSearchValue: searchValue});
 
     return (
       <ul className="menu bg-secondary min-h-full p-4 max-w-80">
@@ -32,9 +41,18 @@ const SideBar = (
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
+
+        <div className="mb-4 flex justify-center">
+          <Pagination 
+            totalPages={totalPages}
+            currentPage={currentPage}
+            goToPage={goToPage}
+          />
+        </div>
+
         {/* Message */}
         <div className="flex flex-col gap-2 max-w-full">
-          {assignedFilteredTickets?.map((ticket: ChatTicket) => (
+          {paginatedTickets?.map((ticket: ChatTicket) => (
               /* Mensajes de la Bandeja de conversaciones */
               <ReceivedMessage 
                 key={ticket.id}
@@ -51,6 +69,8 @@ const SideBar = (
               />
             ))}
         </div>
+
+ 
 
       </ul>
     )
