@@ -39,13 +39,13 @@ const useGeneralInbox = () => {
   * as well as a unique modal ID.
   */
   const modalId = 'delete_ticket_modal'
-  const deleteTicketBtnId = `delete_ticket_btn_${assigningTicketId}`;
+  const closeDeleteTicketBntId = `delete_ticket_btn_${assigningTicketId}`;
   const handleDelete = async () => {
     try {
       await deleteTicketCallToApi({ ticketId: assigningTicketId });
       dispatch(deleteTicket({ ticketId: assigningTicketId! }));
       // Close modal
-      const closeModalButton = document.getElementById(deleteTicketBtnId) as HTMLButtonElement | null;
+      const closeModalButton = document.getElementById(closeDeleteTicketBntId) as HTMLButtonElement | null;
       if (closeModalButton) closeModalButton.click();
     } catch (error) {
       console.error('Error deleting ticket:', error);
@@ -59,7 +59,7 @@ const useGeneralInbox = () => {
     modalId,
     handleDelete,
     isDeleting,
-    deleteTicketBtnId,
+    closeDeleteTicketBntId,
     inboxSearchValue,
     setInboxSearchValue,
     filteredUnassignedTickets
