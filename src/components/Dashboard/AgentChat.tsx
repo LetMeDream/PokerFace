@@ -43,9 +43,9 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
     }
   }
 
-  const modalId = 'unassign_ticket_modal'
+  const unassignModalId = 'unassign_ticket_modal'
   const handleUnassign = () => {
-    const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
+    const dialog = document.getElementById(unassignModalId) as HTMLDialogElement | null;
     if (dialog) dialog.showModal();
   }
 
@@ -129,7 +129,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
         type='info'
         message='¿Desear desasignarse del ticket y volver a la bandeja de entrada?'
         btnMessage='Desasignar'
-        id={modalId}
+        id={unassignModalId}
       />
     </div>
   )
