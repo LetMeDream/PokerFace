@@ -25,32 +25,37 @@ const InboxEntry = ({ ticket, modalId }: { ticket: ChatTicket, modalId: string }
             onClick={showOptions}
             data-custom-id={ticket.id}
           >
-            {/* Avatar */}
-            {ticket?.avatarSrc && !imgError ? (
-              /* Avatar image */
-              <div className="rounded-l-sm rounded-r-none group-hover:!bg-slate-600 self-stretch flex justify-center items-center">
-                <div className="mask mask-squircle w-12">
-                  <img src={ticket.avatarSrc} onError={() => setImgError(true)} />
+            {/* Avatar + Name */}
+            <div className=" border-r border-r-gray-300 p-1 basis-2/6 md:basis-1/6 truncate">
+                {ticket?.avatarSrc && !imgError ? (
+                  /* Avatar image */
+                  <div className="rounded-l-sm rounded-r-none group-hover:!bg-slate-600 self-stretch flex justify-center items-center">
+                    <div className="mask mask-squircle w-12">
+                      <img src={ticket.avatarSrc} onError={() => setImgError(true)} />
+                    </div>
+                  </div>
+                ) : (
+                /* Fallback avatar */
+                <div className="rounded-l-sm self-stretch flex justify-center group-hover:!bg-slate-600">
+                  <FaUserAstronaut className="text-secondary w-12 h-12" />
                 </div>
-              </div>
-            ) : (
-              /* Fallback avatar */
-              <div className="rounded-l-sm self-stretch flex justify-center group-hover:!bg-slate-600">
-                <FaUserAstronaut className="text-secondary w-12 h-12" />
-              </div>
-            )}
+                )}
 
-            {/* Nombre + Estado + Mensaje */}
-            <div className="flex-1 min-w-0 flex gap-2 max-h-[60px] border-r border-r-gray-300">
-              {/* Columna: Nombre y Status */}
-              <div className="flex flex-col flex-1 basis-1/5 md:basis-1/6 truncate border-r border-r-gray-300">
-                <div className="md:px-2 text-sm font-medium truncate">
+                {/* Columna: Nombre y Status */}
+              <div className="flex flex-col flex-1 basis-1/5 md:basis-1/6 truncate text-center">
+                <div className="md:px-2 text-xs font-medium truncate">
                   {ticket.nickname || 'Usuario Anónimo'}
                 </div>
-                <div className="md:px-2 text-xs uppercase font-semibold opacity-60">
+                <div className="md:px-2 !text-xs uppercase font-semibold opacity-60">
                   {ticket.status || 'Desconocido'}
                 </div>
               </div>
+              
+            </div>
+
+            {/* Último mensaje */}
+            <div className="flex-1 min-w-0 flex gap-2 max-h-[60px] basis-3/6 md:basis-4/6">
+              
 
               {/* Columna: Último mensaje */}
               <div className="flex-1 basis-4/5 md:basis-5/6">
@@ -74,7 +79,7 @@ const InboxEntry = ({ ticket, modalId }: { ticket: ChatTicket, modalId: string }
             </div>
 
             {/* Acciones */}
-            <div className="flex items-center md:px-4">
+            <div className="flex flex-1 items-center md:px-4 basis-1/6 md:basis-1/6">
               {/* Asignar e ir */}
               <div
                 className="text-indigo-700 hover:text-indigo-900 transition-colors px-3 py-2.5"
@@ -97,13 +102,15 @@ const InboxEntry = ({ ticket, modalId }: { ticket: ChatTicket, modalId: string }
                     />
                   </button>
                   <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                    <li>
-                      <a>
+                    {/* give appearance of disabled button */}
+                    <li className="pointer-events-none">
+                      <a className=" !text-gray-600 ">
                         Asignar 
                       </a>
                     </li>
-                    <li>
-                      <a>
+                    {/* give appearance of disabled button */}
+                    <li className="pointer-events-none">
+                      <a className=" !text-gray-600">
                         Marcar como Resuelto
                       </a>
                     </li>
