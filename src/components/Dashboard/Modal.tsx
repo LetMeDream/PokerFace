@@ -58,7 +58,7 @@ const Modal = ({
 
               </div>
               
-              <button className="btn" id={closeBtnId}>Cerrar</button>
+              <button className="btn" id={closeBtnId}>Cancelar</button>
             </form>
           </div>
         </div>
