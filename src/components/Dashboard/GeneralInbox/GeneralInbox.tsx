@@ -1,6 +1,9 @@
 import Modal from '../Modal';
 import InboxEntry from './InboxEntry';
 import useGeneralInbox from '../../../hooks/useGeneralInbox';
+import usePagination from '../../../hooks/usePagination';
+import Pagination from '../Pagination';
+import useMediaQuery from '../../../hooks/useMediaQuery';
 
 const GeneralInbox = () => {
   const {
@@ -23,6 +26,14 @@ const GeneralInbox = () => {
     closeReopenTicketBntId
   } = useGeneralInbox();
 
+
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  const {
+    currentItems: paginatedTickets,
+    totalPages,
+    goToPage,
+    currentPage
+  } = usePagination({elements: filteredUnassignedTickets, itemsPerPage: isMobile ? 3 : 5, inboxSearchValue})
 
   return (
     <div className='flex flex-col items-center justify-center pb-14'>
@@ -64,7 +75,7 @@ const GeneralInbox = () => {
 
         {/* Ticket list */}
         <ul className="list bg-cyan-50 text-black rounded-none rounded-box shadow-md">
-          {filteredUnassignedTickets.map(ticket => (
+          {paginatedTickets.map(ticket => (
             <InboxEntry 
               key={ticket.id} 
               ticket={ticket} 
@@ -76,6 +87,17 @@ const GeneralInbox = () => {
         </ul>
 
       </div>
+
+      {/* Pagination Component */}
+      {(
+        <div className='fixed bottom-20 md:bottom-4'>
+          <Pagination
+            totalPages={totalPages}
+            goToPage={goToPage}
+            currentPage={currentPage}
+          />
+        </div>
+      )}
 
       <Modal // Modal for auto-assign ticket and go to chat
         acceptFunction={handleAssign} 
