@@ -9,14 +9,14 @@ const GeneralInbox = () => {
     modalId,
     handleDelete,
     isDeleting,
-    deleteTicketBtnId,
+    closeDeleteTicketBntId,
     inboxSearchValue,
     setInboxSearchValue,
     filteredUnassignedTickets
   } = useGeneralInbox();
 
   return (
-    <div className='flex flex-col items-center justify-center'>
+    <div className='flex flex-col items-center justify-center pb-14'>
       <div className=" h-full pt-6 text-white">
         <h1 className="!text-xl md:!text-3xl  font-bold mb-4">Gestión de Tickets</h1>
       </div>
@@ -81,7 +81,7 @@ const GeneralInbox = () => {
         message='¿Estás seguro de que deseas eliminar este ticket?'
         id={modalId}
         btnMessage='Eliminar'
-        closeBtnId={deleteTicketBtnId}
+        closeBtnId={closeDeleteTicketBntId}
       />
     </div>
   )
