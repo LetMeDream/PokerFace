@@ -87,7 +87,12 @@ const mockData = {
   tickets: {
     success: true,
     data: allTickets24
-  } as ticketsSuccess
+  } as ticketsSuccess,
+
+  closeTicket: async () => {
+    await sleep(1500); // Simula un retardo
+    return { success: true };
+  }
 };
 
 export const mockApi = createApi({
@@ -147,7 +152,20 @@ export const mockApi = createApi({
         return { data: true, success: true};
       }
     }),
+
+    // Close Ticket
+    closeTicket: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+      async queryFn({ ticketId }) {
+        // Aquí podrías agregar lógica para cerrar el ticket en tu mock
+        const response = await mockData.closeTicket();
+        if (!response.success) {
+          return { error: { status: 500, data: 'Error al cerrar el ticket' } };
+        }
+        console.info(`Ticket ${ticketId} cerrado`);
+        return { data: true, success: true };
+      }
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation } = mockApi;
+export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation, useCloseTicketMutation } = mockApi;
