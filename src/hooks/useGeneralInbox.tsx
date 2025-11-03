@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { assignTicketToAgent, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
-import { useAssignTicketMutation, useCloseTicketMutation } from '../services/service';
+import { assignTicketToAgent, reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
+import { useAssignTicketMutation, useCloseTicketMutation, useOpenTicketMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
 import { deleteTicket, closeTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
@@ -71,6 +71,25 @@ const useGeneralInbox = () => {
     }
   }
 
+  /* 
+  * In order to re-use the Modal component for REOPENING tickets, we need to create a unique ID for the delete button within the modal.
+  * as well as a unique modal ID.
+  */
+  const reopenTicketModalId = 'reopen_ticket_modal'
+  const closeReopenTicketBntId = `reopen_ticket_btn_${assigningTicketId}`;
+  const [ reopenTicketApiCall, { isLoading: isReopeningTicket } ] = useOpenTicketMutation();
+  const handleReopenTicket = async () => {
+    try {
+      await reopenTicketApiCall({ ticketId: assigningTicketId });
+      dispatch(reopenTicket({ ticketId: assigningTicketId }));
+      // Close modal
+      const closeModalButton = document.getElementById(closeReopenTicketBntId) as HTMLButtonElement | null;
+      if (closeModalButton) closeModalButton.click();
+    } catch (error) {
+      console.error('Error reopening ticket:', error);
+    }
+  }
+
 
 
   return {
@@ -86,7 +105,11 @@ const useGeneralInbox = () => {
     closeTicketModalId,
     handleCloseTicket,
     isClosingTicket,
-    closeCloseTicketBntId
+    closeCloseTicketBntId,
+    reopenTicketModalId,
+    handleReopenTicket,
+    isReopeningTicket,
+    closeReopenTicketBntId
   }
 }
 

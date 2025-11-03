@@ -6,7 +6,17 @@ import useInboxEntry from "../../../hooks/useInboxEntry";
 import { useDispatch } from "react-redux";
 import { setAssigningTicketId } from "../../../store/slices/base";
 
-const InboxEntry = ({ ticket, deleteModalId, closeTicketModalId }: { ticket: ChatTicket, deleteModalId: string, closeTicketModalId: string }) => {
+const InboxEntry = ({ 
+  ticket, 
+  deleteModalId, 
+  closeTicketModalId,
+  reopenTicketModalId
+}: { 
+  ticket: ChatTicket, 
+  deleteModalId: string, 
+  closeTicketModalId: string,
+  reopenTicketModalId: string 
+}) => {
   const { imgError, lastMessage, lastRemitent, showModal, showOptions, setImgError } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
 
@@ -25,6 +35,36 @@ const InboxEntry = ({ ticket, deleteModalId, closeTicketModalId }: { ticket: Cha
     if (dialog) dialog.showModal();
   }
 
+  const handleReOpenTicket = () => {
+    // Implement ticket reopening logic here
+    dispatch(setAssigningTicketId(ticket.id));
+    const dialog = document.getElementById(reopenTicketModalId) as HTMLDialogElement | null;
+    if (dialog) dialog.showModal();
+  }
+
+
+  let status 
+  switch (ticket.status.toLowerCase()) {
+    case 'active':
+      status = <div className="md:px-2 !text-xs uppercase font-semibold">
+                  Activo
+                </div>;
+      break;
+
+    case 'closed':
+      status = <div className="md:px-2 !text-xs uppercase text-red-700 font-semibold">
+                  Cerrado
+                </div>;
+      break;
+
+    case 'pending':
+      status = (<div className="md:px-2 !text-xs uppercase  font-semibold">
+                  Pendiente
+                </div>);
+      break;
+    default:
+      break;
+  }
   return (
     <>
       <div className=" border-b border-gray-300">
@@ -55,7 +95,7 @@ const InboxEntry = ({ ticket, deleteModalId, closeTicketModalId }: { ticket: Cha
                   {ticket.nickname || 'Usuario Anónimo'}
                 </div>
                 <div className="md:px-2 !text-xs uppercase font-semibold opacity-60">
-                  {ticket.status || 'Desconocido'}
+                  {status || 'Desconocido'}
                 </div>
               </div>
               
@@ -117,9 +157,13 @@ const InboxEntry = ({ ticket, deleteModalId, closeTicketModalId }: { ticket: Cha
                       </a>
                     </li>
                     {/* give appearance of disabled button */}
-                    <li onClick={handleCloseTicket}>
+                    <li 
+                      onClick={
+                        ticket.status.toLowerCase() === 'closed' ? handleReOpenTicket : handleCloseTicket
+                      }
+                    >
                       <a>
-                        Marcar como Resuelto
+                        { ticket.status.toLowerCase() === 'closed' ? 'Reabrir Ticket' : 'Marcar como Resuelto' }
                       </a>
                     </li>
                     <li onClick={handleDeleteTicket}>

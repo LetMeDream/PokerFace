@@ -107,9 +107,23 @@ export const baseSlice = createSlice({
       if (ticket) {
         ticket.status = 'closed';
       }
-    }
+    },
+
+    // Re-open ticket
+    reopenTicket(state, action) {
+      const { ticketId } = action.payload;
+      const ticket = state.tickets.byId[ticketId];
+      if (ticket) {
+        ticket.status = 'pending';
+      }
+    },
   }
 })
 
-export const { setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket, deleteTicket, closeTicket } = baseSlice.actions
+export const { 
+  setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, 
+  unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket, 
+  deleteTicket, closeTicket, reopenTicket 
+} = baseSlice.actions
+
 export default baseSlice.reducer

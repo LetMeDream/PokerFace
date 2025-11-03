@@ -89,7 +89,14 @@ const mockData = {
     data: allTickets24
   } as ticketsSuccess,
 
+  /* Mock for closing tickets */
   closeTicket: async () => {
+    await sleep(1500); // Simula un retardo
+    return { success: true };
+  },
+
+  /* Mock for opening tickets */
+  openTicket: async () => {
     await sleep(1500); // Simula un retardo
     return { success: true };
   }
@@ -165,7 +172,20 @@ export const mockApi = createApi({
         return { data: true, success: true };
       }
     }),
+
+    // Re-open Ticket
+    openTicket: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+      async queryFn({ ticketId }) {
+        // Here we could add logic to reopen the ticket in your mock
+        const response = await mockData.openTicket();
+        if (!response.success) {
+          return { error: { status: 500, data: 'Error al reabrir el ticket' } };
+        }
+        console.info(`Ticket ${ticketId} reabierto`);
+        return { data: true, success: true };
+      }
+    }),
   }),
 });
 
-export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation, useCloseTicketMutation } = mockApi;
+export const { useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation, useCloseTicketMutation, useOpenTicketMutation } = mockApi;

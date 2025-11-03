@@ -16,7 +16,11 @@ const GeneralInbox = () => {
     closeTicketModalId,
     handleCloseTicket,
     isClosingTicket,
-    closeCloseTicketBntId
+    closeCloseTicketBntId,
+    reopenTicketModalId,
+    handleReopenTicket,
+    isReopeningTicket,
+    closeReopenTicketBntId
   } = useGeneralInbox();
 
 
@@ -66,6 +70,7 @@ const GeneralInbox = () => {
               ticket={ticket} 
               deleteModalId={deleteModalId}
               closeTicketModalId={closeTicketModalId}
+              reopenTicketModalId={reopenTicketModalId}
             />
           ))}
         </ul>
@@ -97,6 +102,15 @@ const GeneralInbox = () => {
         id={closeTicketModalId}
         btnMessage='Cerrar'
         closeBtnId={closeCloseTicketBntId}
+      />
+      <Modal // Modal for reopening ticket
+        acceptFunction={handleReopenTicket}
+        isLoading={isReopeningTicket}
+        type='info'
+        message='¿Estás seguro de que deseas marcar este ticket como reabierto?'
+        id={reopenTicketModalId}
+        btnMessage='Reabrir'
+        closeBtnId={closeReopenTicketBntId}
       />
     </div>
   )
