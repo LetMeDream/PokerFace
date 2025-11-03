@@ -7,6 +7,7 @@ import { selectTicketById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
 import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
+import Modal from './Modal';
 
 const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
   /* Input state */
@@ -42,6 +43,12 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
     }
   }
 
+  const modalId = 'unassign_ticket_modal'
+  const handleUnassign = () => {
+    const dialog = document.getElementById(modalId) as HTMLDialogElement | null;
+    if (dialog) dialog.showModal();
+  }
+
   return (
     <div>
       {/* Placeholder for selected chat conversation */}
@@ -66,12 +73,12 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
                       <RiSettingsLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
                     </div>
                     <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                      <li>
-                        <a>
+                      <li className="pointer-events-none">
+                        <a className=" !text-gray-600 ">
                           Marcar como Resuelto
                         </a>
                       </li>
-                      <li onClick={unassignAgentFromTicketHandler}>
+                      <li onClick={handleUnassign}>
                         <a>
                           Desasignar
                         </a>
@@ -116,7 +123,14 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
           </div>
         </div>
       </div>
-
+      <Modal 
+        acceptFunction={unassignAgentFromTicketHandler} 
+        isLoading={false}
+        type='info'
+        message='¿Desear desasignarse del ticket y volver a la bandeja de entrada?'
+        btnMessage='Desasignar'
+        id={modalId}
+      />
     </div>
   )
 }
