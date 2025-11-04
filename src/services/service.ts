@@ -1,6 +1,6 @@
 // api/mockApi.ts
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { allTickets24 } from '../constants/chat';
+import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 
 // Tipos
@@ -86,7 +86,7 @@ const mockData = {
   /* Mocks para tickets */
   tickets: {
     success: true,
-    data: allTickets24
+    data: allTickets48
   } as ticketsSuccess,
 
   /* Mock for closing tickets */

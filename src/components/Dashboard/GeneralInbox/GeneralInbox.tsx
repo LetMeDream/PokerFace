@@ -32,7 +32,9 @@ const GeneralInbox = () => {
     currentItems: paginatedTickets,
     totalPages,
     goToPage,
-    currentPage
+    currentPage,
+    goToNextPage,
+    goToPreviousPage
   } = usePagination({elements: filteredUnassignedTickets, itemsPerPage: isMobile ? 3 : 5, inboxSearchValue})
 
   return (
@@ -95,6 +97,8 @@ const GeneralInbox = () => {
             totalPages={totalPages}
             goToPage={goToPage}
             currentPage={currentPage}
+            goToNextPage={goToNextPage}
+            goToPrevPage={goToPreviousPage}
           />
         </div>
       )}
