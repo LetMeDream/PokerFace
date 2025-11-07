@@ -22,6 +22,7 @@ export const userSlice = createSlice({
       state.first_name = action.payload.first_name;
       state.last_name = action.payload.last_name;
       state.is_active = action.payload.is_active;
+      
     },
     clearUser: (state) => {
       state.id = null;
