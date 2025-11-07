@@ -16,8 +16,8 @@ const SideBar = (
     classnames: { searchInput: string };
     handleTicketClick: (ticket: any) => void;
   }) => {
-    const { chat_id: chat_room_id } = useSelector((state: RootState) => state.chatProfile);
-    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, chat_room_id));
+    const { id: agentId } = useSelector((state: RootState) => state.agent);
+    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, agentId));
 
     const {
       currentItems: paginatedTickets,
