@@ -1,35 +1,41 @@
 // api/mockApi.ts
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
+import { envSettings } from '../constants/envSettings';
 
 // Tipos
 type User = {
   id: number;
-  name: string;
+  username: string;
   email: string;
 };
 
-export type LoginSuccess = {
-  success: true
-  data: {
-    token: string;
-    user: {
-      id: number;
-      username: string;
-      email: string;
-      first_name: string;
-      last_name: string;
-      is_active: boolean;
-    };
-    chat_profile: {
-      chat_id: string;
-      is_online: boolean;
-      last_seen: string;
-      full_name: string;
-    };
-  };
+type ExtendedUser = User & {
+  first_name: string;
+  last_name: string;
 };
+
+export type Agent = {
+  can_take_chat: boolean;
+  current_active_chats: number;
+  id: string;
+  department: string | null;
+  employee_id: string;
+  full_name: string;
+  is_available: boolean;
+  max_concurrent_chats: number;
+  rating: number;
+  total_resolved_chats: number;
+  user: User;
+}
+
+export type LoginSuccess = {
+  token: string;
+  agent: Agent;
+  user: ExtendedUser;
+};
+
 
 type LoginFailure = {
   success: false;
@@ -51,38 +57,7 @@ type TicketsResponse = ticketsSuccess | ticketsFailure;
 
 // Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
 const mockData = {
-  users: [
-    { id: 1, name: 'Juan', email: 'juan@example.com' },
-    { id: 2, name: 'María', email: 'maria@example.com' },
-  ] as User[],
-
-  /* Mocks up login */
-  login: (credentials: { pk_username: string; pk_password: string }): LoginResponse => {
-    if (credentials.pk_username === 'usuario123' && credentials.pk_password === 'contraseña123') {
-      return {
-        success: true,
-        data: {
-          "token": "abc123token456",
-          "user": {
-            "id": 1,
-            "username": "usuario123",
-            "email": "usuario@ejemplo.com",
-            "first_name": "Juan",
-            "last_name": "Pérez",
-            "is_active": true
-          },
-          "chat_profile": {
-            "chat_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
-            "is_online": true,
-            "last_seen": "2024-01-15T10:30:00Z",
-            "full_name": "Juan Pérez"
-          }
-        }
-      };
-    }
-    return { success: false, error: 'Credenciales inválidas' };
-  },
-
+  
   /* Mocks para tickets */
   tickets: {
     success: true,
@@ -103,26 +78,12 @@ const mockData = {
 };
 
 export const mockApi = createApi({
-  baseQuery: fakeBaseQuery(), // ¡Aquí está la magia!
+  baseQuery: fetchBaseQuery({ baseUrl: envSettings.API_BASE_URL }),
   endpoints: (builder) => ({
-    getUsers: builder.query<User[], void>({
-      queryFn() {
-        // Simula una respuesta exitosa
-        return { data: mockData.users };
-      },
-    }),
-    // `POST /api/auth/login/`
-    login: builder.mutation<LoginResponse, { pk_username: string; pk_password: string }>({
-      async queryFn(credentials) {
-        await sleep(800); // 800ms delay
 
-        const result = mockData.login(credentials);
-        if (result.success) {
-          return { data: result };
-        } else {
-          return { error: { status: 401, data: result.error } };
-        }
-      },
+    // `POST /api/auth/login/`
+    login: builder.mutation<LoginResponse, { username: string; password: string }>({
+      query: (credentials) => ({ url: envSettings.LOGIN, method: 'POST', body: credentials }),
     }),
 
     // `GET /api/tickets/`
@@ -140,7 +101,7 @@ export const mockApi = createApi({
 
 
     // Assign ticket to agent
-    assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: string | null }>({
+    assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
       async queryFn({ ticketId, agentId }) {
         await sleep(1500); // Simula un retardo
         // Aquí podrías agregar lógica para asignar el ticket en tu mock
