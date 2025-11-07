@@ -3,57 +3,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 import { envSettings } from '../constants/envSettings';
-
-// Tipos
-type User = {
-  id: number;
-  username: string;
-  email: string;
-};
-
-type ExtendedUser = User & {
-  first_name: string;
-  last_name: string;
-};
-
-export type Agent = {
-  can_take_chat: boolean;
-  current_active_chats: number;
-  id: string;
-  department: string | null;
-  employee_id: string;
-  full_name: string;
-  is_available: boolean;
-  max_concurrent_chats: number;
-  rating: number;
-  total_resolved_chats: number;
-  user: User;
-}
-
-export type LoginSuccess = {
-  token: string;
-  agent: Agent;
-  user: ExtendedUser;
-};
-
-
-type LoginFailure = {
-  success: false;
-  error: string;
-};
-
-export type LoginResponse = LoginSuccess | LoginFailure;
-
-type ticketsSuccess = {
-  success: true;
-  data: any[];
-}
-
-type ticketsFailure = {
-  success: false;
-  error: string;
-}
-type TicketsResponse = ticketsSuccess | ticketsFailure;
+import type { LoginResponse, TicketsResponse, ticketsSuccess } from '../types/Slices';
+import type { RootState } from '../store/store';
 
 // Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
 const mockData = {
@@ -78,14 +29,33 @@ const mockData = {
 };
 
 export const mockApi = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: envSettings.API_BASE_URL }),
+  baseQuery: fetchBaseQuery(
+    { 
+      baseUrl: envSettings.API_BASE_URL, 
+      /* Auth headers */
+      prepareHeaders: (headers, { getState }) => {
+        const token = (getState() as RootState).auth.token;
+        if (token) {
+          headers.set('Authorization', `Token ${token}`);
+        }
+        return headers;
+  },
+    }),
   endpoints: (builder) => ({
 
     // `POST /api/auth/login/`
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
       query: (credentials) => ({ url: envSettings.LOGIN, method: 'POST', body: credentials }),
     }),
+    // `POST /api/auth/logout/`
+    logout: builder.mutation<void, void>({
+      query: () => ({ url: envSettings.LOGOUT, method: 'POST' }),
+    }),
 
+
+    /* 
+    TODO: MOCK UP DATA DOWN HERE
+     */
     // `GET /api/tickets/`
     getTickets: builder.query<TicketsResponse, void>({
       async queryFn() {
@@ -98,8 +68,6 @@ export const mockApi = createApi({
         }
       }
     }),
-
-
     // Assign ticket to agent
     assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
       async queryFn({ ticketId, agentId }) {
@@ -160,6 +128,15 @@ export const mockApi = createApi({
 });
 
 export const { 
-  useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation, 
-  useCloseTicketMutation, useOpenTicketMutation, useUnassignTicketMutation 
+  useLoginMutation,
+  useLogoutMutation,
+  /* 
+  TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
+  */
+  useGetTicketsQuery,
+  useAssignTicketMutation,
+  useUnassignTicketMutation,
+  useDeleteTicketMutation,
+  useCloseTicketMutation,
+  useOpenTicketMutation
 } = mockApi;
