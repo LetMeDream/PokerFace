@@ -44,7 +44,7 @@ const Login = () => {
                 <FaUserCog 
                   className={`
                     ${classNames.icon}
-                    ${errors.pk_username ? 'text-red-400' : ''}
+                    ${errors.username ? 'text-red-400' : ''}
                   `}
                 />
                 <input
@@ -52,9 +52,9 @@ const Login = () => {
                   placeholder="Usuario"
                   className={
                     classNames.inputBase
-                    + (errors.pk_username ? inputErrors : '')}
+                    + (errors.username ? inputErrors : '')}
                   autoComplete="on"
-                  {...register('pk_username', { required: true })}
+                  {...register('username', { required: true })}
                 />
               </div>
 
@@ -62,7 +62,7 @@ const Login = () => {
                 <MdLock 
                   className={`
                     ${classNames.icon}
-                    ${errors.pk_password ? 'text-red-400' : ''}
+                    ${errors.password ? 'text-red-400' : ''}
                   `} 
                 />
                 <input
@@ -71,10 +71,10 @@ const Login = () => {
                   placeholder="Contraseña"
                   className={`
                     ${classNames.inputBase}
-                    ${errors.pk_password ? inputErrors : ''}
+                    ${errors.password ? inputErrors : ''}
                   `}
                   autoComplete="off"
-                  {...register('pk_password', { required: true })}
+                  {...register('password', { required: true })}
                 />
                 {/* Eye toggle */}
                 <span
