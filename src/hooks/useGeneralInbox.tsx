@@ -11,7 +11,7 @@ import { useState } from 'react';
 const useGeneralInbox = () => {
   const dispatch = useDispatch();
   const { assigningTicketId } = useSelector((state: RootState) => state.base);
-  const { chat_id } = useSelector((state: RootState) => state.chatProfile);
+  const { id: agentId } = useSelector((state: RootState) => state.agent);
   const { first_name, last_name } = useSelector((state: RootState) => state.user);
   const [ assignTicket, { isLoading } ] = useAssignTicketMutation();
   const [ deleteTicketCallToApi, { isLoading: isDeleting } ] = useDeleteTicketMutation();
@@ -20,7 +20,7 @@ const useGeneralInbox = () => {
   
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
-    dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: chat_id, agentName: `${first_name} ${last_name}` }));
+    dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: agentId, agentName: `${first_name} ${last_name}` }));
     // Close modal
     const closeModalButton = document.getElementById('close_modal') as HTMLButtonElement | null;
     if (closeModalButton) closeModalButton.click();
@@ -30,7 +30,7 @@ const useGeneralInbox = () => {
   }  
 
   const handleAssign = async () => {
-    await assignTicket({ ticketId: assigningTicketId, agentId: chat_id });
+    await assignTicket({ ticketId: assigningTicketId, agentId });
     assignAndGo();
   }
 

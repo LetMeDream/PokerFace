@@ -2,6 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import useSound from "use-sound";
 import guest from '../assets/sounds/guest.mp3'
 // import { messages } from "../constants/chat";
+import { useInitiateChatMutation } from "../services/service";
+import { setGuestSessionId } from "../store/slices/auth";
+import { useDispatch } from "react-redux";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 type ChatMessage = {
   type: string;
@@ -26,19 +30,46 @@ const useChat = () => {
   };
 
   const [messageInput, setMessageInput] = useState("");
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(/* messages */[]);
+  const [previousChatMessages, setPreviousChatMessages] = useLocalStorage<ChatMessage[]>('chatMessages', []);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(previousChatMessages || []);
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
-  
+  const [initiateChat, { isSuccess: isChatInitiationSuccess }] = useInitiateChatMutation();
+  const dispatch = useDispatch();
+
+  /* Load previous chat messages from localStorage on mount */
+  useEffect(() => {
+    if (previousChatMessages && previousChatMessages.length > 0 && chatMessages.length === 0) {
+      setChatMessages(previousChatMessages);
+    }
+  }, [previousChatMessages, chatMessages.length]);
+
+  // Store chat messages to localStorage whenever they change
+  useEffect(() => {
+    if (chatMessages.length > 4) {
+      console.log('saving')
+      setPreviousChatMessages(chatMessages);
+    }
+  }, [chatMessages, setPreviousChatMessages]);
+
   /* Seng Message */
   const [beep] = useSound(guest);
-  const send = () => {
-    if (messageInput.trim() === "") return;
-    setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
-    (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
-    setMessageInput("");  
-    beep()
+  const send = async () => {
+    if (chatMessages.length === 0) {
+      try {
+        const { session_id } = await initiateChat({ initialMessage: messageInput }).unwrap();
+        dispatch(setGuestSessionId(session_id));
+        if (messageInput.trim() === "") return;
+        setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
+        (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
+        setMessageInput("");  
+        beep()
+        
+      } catch (error) {
+        console.error("Error initiating chat:", error);
+      }
+    }
   }
 
   useEffect(() => {
@@ -59,7 +90,9 @@ const useChat = () => {
     send,
     chatBodyRef,
     inputRef,
-    bannerRef
+    bannerRef,
+    isChatInitiationSuccess,
+    setPreviousChatMessages
   }
 }
 

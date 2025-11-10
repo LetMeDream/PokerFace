@@ -79,8 +79,8 @@ export const selectFilteredUnassignedTickets = createSelector(
 /* Selector for getting all tickets with the given chat_room_id */
 export const selectTicketsByChatRoomId = createSelector(
   selectTicketsArray,
-  (_, chatRoomId: string | null) => chatRoomId,
-  (tickets: Ticket[], chatRoomId: string | null) => tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId)
+  (_, chatRoomId: number | null) => chatRoomId,
+  (tickets: Ticket[], chatRoomId: number | null) => tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId)
 );
 
 /* Selector for getting and filtering all tickets with the given chat_room_id */

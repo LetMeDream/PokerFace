@@ -1,88 +1,15 @@
 // api/mockApi.ts
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
-
-// Tipos
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-export type LoginSuccess = {
-  success: true
-  data: {
-    token: string;
-    user: {
-      id: number;
-      username: string;
-      email: string;
-      first_name: string;
-      last_name: string;
-      is_active: boolean;
-    };
-    chat_profile: {
-      chat_id: string;
-      is_online: boolean;
-      last_seen: string;
-      full_name: string;
-    };
-  };
-};
-
-type LoginFailure = {
-  success: false;
-  error: string;
-};
-
-export type LoginResponse = LoginSuccess | LoginFailure;
-
-type ticketsSuccess = {
-  success: true;
-  data: any[];
-}
-
-type ticketsFailure = {
-  success: false;
-  error: string;
-}
-type TicketsResponse = ticketsSuccess | ticketsFailure;
+import { endpoints } from '../constants/envSettings';
+import type { LoginResponse, TicketsResponse, ticketsSuccess } from '../types/Slices';
+import type { RootState } from '../store/store';
+import type { ContactFormValues } from '../types/Chat';
 
 // Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
 const mockData = {
-  users: [
-    { id: 1, name: 'Juan', email: 'juan@example.com' },
-    { id: 2, name: 'María', email: 'maria@example.com' },
-  ] as User[],
-
-  /* Mocks up login */
-  login: (credentials: { pk_username: string; pk_password: string }): LoginResponse => {
-    if (credentials.pk_username === 'usuario123' && credentials.pk_password === 'contraseña123') {
-      return {
-        success: true,
-        data: {
-          "token": "abc123token456",
-          "user": {
-            "id": 1,
-            "username": "usuario123",
-            "email": "usuario@ejemplo.com",
-            "first_name": "Juan",
-            "last_name": "Pérez",
-            "is_active": true
-          },
-          "chat_profile": {
-            "chat_id": "a9b8c7d6-e5f4-3210-aaaa-666666666666",
-            "is_online": true,
-            "last_seen": "2024-01-15T10:30:00Z",
-            "full_name": "Juan Pérez"
-          }
-        }
-      };
-    }
-    return { success: false, error: 'Credenciales inválidas' };
-  },
-
+  
   /* Mocks para tickets */
   tickets: {
     success: true,
@@ -103,28 +30,68 @@ const mockData = {
 };
 
 export const mockApi = createApi({
-  baseQuery: fakeBaseQuery(), // ¡Aquí está la magia!
-  endpoints: (builder) => ({
-    getUsers: builder.query<User[], void>({
-      queryFn() {
-        // Simula una respuesta exitosa
-        return { data: mockData.users };
-      },
-    }),
-    // `POST /api/auth/login/`
-    login: builder.mutation<LoginResponse, { pk_username: string; pk_password: string }>({
-      async queryFn(credentials) {
-        await sleep(800); // 800ms delay
+  // declare known tag types so providesTags/invalidatesTags accept string literals
+  tagTypes: ['WaitingChats'],
+  baseQuery: fetchBaseQuery(
+    { 
+      baseUrl: endpoints.API_BASE_URL, 
+      /* Auth headers */
+      prepareHeaders: (headers, { getState, endpoint  }) => {
 
-        const result = mockData.login(credentials);
-        if (result.success) {
-          return { data: result };
-        } else {
-          return { error: { status: 401, data: result.error } };
+        if (endpoint === 'login') {
+          return headers; // No auth header for login
         }
-      },
+
+        const token = (getState() as RootState).auth.token;
+        if (token) {
+          headers.set('Authorization', `Token ${token}`);
+        }
+        return headers;
+  },
+    }),
+  endpoints: (builder) => ({
+
+    // `POST /api/auth/login/`
+    login: builder.mutation<LoginResponse, { username: string; password: string }>({
+      query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
+      invalidatesTags: ['WaitingChats'],
+    }),
+    // `POST /api/auth/logout/`
+    logout: builder.mutation<void, void>({
+      query: () => ({ url: endpoints.LOGOUT, method: 'POST' }),
+    }),
+    // GET /api/chat-rooms/waiting_chats/?page=1&page_size=50
+    // * Obtain all waiting (unassigned) chats for agent
+    getWaitingChats: builder.query<void, void>({
+      query: () => ({ url: endpoints.WAITING_CHATS, method: 'GET' }),
+      providesTags: ['WaitingChats'],
+    }),
+    // `POST /api/chat-rooms/{id}/take_chat/`
+    /* assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
+      query: ({ ticketId, agentId }) => ({ url: endpoints.ASSIGN_TICKET(ticketId), method: 'POST', body: { agent_id: agentId } }),
+    }), */
+
+
+    // Guest Initiation conversation.
+    // POST  `api/chat/start_chat/`
+    initiateChat: builder.mutation<{ session_id: string }, { initialMessage: string }>({
+      query: ({ initialMessage }) => ({ url: endpoints.INITIAL_MESSAGE, method: 'POST', body: { initial_message: initialMessage } }),
     }),
 
+    // POST /api/chat/complete_chat/`
+    completeChat: builder.mutation<void, ContactFormValues>({
+      query: ({ 
+        session_id,
+        email,
+        full_name,
+        phone_number,
+        recaptcha_token
+       }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, email, full_name, phone_number, recaptcha_token } }),
+    }),
+
+    /* 
+    TODO: MOCK UP DATA DOWN HERE
+     */
     // `GET /api/tickets/`
     getTickets: builder.query<TicketsResponse, void>({
       async queryFn() {
@@ -137,10 +104,8 @@ export const mockApi = createApi({
         }
       }
     }),
-
-
     // Assign ticket to agent
-    assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: string | null }>({
+    assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
       async queryFn({ ticketId, agentId }) {
         await sleep(1500); // Simula un retardo
         // Aquí podrías agregar lógica para asignar el ticket en tu mock
@@ -199,6 +164,17 @@ export const mockApi = createApi({
 });
 
 export const { 
-  useLoginMutation, useGetTicketsQuery, useAssignTicketMutation, useDeleteTicketMutation, 
-  useCloseTicketMutation, useOpenTicketMutation, useUnassignTicketMutation 
+  useLoginMutation,
+  useLogoutMutation,
+  useInitiateChatMutation,
+  useCompleteChatMutation,
+  /* 
+  TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
+  */
+  useGetTicketsQuery,
+  useAssignTicketMutation,
+  useUnassignTicketMutation,
+  useDeleteTicketMutation,
+  useCloseTicketMutation,
+  useOpenTicketMutation
 } = mockApi;

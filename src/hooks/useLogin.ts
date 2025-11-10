@@ -2,19 +2,20 @@ import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLoginMutation } from "../services/service";
+import type { LoginSuccess } from "../types/Slices";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { setLoggedInUser } from "../utils/actions";
 
 interface LoginForm {
-  pk_username: string;
-  pk_password: string;
+  username: string;
+  password: string;
 }
 
 /* Create yup validation schema */
   const schema = yup.object().shape({
-    pk_username: yup.string().required('Usuario es requerido'),
-    pk_password: yup.string().required('Contraseña es requerida').min(6, 'Contraseña debe tener al menos 3 caracteres'),
+    username: yup.string().required('Usuario es requerido'),
+    password: yup.string().required('Contraseña es requerida').min(6, 'Contraseña debe tener al menos 3 caracteres'),
   }); 
 
 const useLogin = () => {
@@ -24,8 +25,8 @@ const useLogin = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     defaultValues: {
-      pk_username: '',
-      pk_password: ''
+      username: '',
+      password: ''
     },
     mode: 'onBlur',
     resolver: yupResolver(schema)
@@ -53,14 +54,14 @@ const useLogin = () => {
       error: error?.data || 'Error en el login',
     });
     try {
-        const result = await promise; // no second request, sólo espera el mismo promise
+        const result = await promise as LoginSuccess; // no second request, sólo espera el mismo promise
         // if your endpoint returns { success, data }, access it:
-        if (!result.success) {
+        if (!result) {
           // failure branch — LoginFailure
-          toast.error(result.error || 'Invalid credentials');
+          toast.error('Error inesperado durante el login');
           return;
         }
-
+        // debugger
         await setLoggedInUser(result);
         navigate('/dashboard')
       } catch (err: any) {

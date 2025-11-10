@@ -13,7 +13,7 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
   drawerButtonRef: React.RefObject<HTMLLabelElement | null>; 
 }) => {
   const selectedTicketId = useSelector((state: any) => state.base.selectedTicketId);
-  const chatRoomId = useSelector((state: RootState) => state.chatProfile.chat_id);
+  const chatRoomId = useSelector((state: RootState) => state.agent.id);
   const tickets = useSelector((state: RootState) => selectTicketsByChatRoomId(state.base, chatRoomId));
   const ticketsQty = tickets.length;
   /*

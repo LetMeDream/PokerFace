@@ -16,8 +16,8 @@ const SideBar = (
     classnames: { searchInput: string };
     handleTicketClick: (ticket: any) => void;
   }) => {
-    const { chat_id: chat_room_id } = useSelector((state: RootState) => state.chatProfile);
-    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, chat_room_id));
+    const { id: agentId } = useSelector((state: RootState) => state.agent);
+    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, agentId));
 
     const {
       currentItems: paginatedTickets,
@@ -56,8 +56,7 @@ const SideBar = (
               /* Mensajes de la Bandeja de conversaciones */
               <ReceivedMessage 
                 key={ticket.id}
-                avatarSrc={ticket?.avatarSrc || ''}
-                name={`${ticket.nickname}`}
+                name={`${ticket.chat_user.full_name}`}
                 messages={ticket.messages}
                 onClick={() => {
                   handleTicketClick(ticket as any);

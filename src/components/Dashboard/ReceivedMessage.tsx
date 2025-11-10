@@ -7,7 +7,7 @@ const ReceivedMessage = ({
   messages,
   onClick
 }: {
-  avatarSrc: string;
+  avatarSrc?: string;
   name: string;
   messages: any;
   onClick: () => void;
