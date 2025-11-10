@@ -20,3 +20,11 @@ export type FormValues = {
   email: string;
   recaptcha: string;
 };
+
+export type ContactFormValues = {
+  session_id: string;
+  email: string;
+  full_name: string;
+  phone_number: string;
+  recaptcha_token: string;
+}

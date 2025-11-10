@@ -3,5 +3,6 @@ export const endpoints = {
   LOGIN: '/auth/login/',
   LOGOUT: '/auth/logout/',
   WAITING_CHATS: `/chat-rooms/waiting_chats/`,
-  INITIAL_MESSAGE: `/chat/start_chat/`
+  INITIAL_MESSAGE: `/chat/start_chat/`,
+  COMPLETE_CHAT: `/chat/complete_chat/`,
 }

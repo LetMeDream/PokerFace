@@ -6,6 +6,10 @@ import { ContactFormSchema } from '../../../constants/schemas'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useState, useEffect } from 'react'
 import ReCaptcha from 'react-google-recaptcha'
+import { useCompleteChatMutation } from '../../../services/service'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../../../store/store'
+import toast from 'react-hot-toast'
 
 const ContactForm = ({
   isSending,
@@ -34,22 +38,94 @@ const ContactForm = ({
   });
 
   const { register, handleSubmit, formState: { isValid } } = methods;
+  const { guestSessionId } = useSelector((state: RootState) => state.auth); // get chat state if needed
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
+  const [completeChat, { isSuccess, isError, error }] = useCompleteChatMutation();
 
   const handleSend = () => {
     if (isSending) return; // prevent duplicate animations
     (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
     setIsSending(true);
+    const values = methods.getValues();
+    completeChat({
+      session_id: guestSessionId,
+      email: values.email,
+      full_name: values.name,
+      phone_number: values.phone || '',
+      recaptcha_token: values.recaptcha,
+    }).unwrap()
 
     // simulate async submit (replace with real request)
-    setTimeout(() => {
-      setIsSending(false); // reset animation state
-      setIsUserConected(true); // mark user connected
-    }, 3000); // match animation duration
+
   };
+
+  const handleError = (errors: any) => {
+  console.log('Raw API Error:', errors);
+
+  // Asegúrate de que errors.data existe
+  if (!errors?.data || typeof errors.data !== 'object') {
+    toast.error('Error desconocido. Por favor, intenta de nuevo.');
+    return;
+  }
+
+  const data = errors.data;
+
+  // Mapea los campos posibles a mensajes amigables
+  const fieldErrors: Record<string, string> = {
+    session_id: data.session_id?.[0] || '',
+    email: data.email?.[0] || '',
+    full_name: data.full_name?.[0] || '',
+    phone_number: data.phone_number?.[0] || '',
+    recaptcha_token: data.recaptcha_token?.[0] || '',
+    // Para errores no específicos del campo
+    non_field_errors: data.non_field_errors?.[0] || '',
+    detail: data.detail || '',
+  };
+
+  // Filtra solo los que tienen mensaje
+  const activeErrors = Object.entries(fieldErrors)
+    .filter(([, msg]) => msg)
+    .map(([field, msg]) => {
+      // Opcional: humanizar el nombre del campo
+      const fieldName = {
+        session_id: 'Sesión',
+        email: 'Correo',
+        full_name: 'Nombre',
+        phone_number: 'Teléfono',
+        recaptcha_token: 'reCAPTCHA',
+        non_field_errors: 'Error general',
+        detail: 'Detalle',
+      }[field] || field;
+
+      return `${fieldName}: ${msg}`;
+    });
+
+  const errorMessage = activeErrors.length > 0
+    ? activeErrors.join(' | ')
+    : 'Error en el formulario. Por favor, revisa los campos.';
+
+  console.log('Handled Errors:', errorMessage);
+  toast.error(errorMessage);
+};
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      setTimeout(() => {
+        setIsSending(false); // reset animation state
+        setIsUserConected(true); // mark user connected
+      }, 1000); // match animation duration
+    } else if (isError) {
+      setTimeout(() => {
+        setIsSending(false); // reset animation state
+        handleError(error);
+      }, 1000);
+    }
+  }, [isSuccess, setIsSending, setIsUserConected, isError]);
+
 
   const [isAgentAlerted, setIsAgentAlerted] = useState(false);
 
@@ -65,7 +141,7 @@ const ContactForm = ({
     setTimeout(() => {
       if (chatBodyRef.current) chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }, 333);
-  }, [isAgentAlerted]);
+  }, [isAgentAlerted, chatBodyRef]);
 
   return (
     <>

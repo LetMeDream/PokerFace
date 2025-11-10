@@ -5,6 +5,7 @@ import { sleep } from '../utils/helpers';
 import { endpoints } from '../constants/envSettings';
 import type { LoginResponse, TicketsResponse, ticketsSuccess } from '../types/Slices';
 import type { RootState } from '../store/store';
+import type { ContactFormValues } from '../types/Chat';
 
 // Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
 const mockData = {
@@ -29,6 +30,8 @@ const mockData = {
 };
 
 export const mockApi = createApi({
+  // declare known tag types so providesTags/invalidatesTags accept string literals
+  tagTypes: ['WaitingChats'],
   baseQuery: fetchBaseQuery(
     { 
       baseUrl: endpoints.API_BASE_URL, 
@@ -51,6 +54,7 @@ export const mockApi = createApi({
     // `POST /api/auth/login/`
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
       query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
+      invalidatesTags: ['WaitingChats'],
     }),
     // `POST /api/auth/logout/`
     logout: builder.mutation<void, void>({
@@ -60,6 +64,7 @@ export const mockApi = createApi({
     // * Obtain all waiting (unassigned) chats for agent
     getWaitingChats: builder.query<void, void>({
       query: () => ({ url: endpoints.WAITING_CHATS, method: 'GET' }),
+      providesTags: ['WaitingChats'],
     }),
     // `POST /api/chat-rooms/{id}/take_chat/`
     /* assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
@@ -69,8 +74,19 @@ export const mockApi = createApi({
 
     // Guest Initiation conversation.
     // POST  `api/chat/start_chat/`
-    initiateChat: builder.mutation<void, { initialMessage: string }>({
+    initiateChat: builder.mutation<{ session_id: string }, { initialMessage: string }>({
       query: ({ initialMessage }) => ({ url: endpoints.INITIAL_MESSAGE, method: 'POST', body: { initial_message: initialMessage } }),
+    }),
+
+    // POST /api/chat/complete_chat/`
+    completeChat: builder.mutation<void, ContactFormValues>({
+      query: ({ 
+        session_id,
+        email,
+        full_name,
+        phone_number,
+        recaptcha_token
+       }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, email, full_name, phone_number, recaptcha_token } }),
     }),
 
     /* 
@@ -151,6 +167,7 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useInitiateChatMutation,
+  useCompleteChatMutation,
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
   */

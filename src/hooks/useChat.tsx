@@ -3,6 +3,8 @@ import useSound from "use-sound";
 import guest from '../assets/sounds/guest.mp3'
 // import { messages } from "../constants/chat";
 import { useInitiateChatMutation } from "../services/service";
+import { setGuestSessionId } from "../store/slices/auth";
+import { useDispatch } from "react-redux";
 
 type ChatMessage = {
   type: string;
@@ -32,12 +34,15 @@ const useChat = () => {
   const inputRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [initiateChat, { isSuccess: isChatInitiationSuccess }] = useInitiateChatMutation();
+  const dispatch = useDispatch();
+
   /* Seng Message */
   const [beep] = useSound(guest);
   const send = async () => {
     if (chatMessages.length === 0) {
       try {
-        await initiateChat({ initialMessage: messageInput });
+        const { session_id } = await initiateChat({ initialMessage: messageInput }).unwrap();
+        dispatch(setGuestSessionId(session_id));
         if (messageInput.trim() === "") return;
         setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
         (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input

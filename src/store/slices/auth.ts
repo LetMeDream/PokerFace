@@ -2,12 +2,15 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export interface AuthState {
   isLoggedIn: boolean,
-  token?: string,
+  token: string,
+  /* Id for the guest comming from the ContactForm component */
+  guestSessionId: string
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
-  token: undefined,
+  token: '',
+  guestSessionId: ''
 }
 
 export const authSlice = createSlice({
@@ -20,12 +23,17 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       state.isLoggedIn = false
-      state.token = undefined
+      state.token = ''
+      state.guestSessionId = ''
     },
+    setGuestSessionId: (state, action) => {
+      state.guestSessionId = action.payload
+    }
+
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { login, logout } = authSlice.actions
+export const { login, logout, setGuestSessionId } = authSlice.actions
 
 export default authSlice.reducer
