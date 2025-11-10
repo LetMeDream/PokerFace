@@ -51,6 +51,12 @@ export const mockApi = createApi({
     logout: builder.mutation<void, void>({
       query: () => ({ url: envSettings.LOGOUT, method: 'POST' }),
     }),
+    // GET /api/chat-rooms/waiting_chats/?page=1&page_size=50
+    getWaitingChats: builder.query<void, { page: number, pageSize: number }>({
+      query: ({ page, pageSize }: { page: number; pageSize: number }) => ({ url: envSettings.WAITING_CHATS({ page, pageSize }), method: 'GET' }),
+    }),
+
+    // Guest Initiation conversation.
 
 
     /* 
