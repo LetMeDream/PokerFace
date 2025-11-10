@@ -9,9 +9,9 @@ import { FaEnvelope } from "react-icons/fa";
 import "./Chat.css";
 
 const Chat = () => {
-  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages, inputRef, bannerRef, isChatInitiationSuccess } = useChat();
+  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages, inputRef, bannerRef, isChatInitiationSuccess, setPreviousChatMessages } = useChat();
   const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending, setIsUserConected } = useContactForm({ chatMessages, chatBodyRef, setChatMessages, isChatInitiationSuccess });
-  usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected });
+  usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected, setPreviousChatMessages });
   const { isBannerHidden, showBanner, modifiedToggleChat } = useMobileChat({ isOpen, toggleChat, bannerRef, inputRef, chatBodyRef });
 
 

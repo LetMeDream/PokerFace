@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.9.2",
     "@tailwindcss/vite": "^4.1.14",
+    "@uidotdev/usehooks": "^2.4.1",
     "localforage": "^1.10.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

@@ -9,6 +9,7 @@ interface PresentationProps {
   chatMessages: { type: string; content: string; }[];
   isUserConected: boolean;
   setIsContactFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setPreviousChatMessages: React.Dispatch<React.SetStateAction<{ type: string; content: string; }[]>>;
 }
 
 const usePresentation = ({
@@ -16,7 +17,8 @@ const usePresentation = ({
   setChatMessages,
   chatMessages,
   isUserConected,
-  setIsContactFormVisible
+  setIsContactFormVisible,
+  setPreviousChatMessages
 }: PresentationProps) => {
   const [ping] = useSound(agent);
 
@@ -39,14 +41,20 @@ const usePresentation = ({
             ...prevMessages,
             { type: 'agent', content: "Hola! ¿En qué puedo ayudarte hoy?" }
           ]);
+          setPreviousChatMessages(() => {
+            return [
+              ...chatMessages,
+              { type: 'agent', content: "Hola! ¿En qué puedo ayudarte hoy?" }
+            ];
+          });
         }
-        if (chatMessages.length == 4) {
+        /* if (chatMessages.length == 4) {
           ping();
           setChatMessages((prevMessages) => [
             ...prevMessages,
             { type: 'agent', content: "Que bueno saberlo😊, estamos a la orden." }
           ]);
-        } 
+        } */ 
       }
     }, timeout);
 

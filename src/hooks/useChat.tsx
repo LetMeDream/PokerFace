@@ -5,6 +5,7 @@ import guest from '../assets/sounds/guest.mp3'
 import { useInitiateChatMutation } from "../services/service";
 import { setGuestSessionId } from "../store/slices/auth";
 import { useDispatch } from "react-redux";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 type ChatMessage = {
   type: string;
@@ -29,12 +30,28 @@ const useChat = () => {
   };
 
   const [messageInput, setMessageInput] = useState("");
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(/* messages */[]);
+  const [previousChatMessages, setPreviousChatMessages] = useLocalStorage<ChatMessage[]>('chatMessages', []);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(previousChatMessages || []);
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [initiateChat, { isSuccess: isChatInitiationSuccess }] = useInitiateChatMutation();
   const dispatch = useDispatch();
+
+  /* Load previous chat messages from localStorage on mount */
+  useEffect(() => {
+    if (previousChatMessages && previousChatMessages.length > 0 && chatMessages.length === 0) {
+      setChatMessages(previousChatMessages);
+    }
+  }, [previousChatMessages, chatMessages.length]);
+
+  // Store chat messages to localStorage whenever they change
+  useEffect(() => {
+    if (chatMessages.length > 4) {
+      console.log('saving')
+      setPreviousChatMessages(chatMessages);
+    }
+  }, [chatMessages, setPreviousChatMessages]);
 
   /* Seng Message */
   const [beep] = useSound(guest);
@@ -74,7 +91,8 @@ const useChat = () => {
     chatBodyRef,
     inputRef,
     bannerRef,
-    isChatInitiationSuccess
+    isChatInitiationSuccess,
+    setPreviousChatMessages
   }
 }
 
