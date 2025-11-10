@@ -17,7 +17,7 @@ const InboxEntry = ({
   closeTicketModalId: string,
   reopenTicketModalId: string 
 }) => {
-  const { imgError, lastMessage, lastRemitent, showModal, showOptions, setImgError } = useInboxEntry({ ticket });
+  const { lastMessage, lastRemitent, showModal, showOptions } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
 
 
@@ -75,24 +75,15 @@ const InboxEntry = ({
           >
             {/* Avatar + Name */}
             <div className=" border-r border-r-gray-300 p-1 basis-2/6 md:basis-1/6 truncate">
-                {ticket?.avatarSrc && !imgError ? (
-                  /* Avatar image */
-                  <div className="rounded-l-sm rounded-r-none group-hover:!bg-slate-600 self-stretch flex justify-center items-center">
-                    <div className="mask mask-squircle w-12">
-                      <img src={ticket.avatarSrc} onError={() => setImgError(true)} />
-                    </div>
-                  </div>
-                ) : (
-                /* Fallback avatar */
+
                 <div className="rounded-l-sm self-stretch flex justify-center group-hover:!bg-slate-600">
                   <FaUserAstronaut className="text-secondary w-12 h-12" />
                 </div>
-                )}
 
                 {/* Columna: Nombre y Status */}
               <div className="flex flex-col flex-1 basis-1/5 md:basis-1/6 truncate text-center">
                 <div className="md:px-2 text-xs font-medium truncate">
-                  {ticket.nickname || 'Usuario Anónimo'}
+                  {ticket.chat_user.full_name || 'Usuario Anónimo'}
                 </div>
                 <div className="md:px-2 !text-xs uppercase font-semibold opacity-60">
                   {status || 'Desconocido'}
@@ -115,7 +106,7 @@ const InboxEntry = ({
                     </span>
                     ) : (
                     <span className=' text-indigo-600'>
-                      {ticket.nickname || 'Usuario'}
+                      {ticket.chat_user.full_name || 'Usuario'}
                     </span>
                     )}
                 </div>

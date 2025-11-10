@@ -70,7 +70,7 @@ export const selectFilteredUnassignedTickets = createSelector(
   (tickets: Ticket[], searchLower: string) =>
     searchLower
       ? tickets.filter((ticket: Ticket) =>
-          ticket.nickname?.toLowerCase().includes(searchLower)
+          ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
         )
       : tickets 
 )
@@ -92,7 +92,7 @@ export const selectFilteredTicketsByChatRoomId = createSelector(
 
     return searchLower
       ? tickets.filter((ticket: Ticket) =>
-          ticket.nickname?.toLowerCase().includes(searchLower)
+          ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
         ).filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId)
       : tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId);
     }
