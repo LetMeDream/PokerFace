@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useLoginMutation, type LoginSuccess } from "../services/service";
+import { useLoginMutation } from "../services/service";
+import type { LoginSuccess } from "../types/Slices";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { setLoggedInUser } from "../utils/actions";

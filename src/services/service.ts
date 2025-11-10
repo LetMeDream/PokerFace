@@ -2,7 +2,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
-import { envSettings } from '../constants/envSettings';
+import { endpoints } from '../constants/envSettings';
 import type { LoginResponse, TicketsResponse, ticketsSuccess } from '../types/Slices';
 import type { RootState } from '../store/store';
 
@@ -31,7 +31,7 @@ const mockData = {
 export const mockApi = createApi({
   baseQuery: fetchBaseQuery(
     { 
-      baseUrl: envSettings.API_BASE_URL, 
+      baseUrl: endpoints.API_BASE_URL, 
       /* Auth headers */
       prepareHeaders: (headers, { getState, endpoint  }) => {
 
@@ -50,25 +50,28 @@ export const mockApi = createApi({
 
     // `POST /api/auth/login/`
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
-      query: (credentials) => ({ url: envSettings.LOGIN, method: 'POST', body: credentials }),
+      query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
     }),
     // `POST /api/auth/logout/`
     logout: builder.mutation<void, void>({
-      query: () => ({ url: envSettings.LOGOUT, method: 'POST' }),
+      query: () => ({ url: endpoints.LOGOUT, method: 'POST' }),
     }),
     // GET /api/chat-rooms/waiting_chats/?page=1&page_size=50
     // * Obtain all waiting (unassigned) chats for agent
     getWaitingChats: builder.query<void, void>({
-      query: () => ({ url: envSettings.WAITING_CHATS, method: 'GET' }),
+      query: () => ({ url: endpoints.WAITING_CHATS, method: 'GET' }),
     }),
     // `POST /api/chat-rooms/{id}/take_chat/`
     /* assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
-      query: ({ ticketId, agentId }) => ({ url: envSettings.ASSIGN_TICKET(ticketId), method: 'POST', body: { agent_id: agentId } }),
+      query: ({ ticketId, agentId }) => ({ url: endpoints.ASSIGN_TICKET(ticketId), method: 'POST', body: { agent_id: agentId } }),
     }), */
 
 
     // Guest Initiation conversation.
-
+    // POST  `api/chat/start_chat/`
+    initiateChat: builder.mutation<void, { initialMessage: string }>({
+      query: ({ initialMessage }) => ({ url: endpoints.INITIAL_MESSAGE, method: 'POST', body: { initial_message: initialMessage } }),
+    }),
 
     /* 
     TODO: MOCK UP DATA DOWN HERE
@@ -147,6 +150,7 @@ export const mockApi = createApi({
 export const { 
   useLoginMutation,
   useLogoutMutation,
+  useInitiateChatMutation,
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
   */

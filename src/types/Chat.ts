@@ -18,4 +18,5 @@ export type FormValues = {
   name: string;
   phone: string;
   email: string;
+  recaptcha: string;
 };

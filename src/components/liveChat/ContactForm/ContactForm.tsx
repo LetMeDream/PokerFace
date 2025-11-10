@@ -5,6 +5,7 @@ import type { FormValues } from "../../../types/Chat"
 import { ContactFormSchema } from '../../../constants/schemas'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useState, useEffect } from 'react'
+import ReCaptcha from 'react-google-recaptcha'
 
 const ContactForm = ({
   isSending,
@@ -117,32 +118,70 @@ const ContactForm = ({
                   />
                 </div>
               </div>
+              <div className={`
+                  w-full overflow-hidden
+                  ${isUserConected ? 'hidden' : 'block'}
+                `
+              }>
+                <ReCaptcha 
+                  sitekey="6LdeVAgsAAAAANQozBpbzIzIA7KTKrPtuUUB1xFk" 
+                  onChange={(value: string | null) => {
+                    methods.setValue('recaptcha', value || '', {
+                      shouldValidate: true,   // ← Fuerza validación
+                      shouldDirty: true,      // ← Marca como "sucio"
+                      shouldTouch: true,      // ← Marca como "tocado"
+                    });
+                  }}
+                />
+              </div>
               {/* Send Contact Form Button */}
-              <button
-                type="button" // use button (not form submit)
-                onClick={isValid ? handleSend : undefined}
-                onMouseDown={(e) => e.preventDefault()} // prevent focus stealing on mousedown
-                className={`
-                  ${isUserConected ? 'opacity-50 !cursor-not-allowed' : ''}
-                  ${isValid ? '!bg-green-500' : '!bg-gray-300 hover:!border-transparent'}
-                  focus:!outline-none focus:!ring-2 focus:!ring-green-400 focus:!ring-opacity-75 
-                text-white py-2.5 px-4 rounded-lg font-semibold
-                  mt-2 relative overflow-hidden mx-auto w-full transition duration-100
-                  ${isSending ? 'animate-compress-spin' : ''} `
-                }
-                disabled={!isValid || isUserConected}
-              >
-                {/* text toggled during animation */}
-                <span 
-                  className={`transition-opacity duration-75 ${!isSending ? 'opacity-100' : 'opacity-0'}`}
+              {!isUserConected && (
+                <button
+                  type="button" // use button (not form submit)
+                  onClick={isValid ? handleSend : undefined}
+                  onMouseDown={(e) => e.preventDefault()} // prevent focus stealing on mousedown
+                  className={`
+                    ${isUserConected ? 'opacity-50 !cursor-not-allowed' : ''}
+                    ${isValid ? '!bg-green-500' : '!bg-gray-300 hover:!border-transparent'}
+                    focus:!outline-none focus:!ring-2 focus:!ring-green-400 focus:!ring-opacity-75 
+                  text-white py-2.5 px-4 rounded-lg font-semibold
+                    mt-2 relative overflow-hidden mx-auto w-full transition duration-100
+                    ${isSending ? 'animate-compress-spin' : ''} `
+                  }
+                  disabled={!isValid || isUserConected}
                 >
-                  {!isUserConected ? 'Send' : 'Thank you! 🎉'} 
-                </span>
-                {/* spinner shown while animating */}
-                <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isSending ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="border-2 border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
-                </div>
-              </button>
+                  {/* text toggled during animation */}
+                  <span 
+                    className={`transition-opacity duration-75 ${!isSending ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    {!isUserConected ? 'Send' : 'Thank you! 🎉'} 
+                  </span>
+                  {/* spinner shown while animating */}
+                  <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isSending ? 'opacity-100' : 'opacity-0'}`}>
+                      <div className="border-2 border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
+                  </div>
+                </button>
+              )}
+
+
+              {/* Button for displaying when user is connected */}
+              { isUserConected && (
+                <button
+                  type="button" // use button (not form submit)
+                  onMouseDown={(e) => e.preventDefault()} // prevent focus stealing on mousedown
+                  className={`
+                    focus:!outline-none focus:!ring-2 focus:!ring-green-400 focus:!ring-opacity-75 
+                  text-white py-2.5 px-4 rounded-lg font-semibold
+                    mt-2 relative overflow-hidden mx-auto w-full transition duration-100 !bg-green-500`
+                  }
+                >
+                  <span>
+                    Thank you! 🎉
+                  </span>
+                  {/* spinner shown while animating */}
+                  
+                </button>
+              )}
             </form>
           </div>
 
