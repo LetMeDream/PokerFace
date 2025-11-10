@@ -34,7 +34,7 @@ export const setLoggedInUser = async (result: LoginSuccess) => {
   /* 
   TODO: Fetch initial data after login (I thing its done)
   */
-  const res: any = await store.dispatch(mockApi.endpoints.getWaitingChats.initiate({ page: 1, pageSize: 50 }))
+  const res: any = await store.dispatch(mockApi.endpoints.getWaitingChats.initiate())
   const chats = res?.data?.chats ?? []
   store.dispatch(setTickets(chats))
 }

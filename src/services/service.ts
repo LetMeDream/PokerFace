@@ -33,7 +33,12 @@ export const mockApi = createApi({
     { 
       baseUrl: envSettings.API_BASE_URL, 
       /* Auth headers */
-      prepareHeaders: (headers, { getState }) => {
+      prepareHeaders: (headers, { getState, endpoint  }) => {
+
+        if (endpoint === 'login') {
+          return headers; // No auth header for login
+        }
+
         const token = (getState() as RootState).auth.token;
         if (token) {
           headers.set('Authorization', `Token ${token}`);
@@ -52,9 +57,15 @@ export const mockApi = createApi({
       query: () => ({ url: envSettings.LOGOUT, method: 'POST' }),
     }),
     // GET /api/chat-rooms/waiting_chats/?page=1&page_size=50
-    getWaitingChats: builder.query<void, { page: number, pageSize: number }>({
-      query: ({ page, pageSize }: { page: number; pageSize: number }) => ({ url: envSettings.WAITING_CHATS({ page, pageSize }), method: 'GET' }),
+    // * Obtain all waiting (unassigned) chats for agent
+    getWaitingChats: builder.query<void, void>({
+      query: () => ({ url: envSettings.WAITING_CHATS, method: 'GET' }),
     }),
+    // `POST /api/chat-rooms/{id}/take_chat/`
+    /* assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
+      query: ({ ticketId, agentId }) => ({ url: envSettings.ASSIGN_TICKET(ticketId), method: 'POST', body: { agent_id: agentId } }),
+    }), */
+
 
     // Guest Initiation conversation.
 
