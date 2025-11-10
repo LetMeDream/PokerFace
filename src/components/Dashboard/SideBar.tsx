@@ -56,8 +56,7 @@ const SideBar = (
               /* Mensajes de la Bandeja de conversaciones */
               <ReceivedMessage 
                 key={ticket.id}
-                avatarSrc={ticket?.avatarSrc || ''}
-                name={`${ticket.nickname}`}
+                name={`${ticket.chat_user.full_name}`}
                 messages={ticket.messages}
                 onClick={() => {
                   handleTicketClick(ticket as any);
