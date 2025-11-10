@@ -55,6 +55,11 @@
   font-style: normal;
 }
 
+.bebas-neue-font {
+  font-family: "Bebas Neue", cursive;
+  font-weight: 400;
+}
+
 .light {
   font-weight: 300;
 }
