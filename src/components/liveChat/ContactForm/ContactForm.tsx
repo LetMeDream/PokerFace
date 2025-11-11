@@ -36,7 +36,7 @@ const ContactForm = ({
   const { register, handleSubmit, formState: { isValid } } = methods;
   const { id: guestSessionId } = useSelector((state: RootState) => state.guest); // get chat state if needed
   const recaptchaRef = useRef<ReCaptcha>(null);
-  const { isUserConected } = useSelector((state: RootState) => state.guest);
+  const { isUserConected, phone_number } = useSelector((state: RootState) => state.guest);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
@@ -128,6 +128,7 @@ const ContactForm = ({
                     placeholder="+54 9 11 1234-5678"
                     autoComplete="off"
                     {...register("phone")}
+                    defaultValue={phone_number || ''}
                   />
                 </div>
               </div>
