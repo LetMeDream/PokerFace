@@ -177,8 +177,6 @@ Authorization: Token <token>
   "content": "No puedo acceder a mi cuenta, me dice contraseña incorrecta",
   "user_data": {
     "id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
-    "email": "carlos@ejemplo.com",
-    "full_name": "Carlos López",
     "phone_number": "+573001234567",
     "is_temporary": true
   }
