@@ -116,7 +116,7 @@ export interface guestMessage {
   content: string;
   user_data: {
     id: string;
-    phoner_number: string;
+    phone_number: string;
     is_temporary: boolean;
   }
 }

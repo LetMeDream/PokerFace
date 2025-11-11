@@ -1,10 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
 import type { AllTickets, NormalizedTickets } from "../types/Slices";
+import type { RootState } from "../store/store";
 /* 
 * SELECTORS!!!
 */
 
-type RootState = { tickets: NormalizedTickets };
+type BaseState = { tickets: NormalizedTickets };
 type Ticket = AllTickets[number];
 
 /* Selector for 'de-normalizing' the normalized Tickets
@@ -31,8 +32,8 @@ type Ticket = AllTickets[number];
  * - Tickets sin entrada en byId se filtran (no aparecen en el resultado).
  */
 export const selectTicketsArray = createSelector(
-  (state: RootState) => state.tickets.byId,
-  (state: RootState) => state.tickets.allIds,
+  (state: BaseState) => state.tickets.byId,
+  (state: BaseState) => state.tickets.allIds,
   (byId, allIds) => allIds.map(id => byId[id]).filter((t): t is Ticket => t !== undefined)
 );
 
@@ -51,7 +52,7 @@ export const selectFilteredTickets = createSelector(
 
 /* Selector for getting a specific ticket by ID */
 export const selectTicketById = createSelector(
-  (state: RootState) => state.tickets.byId,
+  (state: BaseState) => state.tickets.byId,
   (_, ticketId: string) => ticketId,
   (byId, ticketId) => byId[ticketId]
 );
@@ -96,4 +97,33 @@ export const selectFilteredTicketsByChatRoomId = createSelector(
         ).filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId)
       : tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId);
     }
+);
+
+/* Selector for getting all of the required info, from the Guest slice, to be sent in the 
+** GuessSendMessage API call.
+**Payload:**
+```json
+{
+  "chat_room_id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+  "content": "No puedo acceder a mi cuenta, me dice contraseña incorrecta",
+  "user_data": {
+    "id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+    "phone_number": "+573001234567",
+    "is_temporary": true
+  }
+}
+*/
+export const selectGuestMessagePayload = createSelector(
+  (state: RootState) => state.guest.id,
+  (state: RootState) => state.guest.phone_number,
+  (_, messageContent: string) => messageContent,
+  (id, phoneNumber, content) => ({
+    chat_room_id:  id,
+    content,
+    user_data: {
+      id,
+      phone_number: phoneNumber,
+      is_temporary: true
+    }
+  })
 );

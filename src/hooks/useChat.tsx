@@ -8,6 +8,9 @@ import { setGuestSessionId } from "../store/slices/guest";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { setGuestMessages } from "../store/slices/guest";
+import { useGuestSendMessageMutation } from "../services/service";
+import { selectGuestMessagePayload } from "../utils/selectors";
+import toast from "react-hot-toast";
 
 type ChatMessage = {
   type: string;
@@ -26,20 +29,28 @@ const useChat = () => {
     banner: 'bg-primary text-secondary montserrat regular px-3 py-2 cursor-pointer flex items-center justify-between gap-2 transition'
   };
 
-
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
 
+  const updateGuestChatAfterSend = (chatMessages: ChatMessage[], messageInput: string) => {
+    setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
+    (document.activeElement as HTMLElement | null)?.blur();
+    setMessageInput("");
+  }
+
   const [messageInput, setMessageInput] = useState("");
 
   const previousChatMessages = useSelector((state: RootState) => state.guest.messages);
+  const isUserconnected = useSelector((state: RootState) => state.guest.isUserConected);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(previousChatMessages || []);
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [initiateChat, { isSuccess: isChatInitiationSuccess, isLoading: isChatIniationLoading }] = useInitiateChatMutation();
   const dispatch = useDispatch();
+  const [guestSendMessage] = useGuestSendMessageMutation();
+  const guestMessagePayload = useSelector((state: RootState) => selectGuestMessagePayload(state, messageInput));
 
   /* Load previous chat messages from localStorage on mount */
   useEffect(() => {
@@ -60,20 +71,25 @@ const useChat = () => {
   const [beep] = useSound(guest);
   const send = async () => {
     /* Call to Initiate a Chat */
-    if (chatMessages.length === 0) {
-      try {
-        const data = await initiateChat({ initialMessage: messageInput }).unwrap();
-        dispatch(setGuestSessionId(data.session_id));
-        if (messageInput.trim() === "") return;
-        setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
-        (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
-        setMessageInput("");  
-        beep()
-        
+    try {
+      if (messageInput.trim() === "") return;
+        if (chatMessages.length === 0) {
+            const data = await initiateChat({ initialMessage: messageInput }).unwrap();
+            dispatch(setGuestSessionId(data.session_id));
+            updateGuestChatAfterSend(chatMessages, messageInput); 
+            beep()
+            
+        } else {
+          if (isUserconnected) {
+            await guestSendMessage(guestMessagePayload).unwrap();
+            updateGuestChatAfterSend(chatMessages, messageInput); 
+            beep()
+          }
+        }
       } catch (error) {
         console.error("Error initiating chat:", error);
+        toast.error("Error al enviar el mensaje. Por favor, inténtalo de nuevo.");
       }
-    }
     /* Should continue the chat here */
   }
 
