@@ -1,3 +1,4 @@
+// * HERE WE ACTUALLY HAVE TYPES FOR SLICES AND SERVICES
 /* 
 * For user 
 */
@@ -108,3 +109,14 @@ type ticketsFailure = {
   error: string;
 }
 export type TicketsResponse = ticketsSuccess | ticketsFailure;
+
+// Guest message
+export interface guestMessage {
+  chat_room_id: string;
+  content: string;
+  user_data: {
+    id: string;
+    phoner_number: string;
+    is_temporary: boolean;
+  }
+}

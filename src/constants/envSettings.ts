@@ -5,4 +5,5 @@ export const endpoints = {
   WAITING_CHATS: `/chat-rooms/waiting_chats/`,
   INITIAL_MESSAGE: `/chat/start_chat/`,
   COMPLETE_CHAT: `/chat/complete_chat/`,
+  GUEST_SEND_MESSAGE: `/chat/send_message/`,
 }

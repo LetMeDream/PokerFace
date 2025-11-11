@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 import { endpoints } from '../constants/envSettings';
-import type { LoginResponse, TicketsResponse, ticketsSuccess } from '../types/Slices';
+import type { LoginResponse, TicketsResponse, ticketsSuccess, guestMessage } from '../types/Slices';
 import type { RootState } from '../store/store';
 import type { ContactFormValues } from '../types/Chat';
 
@@ -87,6 +87,20 @@ export const mockApi = createApi({
        }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, phone_number, recaptcha_token } }),
     }),
 
+    // `POST /api/chat/send_message/`
+    guestSendMessage: builder.mutation<void, guestMessage>({
+      query: ({ 
+        chat_room_id, 
+        content, 
+        user_data 
+      }) => ({ 
+        url: endpoints.GUEST_SEND_MESSAGE, 
+        method: 'POST', 
+        body: { chat_room_id, content, user_data } 
+      }),
+    }),
+    
+
     /* 
     TODO: MOCK UP DATA DOWN HERE
      */
@@ -166,6 +180,7 @@ export const {
   useLogoutMutation,
   useInitiateChatMutation,
   useCompleteChatMutation,
+  useGuestSendMessageMutation,
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
   */
