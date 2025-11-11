@@ -3,6 +3,7 @@ import { authSlice } from './slices/auth'
 import { userSlice } from './slices/user'
 import { baseSlice } from './slices/base'
 import { agentSlice } from './slices/agent'
+import { guestSlice } from './slices/guest'
 import { mockApi } from '../services/service'
 import localforage from 'localforage'
 // Root reducer
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   user: userSlice.reducer,
   agent: agentSlice.reducer,
   base: baseSlice.reducer,
+  guest: guestSlice.reducer,
   // RTK Query APIs
   [mockApi.reducerPath]: mockApi.reducer,
 });
