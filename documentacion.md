@@ -108,11 +108,21 @@ Authorization: Token <token>
 
 **Respuesta Exitosa (201 Created):**
 ```json
-{
-  "success": true,
-  "chat_room_id": "uuid-string",
-  "user_name": "Nombre Completo",
-  "message": "Chat iniciado correctamente. Un agente te contactará pronto."
+ {
+    "success": true,
+    "chat_room_id": "b9e715c5-1b57-41ca-b411-4568c9fce7bc",
+    "user_data": {
+        "id": "b9e715c5-1b57-41ca-b411-4568c9fce7bc",
+        "email": "maria@ejemplo.com",
+        "full_name": "María González",
+        "phone_number": "+1234567890",
+        "is_temporary": true,
+        "created_at": "2025-11-10T20:56:54.173382+00:00",
+        "session_id": "e1cc6dc5-0f85-4b4c-8245-96699aeb3f08",
+        "chat_room_id": "b9e715c5-1b57-41ca-b411-4568c9fce7bc"
+    },
+    "user_name": "María González",
+    "message": "Chat iniciado correctamente. Un agente te contactará pronto."
 }
 ```
 
@@ -163,8 +173,15 @@ Authorization: Token <token>
 **Payload:**
 ```json
 {
-  "chat_room_id": "uuid-string",
-  "content": "Mensaje del usuario"
+  "chat_room_id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+  "content": "No puedo acceder a mi cuenta, me dice contraseña incorrecta",
+  "user_data": {
+    "id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+    "email": "carlos@ejemplo.com",
+    "full_name": "Carlos López",
+    "phone_number": "+573001234567",
+    "is_temporary": true
+  }
 }
 ```
 
