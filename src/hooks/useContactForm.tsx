@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
-
 interface ContactFormProps {
   chatMessages: { type: string; content: string; }[];
   chatBodyRef: React.RefObject<HTMLDivElement | null>;
   setChatMessages: React.Dispatch<React.SetStateAction<{ type: string; content: string; }[]>>;
   isChatInitiationSuccess?: boolean;
 }
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import { setIsUserConected } from "../store/slices/guest";
 
 const useContactForm = ({ chatMessages, chatBodyRef, setChatMessages, isChatInitiationSuccess }: ContactFormProps) => {
   /* Variables used to handle the form for the 'register' logic */
   const [isContactFormVisible, setIsContactFormVisible] = useState(false);
-  const [isUserConected, setIsUserConected] = useState(false);
+  const { isUserConected } = useSelector((state: RootState) => state.guest);
+  // const [isUserConected, setIsUserConected] = useState(false);
   /* useEffect to show the Contact Form */
   useEffect(() => {
     if (chatMessages.length === 1 && isChatInitiationSuccess) {

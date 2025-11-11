@@ -11,12 +11,10 @@ const Messages: FC<MessagesProps> = ({
   chatMessages,
   isSending,
   setIsSending,
-  setIsUserConected,
-  isUserConected,
   chatBodyRef,
   type = 'guest'
 }) => {
-  const guestPropertiesExist = [isSending, setIsSending, setIsUserConected, isUserConected, chatBodyRef].every(exists);
+  const guestPropertiesExist = [isSending, setIsSending, chatBodyRef].every(exists);
   if (type === 'guest' && guestPropertiesExist) {
     // * Messages for the Guest user, in the Landing Page chat widget
     return (
@@ -35,10 +33,8 @@ const Messages: FC<MessagesProps> = ({
               {msg.type === 'contactForm' ? (
                 <ContactForm
                   isSending={isSending!}
-                  setIsSending={setIsSending!}
-                  setIsUserConected={setIsUserConected!}
-                  isUserConected={isUserConected!}
                   chatBodyRef={chatBodyRef!}
+                  setIsSending={setIsSending!}
                 />
               ) : null}
             </div>

@@ -3,9 +3,11 @@ import useSound from "use-sound";
 import guest from '../assets/sounds/guest.mp3'
 // import { messages } from "../constants/chat";
 import { useInitiateChatMutation } from "../services/service";
-import { setGuestSessionId } from "../store/slices/auth";
 import { useDispatch } from "react-redux";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { setGuestSessionId } from "../store/slices/guest";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import { setGuestMessages } from "../store/slices/guest";
 
 type ChatMessage = {
   type: string;
@@ -30,12 +32,13 @@ const useChat = () => {
   };
 
   const [messageInput, setMessageInput] = useState("");
-  const [previousChatMessages, setPreviousChatMessages] = useLocalStorage<ChatMessage[]>('chatMessages', []);
+
+  const previousChatMessages = useSelector((state: RootState) => state.guest.messages);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(previousChatMessages || []);
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
-  const [initiateChat, { isSuccess: isChatInitiationSuccess }] = useInitiateChatMutation();
+  const [initiateChat, { isSuccess: isChatInitiationSuccess, isLoading: isChatIniationLoading }] = useInitiateChatMutation();
   const dispatch = useDispatch();
 
   /* Load previous chat messages from localStorage on mount */
@@ -48,18 +51,19 @@ const useChat = () => {
   // Store chat messages to localStorage whenever they change
   useEffect(() => {
     if (chatMessages.length > 4) {
-      console.log('saving')
-      setPreviousChatMessages(chatMessages);
+      console.log('saving messages to localStorage');
+      dispatch(setGuestMessages(chatMessages));
     }
-  }, [chatMessages, setPreviousChatMessages]);
+  }, [chatMessages, dispatch]);
 
   /* Seng Message */
   const [beep] = useSound(guest);
   const send = async () => {
+    /* Call to Initiate a Chat */
     if (chatMessages.length === 0) {
       try {
-        const { session_id } = await initiateChat({ initialMessage: messageInput }).unwrap();
-        dispatch(setGuestSessionId(session_id));
+        const data = await initiateChat({ initialMessage: messageInput }).unwrap();
+        dispatch(setGuestSessionId(data.session_id));
         if (messageInput.trim() === "") return;
         setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
         (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
@@ -70,6 +74,7 @@ const useChat = () => {
         console.error("Error initiating chat:", error);
       }
     }
+    /* Should continue the chat here */
   }
 
   useEffect(() => {
@@ -92,7 +97,8 @@ const useChat = () => {
     inputRef,
     bannerRef,
     isChatInitiationSuccess,
-    setPreviousChatMessages
+    setGuestMessages,
+    isChatIniationLoading
   }
 }
 

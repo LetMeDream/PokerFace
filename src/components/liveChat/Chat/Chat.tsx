@@ -9,9 +9,11 @@ import { FaEnvelope } from "react-icons/fa";
 import "./Chat.css";
 
 const Chat = () => {
-  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages, inputRef, bannerRef, isChatInitiationSuccess, setPreviousChatMessages } = useChat();
-  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending, setIsUserConected } = useContactForm({ chatMessages, chatBodyRef, setChatMessages, isChatInitiationSuccess });
-  usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected, setPreviousChatMessages });
+  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages, inputRef, bannerRef, isChatInitiationSuccess, 
+    isChatIniationLoading
+   } = useChat();
+  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending } = useContactForm({ chatMessages, chatBodyRef, setChatMessages, isChatInitiationSuccess });
+  usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected });
   const { isBannerHidden, showBanner, modifiedToggleChat } = useMobileChat({ isOpen, toggleChat, bannerRef, inputRef, chatBodyRef });
 
 
@@ -53,8 +55,6 @@ const Chat = () => {
               chatMessages={chatMessages}
               isSending={isSending}
               setIsSending={setIsSending}
-              setIsUserConected={setIsUserConected}
-              isUserConected={isUserConected}
               chatBodyRef={chatBodyRef}
             />
 
@@ -72,6 +72,7 @@ const Chat = () => {
               value={messageInput}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  if (isChatIniationLoading) return; // prevent sending while initiating chat
                   e.preventDefault()
                   send();
                 }

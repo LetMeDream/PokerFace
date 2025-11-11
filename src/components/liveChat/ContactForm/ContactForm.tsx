@@ -4,24 +4,22 @@ import type { SubmitHandler } from "react-hook-form"
 import type { FormValues } from "../../../types/Chat"
 import { ContactFormSchema } from '../../../constants/schemas'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ReCaptcha from 'react-google-recaptcha'
 import { useCompleteChatMutation } from '../../../services/service'
-import { useSelector } from 'react-redux'
 import type { RootState } from '../../../store/store'
 import { handleCompleteChatError } from '../../../utils/helpers'
+import { setGuestProfile } from '../../../store/slices/guest'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 const ContactForm = ({
   isSending,
   setIsSending,
-  setIsUserConected,
-  isUserConected,
   chatBodyRef
 }: {
   isSending: boolean;
   setIsSending: (animating: boolean) => void;
-  setIsUserConected: (connected: boolean) => void;
-  isUserConected: boolean;
   chatBodyRef: React.RefObject<HTMLDivElement | null>;
 }) => {
 
@@ -31,26 +29,28 @@ const ContactForm = ({
     mode: 'onChange',
     resolver: yupResolver(ContactFormSchema),
     defaultValues: {
-      name: 'Test User',
-      email: 'test@example.com',
+      name: '',
+      email: '',
       phone: undefined,
     }
   });
 
   const { register, handleSubmit, formState: { isValid } } = methods;
-  const { guestSessionId } = useSelector((state: RootState) => state.auth); // get chat state if needed
+  const { id: guestSessionId } = useSelector((state: RootState) => state.guest); // get chat state if needed
+  const recaptchaRef = useRef<ReCaptcha>(null);
+  const { isUserConected } = useSelector((state: RootState) => state.guest);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
-  const [completeChat, { isSuccess, isError, error }] = useCompleteChatMutation();
+  const [completeChat, { isSuccess, isError, error, data }] = useCompleteChatMutation();
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (isSending) return; // prevent duplicate animations
     (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
     setIsSending(true);
     const values = methods.getValues();
-    completeChat({
+    await completeChat({
       session_id: guestSessionId,
       email: values.email,
       full_name: values.name,
@@ -58,24 +58,41 @@ const ContactForm = ({
       recaptcha_token: values.recaptcha,
     }).unwrap()
 
-    // simulate async submit (replace with real request)
-
   };
 
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (isSuccess) {
       setTimeout(() => {
         setIsSending(false); // reset animation state
-        setIsUserConected(true); // mark user connected
+        console.log(data)
+        // Ensure data exists and normalize shape to satisfy GuesstState
+        if (!data) return;
+        const resp: any = data;
+        const user = resp.user_data ?? resp.user ?? {};
+        dispatch(setGuestProfile({
+          id: user.id,
+          session_id: user.session_id,
+          chatRoomId: user.chat_room_id,
+          email: user.email,
+          full_name: user.full_name,
+          phone_number: user.phone_number,
+          is_temporary: user.is_temporary ?? false,
+          messages: resp.messages ?? [],
+          isUserConected: true,
+          created_at: user.created_at ?? new Date().toISOString(),
+        }));
       }, 1000); // match animation duration
     } else if (isError) {
       setTimeout(() => {
         setIsSending(false); // reset animation state
         handleCompleteChatError(error);
+        if (error && (error as any).status === 400) {
+          recaptchaRef.current?.reset();
+        }
       }, 1000);
     }
-  }, [isSuccess, setIsSending, setIsUserConected, isError, error]);
+  }, [isSuccess, setIsSending, isError, error]);
 
 
   const [isAgentAlerted, setIsAgentAlerted] = useState(false);
@@ -150,16 +167,23 @@ const ContactForm = ({
                   ${isUserConected ? 'hidden' : 'block'}
                 `
               }>
-                <ReCaptcha 
-                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} 
-                  onChange={(value: string | null) => {
-                    methods.setValue('recaptcha', value || '', {
-                      shouldValidate: true,   // ← Fuerza validación
-                      shouldDirty: true,      // ← Marca como "sucio"
-                      shouldTouch: true,      // ← Marca como "tocado"
-                    });
-                  }}
-                />
+                { !isUserConected && (
+                  <ReCaptcha 
+                    ref={recaptchaRef}
+                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} 
+                    onChange={(value: string | null) => {
+                      methods.setValue('recaptcha', value || '', {
+                        shouldValidate: true,   // ← Fuerza validación
+                        shouldDirty: true,      // ← Marca como "sucio"
+                        shouldTouch: true,      // ← Marca como "tocado"
+                      });
+                    }}
+                    onExpired={() => {
+                      methods.setValue('recaptcha', '', { shouldValidate: true });
+                      recaptchaRef.current?.reset();
+                    }}
+                  />
+                ) }
               </div>
               {/* Send Contact Form Button */}
               {!isUserConected && (
@@ -194,11 +218,12 @@ const ContactForm = ({
               {/* Button for displaying when user is connected */}
               { isUserConected && (
                 <button
+                  disabled
                   type="button" // use button (not form submit)
                   onMouseDown={(e) => e.preventDefault()} // prevent focus stealing on mousedown
                   className={`
                     focus:!outline-none focus:!ring-2 focus:!ring-green-400 focus:!ring-opacity-75 
-                  text-white py-2.5 px-4 rounded-lg font-semibold
+                  text-white py-2.5 px-4 rounded-lg font-semibold hover:!border-transparent
                     mt-2 relative overflow-hidden mx-auto w-full transition duration-100 !bg-green-500`
                   }
                 >

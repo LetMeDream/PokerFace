@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 // import { messages } from '../constants/chat';
 import useSound from 'use-sound';
-import agent from '../assets/sounds/agent.mp3'
+import agent from '../assets/sounds/agent.mp3'  
+import { useDispatch } from 'react-redux';
+import { setGuestMessages } from '../store/slices/guest';
 
 interface PresentationProps {
   isOpen: boolean;
@@ -9,7 +11,6 @@ interface PresentationProps {
   chatMessages: { type: string; content: string; }[];
   isUserConected: boolean;
   setIsContactFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setPreviousChatMessages: React.Dispatch<React.SetStateAction<{ type: string; content: string; }[]>>;
 }
 
 const usePresentation = ({
@@ -18,7 +19,6 @@ const usePresentation = ({
   chatMessages,
   isUserConected,
   setIsContactFormVisible,
-  setPreviousChatMessages
 }: PresentationProps) => {
   const [ping] = useSound(agent);
 
@@ -30,6 +30,7 @@ const usePresentation = ({
     }
   }, [isOpen, setChatMessages, setIsContactFormVisible]);
 
+  const dispatch = useDispatch();
   /* Update chat messages when new messages arrive */
   useEffect(() => {
     const timeout = chatMessages.length == 2 ? 4000 : 3000;
@@ -37,16 +38,13 @@ const usePresentation = ({
       if (isUserConected) {
         if (chatMessages.length == 2) {
           ping();
+          const newMessage = { type: 'agent', content: "Hola! ¿En qué puedo ayudarte hoy?" }
           setChatMessages((prevMessages) => [
             ...prevMessages,
-            { type: 'agent', content: "Hola! ¿En qué puedo ayudarte hoy?" }
+            newMessage
           ]);
-          setPreviousChatMessages(() => {
-            return [
-              ...chatMessages,
-              { type: 'agent', content: "Hola! ¿En qué puedo ayudarte hoy?" }
-            ];
-          });
+          dispatch(setGuestMessages([...chatMessages, newMessage]));
+
         }
         /* if (chatMessages.length == 4) {
           ping();
@@ -58,7 +56,7 @@ const usePresentation = ({
       }
     }, timeout);
 
-  }, [chatMessages, setChatMessages, isUserConected]);
+  }, [chatMessages, setChatMessages, isUserConected, dispatch, ping]);
 
   /* No return here; Effect-full custom hook!! */
 }
