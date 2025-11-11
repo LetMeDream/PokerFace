@@ -82,11 +82,9 @@ export const mockApi = createApi({
     completeChat: builder.mutation<void, ContactFormValues>({
       query: ({ 
         session_id,
-        email,
-        full_name,
         phone_number,
         recaptcha_token
-       }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, email, full_name, phone_number, recaptcha_token } }),
+       }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, phone_number, recaptcha_token } }),
     }),
 
     /* 

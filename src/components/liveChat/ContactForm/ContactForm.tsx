@@ -29,8 +29,6 @@ const ContactForm = ({
     mode: 'onChange',
     resolver: yupResolver(ContactFormSchema),
     defaultValues: {
-      name: '',
-      email: '',
       phone: undefined,
     }
   });
@@ -52,8 +50,6 @@ const ContactForm = ({
     const values = methods.getValues();
     await completeChat({
       session_id: guestSessionId,
-      email: values.email,
-      full_name: values.name,
       phone_number: values.phone || '',
       recaptcha_token: values.recaptcha,
     }).unwrap()
@@ -121,33 +117,6 @@ const ContactForm = ({
 
           <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-sm border border-gray-100">
             <form className="flex flex-col gap-5" autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
-              <div>
-                <label htmlFor="name" className="text-sm font-medium text-green-600">Tu nombre*</label>
-                <div className="flex items-center border-b-2 border-gray-200 focus-within:border-green-500">
-                  <input
-                    type="text"
-                    id="name"
-                    required
-                    className="w-full border-0 focus:ring-0 p-1 pl-2 text-sm focus-visible:!outline-none focus-visible:!ring-1 focus-visible:ring-green-300 rounded-sm"
-                    autoComplete="new-password"
-                    {...register("name")}
-                  />
-                </div>
-              </div>
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="text-sm font-medium text-green-600">Tu correo electrónico*</label>
-                <div className="flex items-center border-b-2 border-gray-200">
-                  <input
-                    type="email"
-                    id="email"
-                    required 
-                    className="w-full border-0 focus:ring-0 p-1 pl-2 text-sm focus-visible:!outline-none focus-visible:!ring-1 focus-visible:ring-green-300 rounded-sm"
-                    autoComplete="off"
-                    {...register("email")}
-                  />
-                </div>
-              </div>
               {/* Phone */}
               <div>
                 <label htmlFor="phone" className="text-sm font-medium text-green-600">Tu teléfono*</label>
