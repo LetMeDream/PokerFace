@@ -83,7 +83,7 @@ const InboxEntry = ({
                 {/* Columna: Nombre y Status */}
               <div className="flex flex-col flex-1 basis-1/5 md:basis-1/6 truncate text-center">
                 <div className="md:px-2 text-xs font-medium truncate">
-                  {ticket.chat_user.full_name || 'Usuario Anónimo'}
+                  {ticket?.chat_user?.full_name || 'Usuario Anónimo'}
                 </div>
                 <div className="md:px-2 !text-xs uppercase font-semibold opacity-60">
                   {status || 'Desconocido'}
@@ -106,7 +106,7 @@ const InboxEntry = ({
                     </span>
                     ) : (
                     <span className=' text-indigo-600'>
-                      {ticket.chat_user.full_name || 'Usuario'}
+                      {ticket?.chat_user?.full_name || 'Usuario'}
                     </span>
                     )}
                 </div>
