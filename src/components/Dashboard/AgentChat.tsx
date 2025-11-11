@@ -118,7 +118,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
                 <p className="text-sm text-gray-600 md:text-end text-nowrap">Nombre del usuario: 
                   <span className="font-medium text-gray-800 ml-1">
-                    {selectedTicket?.chat_user.full_name}
+                    {selectedTicket?.chat_user?.full_name}
                   </span>
                   <div>
                     Status: <span className="font-medium text-gray-800">{

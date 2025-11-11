@@ -55,9 +55,9 @@ const SideBar = (
           {paginatedTickets?.map((ticket: ChatTicket) => (
               /* Mensajes de la Bandeja de conversaciones */
               <ReceivedMessage 
-                key={ticket.id}
-                name={`${ticket.chat_user.full_name}`}
-                messages={ticket.messages}
+                key={ticket?.id}
+                name={`${ticket?.chat_user?.full_name}`}
+                messages={ticket?.messages}
                 onClick={() => {
                   handleTicketClick(ticket as any);
                   const drawerCheckbox = document.getElementById('my-drawer-1') as HTMLInputElement;
