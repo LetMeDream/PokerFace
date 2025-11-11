@@ -38,7 +38,7 @@ export const mockApi = createApi({
       /* Auth headers */
       prepareHeaders: (headers, { getState, endpoint  }) => {
 
-        if (endpoint === 'login') {
+        if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat') {
           return headers; // No auth header for login
         }
 
