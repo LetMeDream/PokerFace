@@ -37,7 +37,7 @@ const baseQuery = fetchBaseQuery({
   /* Auth headers */
   prepareHeaders: (headers, { getState, endpoint  }) => {
 
-    if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat' || endpoint === 'getToken') {
+    if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat' || endpoint === 'getToken' || endpoint === 'guestSendMessage') {
       return headers; // No auth header for login
     }
 
