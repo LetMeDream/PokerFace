@@ -145,6 +145,12 @@ export const tribet_api = createApi({
       invalidatesTags: ['WaitingChats', 'assignedChats'],
     }),
 
+    // `POST /api/chat-rooms/{id}/resolve/` Resolve Chat
+    resolveChat: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+      query: ({ ticketId }) => ({ url:endpoints.RESOLVE_CHAT(ticketId), method: 'POST' }),
+      invalidatesTags: ['WaitingChats', 'assignedChats']
+    }),
+
 
     // * Guest Initiating conversation.
     // POST  `api/chat/start_chat/`
@@ -274,6 +280,7 @@ export const {
   useCompleteChatMutation,
   useGuestSendMessageMutation,
   useTakeChatMutation,
+  useResolveChatMutation,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

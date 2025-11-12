@@ -5,10 +5,11 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectAssignedChatById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
-import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket, closeTicket, reopenTicket } from '../../store/slices/base';
+import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket, reopenTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
 import Modal from './Modal';
-import { useUnassignTicketMutation, useCloseTicketMutation, useOpenTicketMutation } from '../../services/service';
+import { useUnassignTicketMutation, useOpenTicketMutation, useResolveChatMutation } from '../../services/service';
+import { toast } from 'react-hot-toast';
 
 const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   /* Input state */
@@ -40,10 +41,10 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
 
   // * Unassigning Ticket Logic
   const unassignModalId = 'unassign_ticket_modal'
-  const handleUnassign = () => {
+  /* const handleUnassign = () => {
     const dialog = document.getElementById(unassignModalId) as HTMLDialogElement | null;
     if (dialog) dialog.showModal();
-  }
+  } */
 
   const [unassignTicket, { isLoading: isUnassigning }] = useUnassignTicketMutation();
   const unassignAgentFromTicketHandler = async () => {
@@ -62,23 +63,24 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
 
   // * Close Ticket Logic
   const closeTicketModalId = 'close_ticket_modal'
-  const handleCloseTicket = () => {
+  const handleResolveChat = () => {
     const dialog = document.getElementById(closeTicketModalId) as HTMLDialogElement | null;
     if (dialog) dialog.showModal();
   }
 
   const closeBtnId = 'close_ticket_btn'
-  const [closeTicketMutation, { isLoading: isClosing }] = useCloseTicketMutation();
-  const closeTicketHandler = async () => {
+  const [resolveChatMutation, { isLoading: isResolving }] = useResolveChatMutation();
+  const resolveChatHandler = async () => {
     try {
       if (selectedTicketId) {
-        await closeTicketMutation({ ticketId: selectedTicketId }).unwrap();
-        dispatch(closeTicket({ ticketId: selectedTicketId }));
+        await resolveChatMutation({ ticketId: selectedTicketId }).unwrap();
       }
+    } catch (error) {
+      console.error('Error resolviendo el ticket:', error);
+      toast.error('Error resolviendo el ticket. Por favor, inténtelo de nuevo.');
+    } finally {
       const closeBtn = document.getElementById(closeBtnId) as HTMLButtonElement | null;
       if (closeBtn) closeBtn.click();
-    } catch (error) {
-      console.error('Error cerrando el ticket:', error);
     }
 
   }
@@ -137,18 +139,18 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
                       <RiSettingsLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
                     </div>
                     <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                      <li onClick={selectedTicket?.status === 'closed' ? handleReopenTicket : handleCloseTicket}>
+                      <li onClick={selectedTicket?.status === 'closed' ? handleReopenTicket : handleResolveChat}>
                         <a>
                           {
                             selectedTicket?.status === 'closed' ? 'Reabrir Ticket' : 'Marcar como Resuelto'
                           }
                         </a>
                       </li>
-                      <li onClick={handleUnassign}>
+                      {/* <li onClick={handleUnassign}>
                         <a>
                           Desasignar
                         </a>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                   <RiCloseLargeFill className="!w-5 md:!w-6 md:!h-5 text-gray-600 hover:text-gray-800 cursor-pointer hover:scale-105 transition" onClick={closeChat} />
@@ -198,8 +200,8 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
         id={unassignModalId}
       />
       <Modal
-        acceptFunction={closeTicketHandler}
-        isLoading={isClosing}
+        acceptFunction={resolveChatHandler}
+        isLoading={isResolving}
         type='info'
         message='¿Desea marcar el ticket como resuelto y cerrarlo?'
         btnMessage='Cerrar Ticket'

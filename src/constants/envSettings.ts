@@ -10,4 +10,5 @@ export const endpoints = {
   GUEST_SEND_MESSAGE: `/chat/send_message/`,
   ASSIGNED_CHATS: `/chat-rooms/my_chats/`,
   TAKE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/take_chat/`,
+  RESOLVE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/resolve/`
 }
