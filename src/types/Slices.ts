@@ -85,12 +85,18 @@ export type Agent = {
   user: User;
 }
 
+/* Previous LOGIN type */
 export type LoginSuccess = {
   token: string;
   agent: Agent;
   user: ExtendedUser;
 };
 
+/* We will use JWT now */
+export type LOGINJWTSuccess = {
+  access: string;
+  refresh: string;
+};
 
 type LoginFailure = {
   success: false;

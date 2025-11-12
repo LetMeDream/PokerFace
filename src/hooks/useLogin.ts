@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useLoginMutation } from "../services/service";
-import type { LoginSuccess } from "../types/Slices";
+import { useGetTokenMutation, useLoginMutation } from "../services/service";
+import type { LOGINJWTSuccess, LoginSuccess } from "../types/Slices";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { setLoggedInUser } from "../utils/actions";
+import { setLoggedInUser, setAuthToken } from "../utils/actions";
 
 interface LoginForm {
   username: string;
@@ -19,7 +19,8 @@ interface LoginForm {
   }); 
 
 const useLogin = () => {
-  const [loginMutation, resMutation] = useLoginMutation();
+  const [getTokenMutation, resMutation] = useGetTokenMutation();
+  const [loginMutation] = useLoginMutation();
   const { isLoading } = resMutation;
     /* Fetch tickets */
   const navigate = useNavigate();
@@ -46,23 +47,24 @@ const useLogin = () => {
   }
 
   const onSubmit = async (data: LoginForm) => {
-    const promise = loginMutation(data).unwrap(); // returns typed payload or throws
+    const getTokenPromise = getTokenMutation(data).unwrap(); // returns typed payload or throws
     const error = (resMutation as any).error;
-    toast.promise(promise, {
+    toast.promise(getTokenPromise, {
       loading: 'Logging in...',
       success: 'Login exitoso',
       error: error?.data || 'Error en el login',
     });
     try {
-        const result = await promise as LoginSuccess; // no second request, sólo espera el mismo promise
+        const result = await getTokenPromise as LOGINJWTSuccess; // no second request, sólo espera el mismo promise
         // if your endpoint returns { success, data }, access it:
         if (!result) {
           // failure branch — LoginFailure
           toast.error('Error inesperado durante el login');
           return;
         }
-        // debugger
-        await setLoggedInUser(result);
+        setAuthToken(result);
+        const loginResults = await loginMutation(data).unwrap() as LoginSuccess;
+        await setLoggedInUser(loginResults);
         navigate('/dashboard')
       } catch (err: any) {
         console.error('login failed', err);

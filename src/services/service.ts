@@ -1,9 +1,10 @@
-// api/mockApi.ts
+// api/tribet_api.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 import { endpoints } from '../constants/envSettings';
-import type { LoginResponse, TicketsResponse, ticketsSuccess, guestMessage } from '../types/Slices';
+import type { LOGINJWTSuccess, TicketsResponse, ticketsSuccess, guestMessage, LoginResponse } from '../types/Slices';
 import type { RootState } from '../store/store';
 import type { ContactFormValues } from '../types/Chat';
 
@@ -29,32 +30,96 @@ const mockData = {
   }
 };
 
-export const mockApi = createApi({
-  // declare known tag types so providesTags/invalidatesTags accept string literals
-  tagTypes: ['WaitingChats'],
-  baseQuery: fetchBaseQuery(
-    { 
-      baseUrl: endpoints.API_BASE_URL, 
-      /* Auth headers */
-      prepareHeaders: (headers, { getState, endpoint  }) => {
 
-        if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat') {
-          return headers; // No auth header for login
-        }
+/* Base Query */
+const baseQuery = fetchBaseQuery({ 
+  baseUrl: endpoints.API_BASE_URL, 
+  /* Auth headers */
+  prepareHeaders: (headers, { getState, endpoint  }) => {
 
-        const token = (getState() as RootState).auth.token;
-        if (token) {
-          headers.set('Authorization', `Token ${token}`);
-        }
-        return headers;
+    if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat' || endpoint === 'getToken') {
+      return headers; // No auth header for login
+    }
+
+    const token = (getState() as RootState).auth.token;
+    if (token) {
+      headers.set('Authorization', `Bearer ${token.access}`);
+    }
+    return headers;
   },
-    }),
+})
+
+const baseQueryWithReAuth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  const result = await baseQuery(args, api, extraOptions);
+
+  const state = api.getState() as RootState;
+  const token = state.auth.token;
+  if (result.error && result.error.status === 401) {
+    if (!token.refresh || !token.access) {
+      api.dispatch({type: 'auth/logout'});
+      return {
+        error: {
+          status: 401,
+          data: 'No refresh token',
+        },
+      };
+    }
+    
+
+    // Here you would normally attempt to refresh the token
+    const refreshResult = await baseQuery(
+      {
+        url: endpoints.REFRESH_TOKEN,
+        method: 'POST',
+        body: { access: token.refresh },
+      },
+      api,
+      extraOptions
+    );
+
+    if (refreshResult.data) {
+      const newTokens = refreshResult.data as LOGINJWTSuccess;
+      // store the new tokens
+      api.dispatch({
+        type: 'auth/setToken',
+        payload: newTokens,
+      });
+      // Retry the original query with new token
+      return await baseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch({type: 'auth/logout'});
+      return {
+        error: {
+          status: 401,
+          data: 'Unable to refresh token',
+        },
+      };
+    }
+
+  } else { 
+    return result;
+  }
+}
+
+
+export const tribet_api = createApi({
+  // declare known tag types so providesTags/invalidatesTags accept string literals
+  tagTypes: ['WaitingChats', 'assignedChats'],
+  baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
 
-    // `POST /api/auth/login/`
+    // `POST /api/token/`
+    getToken: builder.mutation<LOGINJWTSuccess, { username: string; password: string }>({
+      query: (credentials) => ({ url: endpoints.LOGINJWT, method: 'POST', body: credentials }),
+    }),
+    // POST 'api/auth/login/'
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
       query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
-      invalidatesTags: ['WaitingChats'],
+      invalidatesTags: ['WaitingChats', 'assignedChats'],
     }),
     // `POST /api/auth/logout/`
     logout: builder.mutation<void, void>({
@@ -66,6 +131,14 @@ export const mockApi = createApi({
       query: () => ({ url: endpoints.WAITING_CHATS, method: 'GET' }),
       providesTags: ['WaitingChats'],
     }),
+
+    // * Obtain all assigned chats for agent
+    // `GET /api/chat-rooms/my_chats/
+    getAssignedChats: builder.query<void, void>({
+      query: () => ({ url: endpoints.ASSIGNED_CHATS, method: 'GET' }),
+      providesTags: ['assignedChats'],
+    }),
+
     // `POST /api/chat-rooms/{id}/take_chat/`
     /* assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
       query: ({ ticketId, agentId }) => ({ url: endpoints.ASSIGN_TICKET(ticketId), method: 'POST', body: { agent_id: agentId } }),
@@ -176,6 +249,7 @@ export const mockApi = createApi({
 });
 
 export const { 
+  useGetTokenMutation,
   useLoginMutation,
   useLogoutMutation,
   useInitiateChatMutation,
@@ -190,4 +264,4 @@ export const {
   useDeleteTicketMutation,
   useCloseTicketMutation,
   useOpenTicketMutation
-} = mockApi;
+} = tribet_api;

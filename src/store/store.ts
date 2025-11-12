@@ -4,7 +4,7 @@ import { userSlice } from './slices/user'
 import { baseSlice } from './slices/base'
 import { agentSlice } from './slices/agent'
 import { guestSlice } from './slices/guest'
-import { mockApi } from '../services/service'
+import { tribet_api } from '../services/service'
 import localforage from 'localforage'
 // Root reducer
 import { combineReducers } from 'redux';
@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
   base: baseSlice.reducer,
   guest: guestSlice.reducer,
   // RTK Query APIs
-  [mockApi.reducerPath]: mockApi.reducer,
+  [tribet_api.reducerPath]: tribet_api.reducer,
 });
 
 const persistConfig = {
@@ -43,7 +43,7 @@ export const store = configureStore({
     serializableCheck: {
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
     },
-  }).concat(mockApi.middleware),
+  }).concat(tribet_api.middleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

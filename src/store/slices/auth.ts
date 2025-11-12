@@ -2,32 +2,39 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export interface AuthState {
   isLoggedIn: boolean,
-  token: string,
+  token: {
+    access: string,
+    refresh: string
+  }
 }
 
 const initialState: AuthState = {
   isLoggedIn: false,
-  token: '',
+  token: {
+    access: '',
+    refresh: ''
+  },
 }
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state, action) => {
+    login: (state) => {
       state.isLoggedIn = true
-      state.token = action.payload.token
     },
     logout: (state) => {
       state.isLoggedIn = false
-      state.token = ''
+      state.token = { access: '', refresh: '' }
     },
-
+    setToken: (state, action) => {
+      state.token = action.payload
+    }
 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { login, logout } = authSlice.actions
+export const { login, logout, setToken } = authSlice.actions
 
 export default authSlice.reducer
