@@ -42,7 +42,6 @@ const InboxEntry = ({
     if (dialog) dialog.showModal();
   }
 
-  console.log(ticket)
   let status 
   switch (ticket.status.toLowerCase()) {
     case 'active':

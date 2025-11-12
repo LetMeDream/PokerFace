@@ -1,7 +1,21 @@
 type ChatMessage = {
-  type: string;
-  message_type?: string;
+  type?: 'guest' | 'agent' | 'contactForm';
+  sender_type?: 'user' | 'system';
+  attachment?: string | null;
+  can_mark_read?: boolean;
   content: string;
+  created_at?: string;
+  id?: string;
+  is_edited: boolean;
+  is_read: boolean;
+  read_status: {
+    status: 'read' | 'delivered' | 'sent';
+    read_at: string | null;
+  };
+  sender_info: {
+    type: 'system' | 'guest' | 'agent';
+    name: string;
+  }
 };
 
 export type MessagesProps = {

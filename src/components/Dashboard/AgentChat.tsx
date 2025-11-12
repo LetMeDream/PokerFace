@@ -18,7 +18,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   const [newMessage, setNewMessage] = useState<string>("");
   /* Get selected ticket using supah cool selector */
   const selectedTicket = useSelector((state: RootState) => selectAssignedChatById(state.agent, selectedTicketId));
-
+  console.log(selectedTicket)
   /* Ref to scroll */
   const chatBodyRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch();
@@ -170,7 +170,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
               <div className="p-4 h-96 overflow-y-auto scroll-smooth" ref={chatBodyRef} >
                   <Messages
                     chatMessages={selectedTicket?.messages}
-                    type='agent'
+                    type={'agent'}
                   />
               </div>
 

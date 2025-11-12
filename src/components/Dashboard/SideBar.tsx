@@ -17,7 +17,6 @@ const SideBar = (
     handleTicketClick: (ticket: any) => void;
   }) => {
     const assignedChats = useSelector((state: any) => selectPersonalChatsArray(state.agent/*, searchValue */));
-    console.log(assignedChats)
 
     const {
       currentItems: paginatedTickets,

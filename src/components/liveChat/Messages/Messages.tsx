@@ -51,9 +51,9 @@ const Messages: FC<MessagesProps> = ({
               key={index}
             >
               {/* Guest messages */}
-              {msg.message_type === 'guest' ? guestMessage(msg.content) : null}
+              {msg.sender_type === 'user' ? guestMessage(msg.content) : null}
               {/* Agent messages */}
-              {msg.message_type === 'agent' ? agentMessage(msg.content) : null}
+              {msg.sender_type === 'system' ? agentMessage(msg.content) : null}
             </div>
         ))}
       </>

@@ -52,7 +52,7 @@ const Chat = () => {
 
             {/* Messages */}
             <Messages
-              chatMessages={chatMessages}
+              chatMessages={chatMessages as any}
               isSending={isSending}
               setIsSending={setIsSending}
               chatBodyRef={chatBodyRef}
