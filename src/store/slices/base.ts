@@ -100,7 +100,7 @@ export const baseSlice = createSlice({
       }
     },
 
-    // Close ticket
+    // Close ticket (previously used)
     closeTicket(state, action) {
       const { ticketId } = action.payload;
       const ticket = state.tickets.byId[ticketId];
