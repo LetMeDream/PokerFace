@@ -111,10 +111,8 @@ export const selectFilteredTicketsByChatRoomId = createSelector(
 export const selectPersonalChatsArray = createSelector(
   (state: AgentState) => state.assigned_chats.byId,
   (state: AgentState) => state.assigned_chats.allIds,
-  (byId, allIds) => allIds
-    .map(id => byId[id])
-    .filter((t): t is Ticket => t !== undefined)
-);
+  (byId, allIds) => allIds.map(id => byId[id]).filter((t): t is Ticket => t !== undefined)
+)
 
 /* Selector for getting the personal assigned chat from agent.assigned_chats */
 export const selectFilteredPersonalAssignedChat = createSelector(
