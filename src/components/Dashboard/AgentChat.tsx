@@ -3,7 +3,7 @@ import Messages from '../liveChat/Messages/Messages';
 import { RiSearchLine, RiSettingsLine, RiCloseLargeFill } from 'react-icons/ri';
 import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
-import { selectTicketById } from '../../utils/selectors';
+import { selectAssignedChatById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
 import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket, closeTicket, reopenTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
@@ -14,7 +14,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   /* Input state */
   const [newMessage, setNewMessage] = useState<string>("");
   /* Get selected ticket using supah cool selector */
-  const selectedTicket = useSelector((state: RootState) => selectTicketById(state.base, selectedTicketId));
+  const selectedTicket = useSelector((state: RootState) => selectAssignedChatById(state.agent, selectedTicketId));
 
   /* Ref to scroll */
   const chatBodyRef = useRef<HTMLDivElement | null>(null);
@@ -116,16 +116,17 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
           <div className=" bg-cyan-50 rounded-xl max-w-[90vw] w-6xl py-5 pb-2 relative" >
               {/* Title and name */}
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
-                <p className="text-sm text-gray-600 md:text-end text-nowrap">Nombre del usuario: 
+                <div className="text-sm text-gray-600 md:text-end text-nowrap ">
+                  Número del usuario: 
                   <span className="font-medium text-gray-800 ml-1">
-                    {selectedTicket?.chat_user?.full_name}
+                    {selectedTicket?.chat_user_info?.phone_number || 'Desconocido'}
                   </span>
-                  <div>
+                  <div className='text-left'>
                     Status: <span className="font-medium text-gray-800">{
                       selectedTicket?.status.split('_').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
                     }</span>
                   </div>
-                </p>
+                </div>
                 
                 {/* Icons for look for message, and settings */}
                 <div className="flex gap-2">

@@ -7,7 +7,7 @@ import useMediaQuery from '../../../hooks/useMediaQuery';
 
 const GeneralInbox = () => {
   const {
-    isLoading,
+    isTakingChat,
     handleAssign,
     deleteModalId,
     handleDelete,
@@ -105,7 +105,7 @@ const GeneralInbox = () => {
 
       <Modal // Modal for auto-assign ticket and go to chat
         acceptFunction={handleAssign} 
-        isLoading={isLoading}
+        isLoading={isTakingChat}
         type='confirm'
         message='¿Desear auto-asignarse el ticket e ir a la conversación?'
         btnMessage='Asignar e Ir'

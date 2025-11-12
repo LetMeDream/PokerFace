@@ -139,13 +139,14 @@ export const tribet_api = createApi({
       providesTags: ['assignedChats'],
     }),
 
-    // `POST /api/chat-rooms/{id}/take_chat/`
-    /* assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
-      query: ({ ticketId, agentId }) => ({ url: endpoints.ASSIGN_TICKET(ticketId), method: 'POST', body: { agent_id: agentId } }),
-    }), */
+    // `POST /api/chat-rooms/{id}/take_chat/` (assign ticket/chat to agent)
+    takeChat: builder.mutation<boolean, { ticketId: number | null | undefined}>({
+      query: ({ ticketId }) => ({ url: endpoints.TAKE_CHAT(ticketId), method: 'POST' }),
+      invalidatesTags: ['WaitingChats', 'assignedChats'],
+    }),
 
 
-    // Guest Initiation conversation.
+    // * Guest Initiating conversation.
     // POST  `api/chat/start_chat/`
     initiateChat: builder.mutation<{ session_id: string }, { initialMessage: string }>({
       query: ({ initialMessage }) => ({ url: endpoints.INITIAL_MESSAGE, method: 'POST', body: { initial_message: initialMessage } }),
@@ -173,6 +174,23 @@ export const tribet_api = createApi({
       }),
     }),
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /* 
     TODO: MOCK UP DATA DOWN HERE
@@ -255,6 +273,8 @@ export const {
   useInitiateChatMutation,
   useCompleteChatMutation,
   useGuestSendMessageMutation,
+  useTakeChatMutation,
+
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
   */

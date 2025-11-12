@@ -1,22 +1,23 @@
 import { useSelector } from 'react-redux';
 import { assignTicketToAgent, reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
-import { useAssignTicketMutation, useCloseTicketMutation, useOpenTicketMutation } from '../services/service';
+import { useCloseTicketMutation, useOpenTicketMutation, useTakeChatMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
 import { deleteTicket, closeTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
 import { selectFilteredUnassignedTickets } from '../utils/selectors';
 import type { RootState } from '../store/store';
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 const useGeneralInbox = () => {
   const dispatch = useDispatch();
   const { assigningTicketId } = useSelector((state: RootState) => state.base);
   const { id: agentId } = useSelector((state: RootState) => state.agent);
   const { first_name, last_name } = useSelector((state: RootState) => state.user);
-  const [ assignTicket, { isLoading } ] = useAssignTicketMutation();
   const [ deleteTicketCallToApi, { isLoading: isDeleting } ] = useDeleteTicketMutation();
   const [inboxSearchValue, setInboxSearchValue] = useState<string>('');
   const filteredUnassignedTickets = useSelector((state: RootState) => selectFilteredUnassignedTickets(state.base, inboxSearchValue));
+  const [ takeChat, { isLoading: isTakingChat } ] = useTakeChatMutation();
   
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
@@ -30,8 +31,16 @@ const useGeneralInbox = () => {
   }  
 
   const handleAssign = async () => {
-    await assignTicket({ ticketId: assigningTicketId, agentId });
-    assignAndGo();
+    try {
+      await takeChat({ ticketId: assigningTicketId }).unwrap()
+      assignAndGo();
+    } catch (error: any) {
+      console.error('Error assigning ticket:', error);
+      toast.error(error?.data?.error || 'Error al asignar el ticket. Por favor, intenta de nuevo.');
+      // Close modal
+      const closeModalButton = document.getElementById('close_modal') as HTMLButtonElement | null;
+      if (closeModalButton) closeModalButton.click();
+    }
   }
 
   /* 
@@ -93,7 +102,7 @@ const useGeneralInbox = () => {
 
 
   return {
-    isLoading,
+    isTakingChat,
     handleAssign,
     deleteModalId,
     handleDelete,

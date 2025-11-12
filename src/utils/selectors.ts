@@ -1,10 +1,10 @@
 import { createSelector } from "@reduxjs/toolkit";
 import type { AllTickets, NormalizedTickets } from "../types/Slices";
 import type { RootState } from "../store/store";
+
 /* 
 * SELECTORS!!!
 */
-
 type BaseState = { tickets: NormalizedTickets };
 type AgentState = { assigned_chats: NormalizedTickets };
 type Ticket = AllTickets[number];
@@ -51,13 +51,19 @@ export const selectFilteredTickets = createSelector(
       : tickets // if no search value, return all tickets
 );
 
-/* Selector for getting a specific ticket by ID */
+/* Selector for getting a specific ticket by ID (FROM LOCAL STATE) */
 export const selectTicketById = createSelector(
   (state: BaseState) => state.tickets.byId,
   (_, ticketId: string) => ticketId,
   (byId, ticketId) => byId[ticketId]
 );
 
+/* Selector from getting a specific ticket by ID (FROM REDUX'S AGENT.ASSIGNED_CHATS) */
+export const selectAssignedChatById = createSelector(
+  (state: AgentState) => state.assigned_chats.byId,
+  (_, ticketId: number) => ticketId,
+  (byId, ticketId) => byId[ticketId]
+);
 
 /* Selector for getting all unassigned tickets */
 export const selectUnassignedTickets = createSelector(
@@ -120,7 +126,12 @@ export const selectFilteredPersonalAssignedChat = createSelector(
           ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
         )
       : tickets;
-  } 
+  },
+  { 
+    memoizeOptions: {
+      resultEqualityCheck: (_a, _b) => { void _a; void _b; return false; },
+    } 
+  }
 );
 
 

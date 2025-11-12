@@ -9,4 +9,5 @@ export const endpoints = {
   COMPLETE_CHAT: `/chat/complete_chat/`,
   GUEST_SEND_MESSAGE: `/chat/send_message/`,
   ASSIGNED_CHATS: `/chat-rooms/my_chats/`,
+  TAKE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/take_chat/`,
 }

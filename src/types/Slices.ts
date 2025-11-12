@@ -126,3 +126,21 @@ export interface guestMessage {
     is_temporary: boolean;
   }
 }
+
+
+export interface ReceivedChatMessage {
+  agent: Agent;
+  chat_user_info: {
+    is_temporary: boolean;
+    phone_number: string;
+  };
+  created_at: string;
+  id: number;
+  initial_message: string;
+  messages: any []; // needs to be typed better
+  priority: number;
+  status: string;
+  subject: string;
+  tags: string; // probably should be array
+  updated_at: string;
+}
