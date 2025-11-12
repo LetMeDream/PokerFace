@@ -1,6 +1,6 @@
 import { logout, login, setToken } from "../store/slices/auth"
 import { clearUser, setUser } from "../store/slices/user"
-import { unsetChatProfile, setChatProfile } from "../store/slices/agent"
+import { unsetChatProfile, setChatProfile, setAssignedChats } from "../store/slices/agent"
 import { unsetBase, setTickets } from "../store/slices/base"
 import { store } from "../store/store"
 import type { LOGINJWTSuccess, LoginSuccess } from "../types/Slices"
@@ -36,13 +36,21 @@ export const setAuthToken = (token: LOGINJWTSuccess) => {
 /* Set user info coming from Login */
 export const setLoggedInUser = async (result: LoginSuccess) => {
   const { user: userData, agent: agentData } = result;
+  // ensure agent profile matches expected AgentState shape (add default assigned_chats)
+  const normalizedAgent = {
+    ...agentData,
+    assigned_chats: (agentData as any)?.assigned_chats ?? []
+  }
   store.dispatch(setUser(userData))
-  store.dispatch(setChatProfile(agentData))
+  store.dispatch(setChatProfile(normalizedAgent as any))
   store.dispatch(login())
-  /* 
-  TODO: Fetch initial data after login (I thing its done)
-  */
-  const res: any = await store.dispatch(tribet_api.endpoints.getWaitingChats.initiate())
-  const chats = res?.data?.chats ?? []
+
+  // Fetch tickets and assigned chats after login
+  const allChatsRes: any = await store.dispatch(tribet_api.endpoints.getWaitingChats.initiate())
+  const chats = allChatsRes?.data?.chats ?? []
   store.dispatch(setTickets(chats))
+
+  const myChatsRes: any = await store.dispatch(tribet_api.endpoints.getAssignedChats.initiate())
+  const myChats = myChatsRes?.data?.chats ?? []
+  store.dispatch(setAssignedChats(myChats))
 }

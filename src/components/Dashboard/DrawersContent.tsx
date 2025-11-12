@@ -3,7 +3,7 @@ import Header from './Header';
 import GeneralInbox from './GeneralInbox/GeneralInbox';
 import { useSelector } from 'react-redux';
 /* We NORMALIZED tickets in our store, so now we need to SELECT them properly */
-import { selectTicketsByChatRoomId } from '../../utils/selectors';
+import { selectPersonalChatsArray } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
 import AgentChat from './AgentChat';
 
@@ -13,9 +13,8 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
   drawerButtonRef: React.RefObject<HTMLLabelElement | null>; 
 }) => {
   const selectedTicketId = useSelector((state: any) => state.base.selectedTicketId);
-  const chatRoomId = useSelector((state: RootState) => state.agent.id);
-  const tickets = useSelector((state: RootState) => selectTicketsByChatRoomId(state.base, chatRoomId));
-  const ticketsQty = tickets.length;
+  const personalChats = useSelector((state: RootState) => selectPersonalChatsArray(state.agent as any));
+  const personalChatsQty = personalChats.length;
   /*
   TODO: Commented since we would need to pass searchValue from DashboardPage to here
   TODO: and currently 'searchValue' is a local state of DashboardPage only used in SideBar component.
@@ -43,7 +42,7 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
               htmlFor="my-drawer-1" className={classnames.drawerBtn}
               ref={drawerButtonRef}
             >
-                Conversaciones <span className="badge bg-secondary">{ticketsQty}</span>
+                Conversaciones <span className="badge bg-secondary">{personalChatsQty}</span>
             </label>
           </div>  
   )

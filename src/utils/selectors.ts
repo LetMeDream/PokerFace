@@ -6,6 +6,7 @@ import type { RootState } from "../store/store";
 */
 
 type BaseState = { tickets: NormalizedTickets };
+type AgentState = { assigned_chats: NormalizedTickets };
 type Ticket = AllTickets[number];
 
 /* Selector for 'de-normalizing' the normalized Tickets
@@ -84,6 +85,8 @@ export const selectTicketsByChatRoomId = createSelector(
   (tickets: Ticket[], chatRoomId: number | null) => tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId)
 );
 
+// !DEPRECATED
+// !Since it was previously used to filter the assigned tickets out of the local state and we will query the API for that
 /* Selector for getting and filtering all tickets with the given chat_room_id */
 export const selectFilteredTicketsByChatRoomId = createSelector(
   selectTicketsArray,
@@ -98,6 +101,29 @@ export const selectFilteredTicketsByChatRoomId = createSelector(
       : tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId);
     }
 );
+
+export const selectPersonalChatsArray = createSelector(
+  (state: AgentState) => state.assigned_chats.byId,
+  (state: AgentState) => state.assigned_chats.allIds,
+  (byId, allIds) => allIds
+    .map(id => byId[id])
+    .filter((t): t is Ticket => t !== undefined)
+);
+
+/* Selector for getting the personal assigned chat from agent.assigned_chats */
+export const selectFilteredPersonalAssignedChat = createSelector(
+  selectPersonalChatsArray,
+  (_, searchValue) => searchValue?.toLowerCase(),
+  (tickets: Ticket[], searchLower: string) => {
+    return searchLower
+      ? tickets.filter((ticket: Ticket) =>
+          ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
+        )
+      : tickets;
+  } 
+);
+
+
 
 /* Selector for getting all of the required info, from the Guest slice, to be sent in the 
 ** GuessSendMessage API call.

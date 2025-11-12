@@ -2,7 +2,7 @@ import ReceivedMessage from '../Dashboard/ReceivedMessage';
 import type { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import type { ChatTicket } from '../../types/Slices';
-import { selectFilteredTicketsByChatRoomId } from '../../utils/selectors';
+import { selectFilteredPersonalAssignedChat } from '../../utils/selectors';
 import Pagination from './Pagination';
 import usePagination from '../../hooks/usePagination';
 
@@ -16,8 +16,7 @@ const SideBar = (
     classnames: { searchInput: string };
     handleTicketClick: (ticket: any) => void;
   }) => {
-    const { id: agentId } = useSelector((state: RootState) => state.agent);
-    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredTicketsByChatRoomId(state.base, searchValue, agentId));
+    const assignedFilteredTickets = useSelector((state: RootState) => selectFilteredPersonalAssignedChat(state.agent, searchValue));
 
     const {
       currentItems: paginatedTickets,
