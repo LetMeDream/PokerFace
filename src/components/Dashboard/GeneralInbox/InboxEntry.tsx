@@ -42,25 +42,30 @@ const InboxEntry = ({
     if (dialog) dialog.showModal();
   }
 
-
+  console.log(ticket)
   let status 
   switch (ticket.status.toLowerCase()) {
     case 'active':
-      status = <div className="md:px-2 !text-xs uppercase font-semibold">
+      status = <div className=" text-left !text-xs uppercase font-semibold">
                   Activo
                 </div>;
       break;
 
     case 'closed':
-      status = <div className="md:px-2 !text-xs uppercase text-red-700 font-semibold">
+      status = <div className=" text-left !text-xs uppercase text-red-700 font-semibold">
                   Cerrado
                 </div>;
       break;
 
     case 'pending':
-      status = (<div className="md:px-2 !text-xs uppercase  font-semibold">
+      status = (<div className=" text-left !text-xs uppercase font-semibold">
                   Pendiente
                 </div>);
+      break
+    case 'waiting':
+      status = (<div className=" text-left !text-xs uppercase font-semibold">
+                  En Espera
+                </div>);  
       break;
     default:
       break;
