@@ -6,10 +6,12 @@ import { inputErrors } from '../constants/chat';
 import { useEffect, useState } from 'react';
 // import MaskedInput from '../components/liveChat/MaskedInput/MaskedInput';
 import '../components/liveChat/ContactForm/ContactForm.css'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const { classNames, register, handleSubmit, onSubmit, errors, isLoading } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('isLoading changed:', isLoading);
@@ -28,7 +30,10 @@ const Login = () => {
         <div className="w-full max-w-md relative -top-6">
           <div className={classNames.cardWrapper}>
             <button className={classNames.backBtn}>
-              <MdArrowBack className={classNames.back} />
+              <MdArrowBack 
+                onClick={() => navigate('/')}
+                className={classNames.back} 
+              />
             </button>
 
             <h1 className={classNames.welcome}>Bienvenido de nuevo</h1>
