@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { assignTicketToAgent, reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
+import { reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
 import { useCloseTicketMutation, useOpenTicketMutation, useTakeChatMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
 import { deleteTicket, closeTicket } from '../store/slices/base';
@@ -8,20 +8,35 @@ import { selectFilteredUnassignedTickets } from '../utils/selectors';
 import type { RootState } from '../store/store';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { setAssignedChats } from '../store/slices/agent';
+import { useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
+import { setTickets } from '../store/slices/base';
 
 const useGeneralInbox = () => {
   const dispatch = useDispatch();
   const { assigningTicketId } = useSelector((state: RootState) => state.base);
-  const { id: agentId } = useSelector((state: RootState) => state.agent);
-  const { first_name, last_name } = useSelector((state: RootState) => state.user);
   const [ deleteTicketCallToApi, { isLoading: isDeleting } ] = useDeleteTicketMutation();
   const [inboxSearchValue, setInboxSearchValue] = useState<string>('');
   const filteredUnassignedTickets = useSelector((state: RootState) => selectFilteredUnassignedTickets(state.base, inboxSearchValue));
   const [ takeChat, { isLoading: isTakingChat } ] = useTakeChatMutation();
-  
+  const { refetch } = useGetAssignedChatsQuery(); // to keep assigned chats updated
+  const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery();
+
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
-    dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: agentId, agentName: `${first_name} ${last_name}` }));
+    // dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: agentId, agentName: `${first_name} ${last_name}` }));
+    const result = await refetch();
+    const data = (result as any)?.data;
+    const waitingResult = await refetchWaitingChats();
+    const waitingData = (waitingResult as any)?.data;
+    if (data && data.chats) {
+      // Update assigned chats in the store
+      dispatch(setAssignedChats(data.chats));
+    }
+    if (waitingData && waitingData.chats) {
+      // Update waiting chats in the store
+      dispatch(setTickets(waitingData.chats));
+    }
     // Close modal
     const closeModalButton = document.getElementById('close_modal') as HTMLButtonElement | null;
     if (closeModalButton) closeModalButton.click();

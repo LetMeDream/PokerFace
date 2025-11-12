@@ -108,7 +108,7 @@ const baseQueryWithReAuth: BaseQueryFn<
 
 export const tribet_api = createApi({
   // declare known tag types so providesTags/invalidatesTags accept string literals
-  tagTypes: ['WaitingChats', 'assignedChats'],
+  tagTypes: ['WaitingChats', 'AssignedChats'],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
 
@@ -119,7 +119,7 @@ export const tribet_api = createApi({
     // POST 'api/auth/login/'
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
       query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
-      invalidatesTags: ['WaitingChats', 'assignedChats'],
+      invalidatesTags: ['WaitingChats', 'AssignedChats'],
     }),
     // `POST /api/auth/logout/`
     logout: builder.mutation<void, void>({
@@ -136,19 +136,20 @@ export const tribet_api = createApi({
     // `GET /api/chat-rooms/my_chats/
     getAssignedChats: builder.query<void, void>({
       query: () => ({ url: endpoints.ASSIGNED_CHATS, method: 'GET' }),
-      providesTags: ['assignedChats'],
+      providesTags: ['AssignedChats'],
     }),
+    
 
     // `POST /api/chat-rooms/{id}/take_chat/` (assign ticket/chat to agent)
     takeChat: builder.mutation<boolean, { ticketId: number | null | undefined}>({
       query: ({ ticketId }) => ({ url: endpoints.TAKE_CHAT(ticketId), method: 'POST' }),
-      invalidatesTags: ['WaitingChats', 'assignedChats'],
+      invalidatesTags: ['WaitingChats', 'AssignedChats'],
     }),
 
     // `POST /api/chat-rooms/{id}/resolve/` Resolve Chat
     resolveChat: builder.mutation<boolean, { ticketId: number | null | undefined }>({
       query: ({ ticketId }) => ({ url:endpoints.RESOLVE_CHAT(ticketId), method: 'POST' }),
-      invalidatesTags: ['WaitingChats', 'assignedChats']
+      invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),
 
 
@@ -281,6 +282,8 @@ export const {
   useGuestSendMessageMutation,
   useTakeChatMutation,
   useResolveChatMutation,
+  useGetAssignedChatsQuery,
+  useGetWaitingChatsQuery,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

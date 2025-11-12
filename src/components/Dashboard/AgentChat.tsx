@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux';
 import Modal from './Modal';
 import { useUnassignTicketMutation, useOpenTicketMutation, useResolveChatMutation } from '../../services/service';
 import { toast } from 'react-hot-toast';
+import { useGetAssignedChatsQuery } from '../../services/service';
+import { setAssignedChats } from '../../store/slices/agent';
 
 const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   /* Input state */
@@ -70,10 +72,18 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
 
   const closeBtnId = 'close_ticket_btn'
   const [resolveChatMutation, { isLoading: isResolving }] = useResolveChatMutation();
+  const { refetch } = useGetAssignedChatsQuery();
   const resolveChatHandler = async () => {
     try {
       if (selectedTicketId) {
         await resolveChatMutation({ ticketId: selectedTicketId }).unwrap();
+        dispatch(unsetSelectedTicketId());
+        const result = await refetch();
+        const data = (result as any)?.data;
+        if (data && data.chats) {
+          // Update assigned chats in the store
+          dispatch(setAssignedChats(data.chats));
+        }
       }
     } catch (error) {
       console.error('Error resolviendo el ticket:', error);
