@@ -5,10 +5,10 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectAssignedChatById } from '../../utils/selectors';
 import type { RootState } from '../../store/store';
-import { addMessageToTicket, unsetSelectedTicketId, unassignAgentFromTicket, reopenTicket } from '../../store/slices/base';
+import { addMessageToTicket, unsetSelectedTicketId, reopenTicket } from '../../store/slices/base';
 import { useDispatch } from 'react-redux';
 import Modal from './Modal';
-import { useUnassignTicketMutation, useOpenTicketMutation, useResolveChatMutation } from '../../services/service';
+import { useUnassignAgentMutation, useOpenTicketMutation, useResolveChatMutation } from '../../services/service';
 import { toast } from 'react-hot-toast';
 import { useGetAssignedChatsQuery } from '../../services/service';
 import { setAssignedChats } from '../../store/slices/agent';
@@ -48,15 +48,19 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
     if (dialog) dialog.showModal();
   } */
 
-  const [unassignTicket, { isLoading: isUnassigning }] = useUnassignTicketMutation();
+  const [unassignAgent, { isLoading: isUnassigning }] = useUnassignAgentMutation();
   const unassignAgentFromTicketHandler = async () => {
     try {
       if (selectedTicketId) {
-        await unassignTicket({ ticketId: selectedTicketId });
-        dispatch(unassignAgentFromTicket({ ticketId: selectedTicketId }));
+        await unassignAgent({ ticketId: selectedTicketId }).unwrap();
+        dispatch(unsetSelectedTicketId());
       }
     } catch (error) {
       console.error('Error desasignando el ticket:', error);
+      toast.error('Error desasignando el ticket. Por favor, inténtelo de nuevo.');
+    } finally {
+      const dialog = document.getElementById(unassignModalId) as HTMLDialogElement | null;
+      if (dialog) dialog.close();
     }
 
  
@@ -118,6 +122,12 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
     }
   }
 
+  const handleUnassign = () => {
+    const dialog = document.getElementById(unassignModalId) as HTMLDialogElement | null;
+    if (dialog) dialog.showModal();
+  }
+
+
   return (
     <div>
       {/* Placeholder for selected chat conversation */}
@@ -156,11 +166,11 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
                           }
                         </a>
                       </li>
-                      {/* <li onClick={handleUnassign}>
+                      <li onClick={handleUnassign}>
                         <a>
                           Desasignar
                         </a>
-                      </li> */}
+                      </li>
                     </ul>
                   </div>
                   <RiCloseLargeFill className="!w-5 md:!w-6 md:!h-5 text-gray-600 hover:text-gray-800 cursor-pointer hover:scale-105 transition" onClick={closeChat} />

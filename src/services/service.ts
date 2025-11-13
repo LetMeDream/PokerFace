@@ -152,6 +152,16 @@ export const tribet_api = createApi({
       invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),
 
+    // `POST /api/chat-rooms/{id}/unassign_agent/` Unassign Agent from Chat
+    unassignAgent: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+      query: ({ ticketId }) => ({ url: endpoints.UNASSING_AGENT(ticketId), method: 'POST' }),
+      invalidatesTags: ['WaitingChats', 'AssignedChats']
+    }),
+
+
+
+
+
 
     // * Guest Initiating conversation.
     // POST  `api/chat/start_chat/`
@@ -284,6 +294,7 @@ export const {
   useResolveChatMutation,
   useGetAssignedChatsQuery,
   useGetWaitingChatsQuery,
+  useUnassignAgentMutation,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
