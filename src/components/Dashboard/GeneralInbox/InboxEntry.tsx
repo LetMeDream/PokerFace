@@ -28,6 +28,7 @@ const InboxEntry = ({
     if (dialog) dialog.showModal();
   }
 
+  /* RESOLVE CHAT */
   const handleCloseTicket = () => {
     // Implement ticket closing logic here
     dispatch(setAssigningTicketId(ticket.id));

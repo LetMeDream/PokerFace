@@ -75,7 +75,7 @@ const baseQueryWithReAuth: BaseQueryFn<
       {
         url: endpoints.REFRESH_TOKEN,
         method: 'POST',
-        body: { access: token.refresh },
+        body: { refresh: token.refresh },
       },
       api,
       extraOptions

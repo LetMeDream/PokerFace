@@ -63,7 +63,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
   }
 
 
-  // * Close Ticket Logic
+  // * RESOLVE CHAT Logic
   const closeTicketModalId = 'close_ticket_modal'
   const handleResolveChat = () => {
     const dialog = document.getElementById(closeTicketModalId) as HTMLDialogElement | null;

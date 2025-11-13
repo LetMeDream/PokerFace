@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
-import { useCloseTicketMutation, useOpenTicketMutation, useTakeChatMutation } from '../services/service';
+import { useOpenTicketMutation, useTakeChatMutation } from '../services/service';
 import { useDeleteTicketMutation } from "../services/service";
-import { deleteTicket, closeTicket } from '../store/slices/base';
+import { deleteTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
 import { selectFilteredUnassignedTickets } from '../utils/selectors';
 import type { RootState } from '../store/store';
@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { setAssignedChats } from '../store/slices/agent';
 import { useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
+import { useResolveChatMutation } from '../services/service';
 import { setTickets } from '../store/slices/base';
 
 const useGeneralInbox = () => {
@@ -82,11 +83,16 @@ const useGeneralInbox = () => {
   */
   const closeTicketModalId = 'close_ticket_modal'
   const closeCloseTicketBntId = `close_ticket_btn_${assigningTicketId}`;
-  const [ closeTicketApiCall, { isLoading: isClosingTicket } ] = useCloseTicketMutation();
+  const [ resolveChat, { isLoading: isClosingTicket } ] = useResolveChatMutation();
   const handleCloseTicket = async () => {
     try {
-      await closeTicketApiCall({ ticketId: assigningTicketId });
-      dispatch(closeTicket({ ticketId: assigningTicketId }));
+      await resolveChat({ ticketId: assigningTicketId });
+      const result = await refetchWaitingChats();
+      const data = (result as any)?.data;
+      if (data && data.chats) {
+        // Update waiting chats in the store
+        dispatch(setTickets(data.chats));
+      }
       // Close modal
       const closeModalButton = document.getElementById(closeCloseTicketBntId) as HTMLButtonElement | null;
       if (closeModalButton) closeModalButton.click();
