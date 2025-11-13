@@ -78,7 +78,7 @@ export const selectFilteredUnassignedTickets = createSelector(
   (tickets: Ticket[], searchLower: string) =>
     searchLower
       ? tickets.filter((ticket: Ticket) =>
-          ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
+          ticket.chat_user_info?.phone_number?.includes(searchLower)
         )
       : tickets 
 )
@@ -102,7 +102,7 @@ export const selectFilteredTicketsByChatRoomId = createSelector(
 
     return searchLower
       ? tickets.filter((ticket: Ticket) =>
-          ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
+          ticket.chat_user_info.full_name?.toLowerCase().includes(searchLower)
         ).filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId)
       : tickets.filter((ticket: Ticket) => ticket.chat_room_id === chatRoomId);
     }
@@ -121,7 +121,7 @@ export const selectFilteredPersonalAssignedChat = createSelector(
   (tickets: Ticket[], searchLower: string) => {
     return searchLower
       ? tickets.filter((ticket: Ticket) =>
-          ticket.chat_user.full_name?.toLowerCase().includes(searchLower)
+          ticket.chat_user_info.phone_number?.includes(searchLower)
         )
       : tickets;
   },
