@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux';
 import { useAgentSendMessageMutation, useUnassignAgentMutation, useResolveChatMutation, useOpenTicketMutation, useGetAssignedChatsQuery } from '../services/service';
 import { reopenTicket } from '../store/slices/base';
@@ -11,6 +11,16 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
     /* Ref to scroll */
     const chatBodyRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
+
+    /* To scroll to bottom of chat upong accesing it */
+    useEffect(() => {
+      setTimeout(() => {
+        // Scroll to bottom in chat body when selectedTicketId changes
+        if (chatBodyRef.current) {
+          chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+        }
+      }, 300);
+    }, [selectedTicketId]);
   
     // * AGENT SEND MESSAGE
     const [agentSendMessage] = useAgentSendMessageMutation();
