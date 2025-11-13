@@ -139,7 +139,6 @@ export const tribet_api = createApi({
       providesTags: ['AssignedChats'],
     }),
     
-
     // `POST /api/chat-rooms/{id}/take_chat/` (assign ticket/chat to agent)
     takeChat: builder.mutation<boolean, { ticketId: number | null | undefined}>({
       query: ({ ticketId }) => ({ url: endpoints.TAKE_CHAT(ticketId), method: 'POST' }),
@@ -157,6 +156,13 @@ export const tribet_api = createApi({
       query: ({ ticketId }) => ({ url: endpoints.UNASSING_AGENT(ticketId), method: 'POST' }),
       invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),
+
+    // `POST /api/chat-rooms/{id}/close/` Close Chat
+    closeChat: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+      query: ({ ticketId }) => ({ url: endpoints.CLOSE_CHAT(ticketId), method: 'POST' }),
+      invalidatesTags: ['WaitingChats', 'AssignedChats']
+    }),
+
 
 
 
@@ -295,6 +301,7 @@ export const {
   useGetAssignedChatsQuery,
   useGetWaitingChatsQuery,
   useUnassignAgentMutation,
+  useCloseChatMutation,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

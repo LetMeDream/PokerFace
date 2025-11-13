@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
 import { reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
-import { useOpenTicketMutation, useTakeChatMutation } from '../services/service';
-import { useDeleteTicketMutation } from "../services/service";
+import { useCloseChatMutation, useOpenTicketMutation, useTakeChatMutation } from '../services/service';
 import { deleteTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
 import { selectFilteredUnassignedTickets } from '../utils/selectors';
@@ -16,7 +15,7 @@ import { setTickets } from '../store/slices/base';
 const useGeneralInbox = () => {
   const dispatch = useDispatch();
   const { assigningTicketId } = useSelector((state: RootState) => state.base);
-  const [ deleteTicketCallToApi, { isLoading: isDeleting } ] = useDeleteTicketMutation();
+  const [ closeChat, { isLoading: isClosing } ] = useCloseChatMutation();
   const [inboxSearchValue, setInboxSearchValue] = useState<string>('');
   const filteredUnassignedTickets = useSelector((state: RootState) => selectFilteredUnassignedTickets(state.base, inboxSearchValue));
   const [ takeChat, { isLoading: isTakingChat } ] = useTakeChatMutation();
@@ -67,7 +66,7 @@ const useGeneralInbox = () => {
   const closeDeleteTicketBntId = `delete_ticket_btn_${assigningTicketId}`;
   const handleDelete = async () => {
     try {
-      await deleteTicketCallToApi({ ticketId: assigningTicketId });
+      await closeChat({ ticketId: assigningTicketId });
       dispatch(deleteTicket({ ticketId: assigningTicketId! }));
       // Close modal
       const closeModalButton = document.getElementById(closeDeleteTicketBntId) as HTMLButtonElement | null;
@@ -84,7 +83,7 @@ const useGeneralInbox = () => {
   const closeTicketModalId = 'close_ticket_modal'
   const closeCloseTicketBntId = `close_ticket_btn_${assigningTicketId}`;
   const [ resolveChat, { isLoading: isClosingTicket } ] = useResolveChatMutation();
-  const handleCloseTicket = async () => {
+  const handleResolveChat = async () => {
     try {
       await resolveChat({ ticketId: assigningTicketId });
       const result = await refetchWaitingChats();
@@ -127,13 +126,13 @@ const useGeneralInbox = () => {
     handleAssign,
     deleteModalId,
     handleDelete,
-    isDeleting,
+    isClosing,
     closeDeleteTicketBntId,
     inboxSearchValue,
     setInboxSearchValue,
     filteredUnassignedTickets,
     closeTicketModalId,
-    handleCloseTicket,
+    handleResolveChat,
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,

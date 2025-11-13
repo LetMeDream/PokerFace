@@ -11,13 +11,13 @@ const GeneralInbox = () => {
     handleAssign,
     deleteModalId,
     handleDelete,
-    isDeleting,
+    isClosing,
     closeDeleteTicketBntId,
     inboxSearchValue,
     setInboxSearchValue,
     filteredUnassignedTickets,
     closeTicketModalId,
-    handleCloseTicket,
+    handleResolveChat,
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,
@@ -113,7 +113,7 @@ const GeneralInbox = () => {
       />
       <Modal // Modal for deleting ticket
         acceptFunction={handleDelete}
-        isLoading={isDeleting}
+        isLoading={isClosing}
         type='danger'
         message='¿Estás seguro de que deseas eliminar este ticket?'
         id={deleteModalId}
@@ -121,7 +121,7 @@ const GeneralInbox = () => {
         closeBtnId={closeDeleteTicketBntId}
       />
       <Modal // Modal for closing ticket
-        acceptFunction={handleCloseTicket}
+        acceptFunction={handleResolveChat}
         isLoading={isClosingTicket}
         type='info'
         message='¿Estás seguro de que deseas marcar este ticket como cerrado?'
