@@ -37,7 +37,7 @@ interface ChatUser {
 export interface ChatTicket {
   id: number;
   chat_room_id: string | null;
-  chat_user: ChatUser;
+  chat_user_info: ChatUser;
   status: TicketStatus;
   priority: string;
   subject: string;

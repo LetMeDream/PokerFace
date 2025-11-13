@@ -163,7 +163,19 @@ export const tribet_api = createApi({
       invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),
 
-
+    // `POST /api/chat-rooms/{id}/send_message/` Agent Send Message
+    agentSendMessage: builder.mutation<void, { chatRoomId: number | string | null | undefined; payload: { content: string, message_type: string }; }>({
+      query: ({ chatRoomId, payload }) => ({
+        url: endpoints.AGENT_SEND_MESSAGE(chatRoomId),
+        method: 'POST',
+        body: {
+          content: payload.content,
+          message_type: payload.message_type,
+          attachment: null
+        }
+      }),
+      invalidatesTags: ['AssignedChats']
+    }),
 
 
 
@@ -302,6 +314,7 @@ export const {
   useGetWaitingChatsQuery,
   useUnassignAgentMutation,
   useCloseChatMutation,
+  useAgentSendMessageMutation,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

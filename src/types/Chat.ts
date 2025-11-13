@@ -1,6 +1,6 @@
 type ChatMessage = {
   type?: 'guest' | 'agent' | 'contactForm';
-  sender_type?: 'user' | 'system';
+  sender_type?: 'user' | 'system' | 'agent';
   attachment?: string | null;
   can_mark_read?: boolean;
   content: string;

@@ -8,6 +8,7 @@ export const endpoints = {
   INITIAL_MESSAGE: `/chat/start_chat/`,
   COMPLETE_CHAT: `/chat/complete_chat/`,
   GUEST_SEND_MESSAGE: `/chat/send_message/`,
+  AGENT_SEND_MESSAGE: (id: number | string | null | undefined) => `/chat-rooms/${id}/send_message/`,
   ASSIGNED_CHATS: `/chat-rooms/my_chats/`,
   TAKE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/take_chat/`,
   UNASSING_AGENT: (id: number | string | null | undefined) => `/chat-rooms/${id}/unassign_agent/`,

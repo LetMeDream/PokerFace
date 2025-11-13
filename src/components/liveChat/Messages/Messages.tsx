@@ -53,7 +53,7 @@ const Messages: FC<MessagesProps> = ({
               {/* Guest messages */}
               {msg.sender_type === 'user' ? guestMessage(msg.content) : null}
               {/* Agent messages */}
-              {msg.sender_type === 'system' ? agentMessage(msg.content) : null}
+              {(msg.sender_type === 'system' || msg.sender_type === 'agent') ? agentMessage(msg.content) : null}
             </div>
         ))}
       </>
