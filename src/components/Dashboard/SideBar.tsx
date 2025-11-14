@@ -5,6 +5,7 @@ import type { ReceivedChatMessage } from '../../types/Slices';
 import { selectFilteredPersonalAssignedChat } from '../../utils/selectors';
 import Pagination from './Pagination';
 import usePagination from '../../hooks/usePagination';
+import { useRefetchMyChat } from '../../hooks/useRefetch';
 
 const SideBar = (
   { 
@@ -17,6 +18,7 @@ const SideBar = (
     handleTicketClick: (ticket: any) => void;
   }) => {
     const assignedChats = useSelector((state: any) => selectFilteredPersonalAssignedChat(state.agent, searchValue));
+    useRefetchMyChat();
 
     const {
       currentItems: paginatedTickets,

@@ -1,17 +1,19 @@
 import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch,  } from 'react-redux';
 import { useAgentSendMessageMutation, useUnassignAgentMutation, useResolveChatMutation, useOpenTicketMutation, useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
 import { reopenTicket } from '../store/slices/base';
 import { setAssignedChats } from '../store/slices/agent';
 import { setTickets } from '../store/slices/base';
 import { unsetSelectedTicketId } from '../store/slices/base';
 import toast from 'react-hot-toast';
-
+import { useRefetchMyChat } from './useRefetch';
 
 const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNewMessage: (message: string) => void) => {
     /* Ref to scroll */
     const chatBodyRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
+
+    useRefetchMyChat();
 
     /* To scroll to bottom of chat upong accesing it */
     useEffect(() => {
@@ -66,7 +68,12 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
     } */
   
     const [unassignAgent, { isLoading: isUnassigning }] = useUnassignAgentMutation();
-    const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery();
+    const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery(/* undefined, { 
+      pollingInterval: 5000,
+      refetchOnMountOrArgChange: true,
+      skip: selectedTicketIdFromStore !== null,
+      skipPollingIfUnfocused: true
+    } */);
     const unassignAgentFromTicketHandler = async () => {
       try {
         if (selectedTicketId) {
@@ -97,7 +104,6 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
    
     }
   
-  
     // * RESOLVE CHAT Logic
     const closeTicketModalId = 'close_ticket_modal'
     const handleResolveChat = () => {
@@ -107,7 +113,10 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
   
     const closeBtnId = 'close_ticket_btn'
     const [resolveChatMutation, { isLoading: isResolving }] = useResolveChatMutation();
-    const { refetch: refetchAssignedChats } = useGetAssignedChatsQuery();
+    const { data: assignedChatsData, refetch: refetchAssignedChats } = useGetAssignedChatsQuery<any>(undefined, { 
+      pollingInterval: 4000,
+      refetchOnMountOrArgChange: true
+    });
     const resolveChatHandler = async () => {
       try {
         if (selectedTicketId) {
@@ -158,6 +167,15 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
       if (dialog) dialog.showModal();
     }
 
+    /* Custom Hook  */
+    useEffect(() => {
+      setTimeout(() => {
+        // Scroll to bottom in chat body when selectedTicketId changes
+        if (chatBodyRef.current) {
+          chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+        }
+      }, 150);
+    }, [assignedChatsData]);
 
   return {
     chatBodyRef,

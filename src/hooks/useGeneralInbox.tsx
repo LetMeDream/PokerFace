@@ -19,13 +19,13 @@ const useGeneralInbox = () => {
   const [inboxSearchValue, setInboxSearchValue] = useState<string>('');
   const filteredUnassignedTickets = useSelector((state: RootState) => selectFilteredUnassignedTickets(state.base, inboxSearchValue));
   const [ takeChat, { isLoading: isTakingChat } ] = useTakeChatMutation();
-  const { refetch } = useGetAssignedChatsQuery(); // to keep assigned chats updated
-  const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery();
+  const { refetch: refetchAssignedChats } = useGetAssignedChatsQuery(undefined, { pollingInterval: 4000 }); // to keep assigned chats updated
+  const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery(undefined, { pollingInterval: 4000 }); // to keep waiting chats updated
 
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
     // dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: agentId, agentName: `${first_name} ${last_name}` }));
-    const result = await refetch();
+    const result = await refetchAssignedChats();
     const data = (result as any)?.data;
     const waitingResult = await refetchWaitingChats();
     const waitingData = (waitingResult as any)?.data;
