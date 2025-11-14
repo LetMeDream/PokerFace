@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux';
-import { useAgentSendMessageMutation, useUnassignAgentMutation, useResolveChatMutation, useOpenTicketMutation, useGetAssignedChatsQuery } from '../services/service';
+import { useAgentSendMessageMutation, useUnassignAgentMutation, useResolveChatMutation, useOpenTicketMutation, useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
 import { reopenTicket } from '../store/slices/base';
 import { setAssignedChats } from '../store/slices/agent';
+import { setTickets } from '../store/slices/base';
 import { unsetSelectedTicketId } from '../store/slices/base';
 import toast from 'react-hot-toast';
 
@@ -32,7 +33,7 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
         })); */
         await agentSendMessage({ chatRoomId: selectedTicketId, payload: { content: newMessage, message_type: 'text' } }).unwrap();
         // * The 'refetch' is magical here, it updates the assigned chats after sending a message
-        const result = await refetch();
+        const result = await refetchAssignedChats();
         const data = (result as any)?.data;
         if (data && data.chats) {
           // Update assigned chats in the store
@@ -65,10 +66,24 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
     } */
   
     const [unassignAgent, { isLoading: isUnassigning }] = useUnassignAgentMutation();
+    const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery();
     const unassignAgentFromTicketHandler = async () => {
       try {
         if (selectedTicketId) {
           await unassignAgent({ ticketId: selectedTicketId }).unwrap();
+          const assignedChatsResults = await refetchAssignedChats();
+          const data = (assignedChatsResults as any)?.data;
+          if (data && data.chats) {
+            // Update assigned chats in the store
+            dispatch(setAssignedChats(data.chats));
+          }
+          const waitingChatsResults = await refetchWaitingChats();
+          const waitingData = (waitingChatsResults as any)?.data;
+          if (waitingData && waitingData.chats) {
+            // Update waiting chats in the store
+            dispatch(setTickets(waitingData.chats));
+          }
+
           dispatch(unsetSelectedTicketId());
         }
       } catch (error) {
@@ -92,13 +107,13 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
   
     const closeBtnId = 'close_ticket_btn'
     const [resolveChatMutation, { isLoading: isResolving }] = useResolveChatMutation();
-    const { refetch } = useGetAssignedChatsQuery();
+    const { refetch: refetchAssignedChats } = useGetAssignedChatsQuery();
     const resolveChatHandler = async () => {
       try {
         if (selectedTicketId) {
           await resolveChatMutation({ ticketId: selectedTicketId }).unwrap();
           dispatch(unsetSelectedTicketId());
-          const result = await refetch();
+          const result = await refetchAssignedChats();
           const data = (result as any)?.data;
           if (data && data.chats) {
             // Update assigned chats in the store
