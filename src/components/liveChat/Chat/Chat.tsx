@@ -6,16 +6,17 @@ import useContactForm from "../../../hooks/useContactForm";
 import useMobileChat from "../../../hooks/useMobileChat";
 import Messages from "../Messages/Messages";
 import { FaEnvelope } from "react-icons/fa";
+import { useRefetchGuestChatStatus } from "../../../hooks/useRefetch";
 import "./Chat.css";
 
 const Chat = () => {
-  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, setChatMessages, inputRef, bannerRef, isChatInitiationSuccess, 
+  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, inputRef, bannerRef, isChatInitiationSuccess, 
     isChatIniationLoading
    } = useChat();
-  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending } = useContactForm({ chatMessages, chatBodyRef, setChatMessages, isChatInitiationSuccess });
-  usePresentation({ isOpen, setChatMessages, chatMessages, setIsContactFormVisible, isUserConected });
+  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending } = useContactForm({ chatMessages, chatBodyRef, isChatInitiationSuccess });
+  usePresentation({ isOpen, chatMessages, setIsContactFormVisible, isUserConected });
   const { isBannerHidden, showBanner, modifiedToggleChat } = useMobileChat({ isOpen, toggleChat, bannerRef, inputRef, chatBodyRef });
-
+  useRefetchGuestChatStatus();
 
   return (
     <>

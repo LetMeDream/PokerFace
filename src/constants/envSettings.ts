@@ -14,4 +14,5 @@ export const endpoints = {
   UNASSING_AGENT: (id: number | string | null | undefined) => `/chat-rooms/${id}/unassign_agent/`,
   RESOLVE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/resolve/`,
   CLOSE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/close/`,
+  GUEST_CHAT_STATUS: (chat_room_id: string) => `/chat/get_chat_status/?chat_room_id=${chat_room_id}`,
 }

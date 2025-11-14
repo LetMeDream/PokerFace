@@ -114,7 +114,7 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
     const closeBtnId = 'close_ticket_btn'
     const [resolveChatMutation, { isLoading: isResolving }] = useResolveChatMutation();
     const { data: assignedChatsData, refetch: refetchAssignedChats } = useGetAssignedChatsQuery<any>(undefined, { 
-      pollingInterval: 4000,
+      pollingInterval: 5000,
       refetchOnMountOrArgChange: true
     });
     const resolveChatHandler = async () => {

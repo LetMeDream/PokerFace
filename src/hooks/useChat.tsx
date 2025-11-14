@@ -7,10 +7,10 @@ import { useDispatch } from "react-redux";
 import { setGuestSessionId } from "../store/slices/guest";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import { setGuestMessages } from "../store/slices/guest";
 import { useGuestSendMessageMutation } from "../services/service";
 import { selectGuestMessagePayload } from "../utils/selectors";
 import toast from "react-hot-toast";
+import { setGuestMessages } from "../store/slices/guest";
 
 type ChatMessage = {
   type: string;
@@ -19,7 +19,8 @@ type ChatMessage = {
 
 const useChat = () => {
   const [isOpen, setIsOpen] = useState(false);
-  
+  const dispatch = useDispatch();
+
   const classnames = {
     // 'overflow-hidden' is crucial so the chat body is hidden when collapsed
     widgetWrapper: 'md:left-10 fixed md:rounded-tr-3xl text-sm bottom-0 w-[100dvw] md:max-w-[80vw] md:max-w-[310px] md:w-[310px] caret-transparent overflow-hidden !caret-transparent',
@@ -34,30 +35,23 @@ const useChat = () => {
   };
 
   const updateGuestChatAfterSend = (chatMessages: ChatMessage[], messageInput: string) => {
-    setChatMessages([...chatMessages, { type: 'guest', content: messageInput }]);
+    dispatch(setGuestMessages([...chatMessages, { type: 'guest', content: messageInput }]));
     (document.activeElement as HTMLElement | null)?.blur();
     setMessageInput("");
   }
 
   const [messageInput, setMessageInput] = useState("");
 
-  const previousChatMessages = useSelector((state: RootState) => state.guest.messages);
+  // const previousChatMessages = useSelector((state: RootState) => state.guest.messages);
   const isUserconnected = useSelector((state: RootState) => state.guest.isUserConected);
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(previousChatMessages || []);
+  const chatMessages = useSelector((state: RootState) => state.guest.messages);
   const chatBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
   const [initiateChat, { isSuccess: isChatInitiationSuccess, isLoading: isChatIniationLoading }] = useInitiateChatMutation();
-  const dispatch = useDispatch();
   const [guestSendMessage] = useGuestSendMessageMutation();
   const guestMessagePayload = useSelector((state: RootState) => selectGuestMessagePayload(state, messageInput));
 
-  /* Load previous chat messages from localStorage on mount */
-  useEffect(() => {
-    if (previousChatMessages && previousChatMessages.length > 0 && chatMessages.length === 0) {
-      setChatMessages(previousChatMessages);
-    }
-  }, [previousChatMessages, chatMessages.length]);
 
   // Store chat messages to localStorage whenever they change
   useEffect(() => {
@@ -107,7 +101,6 @@ const useChat = () => {
     messageInput,
     setMessageInput,
     chatMessages,
-    setChatMessages,
     send,
     chatBodyRef,
     inputRef,

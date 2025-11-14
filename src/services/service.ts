@@ -37,7 +37,7 @@ const baseQuery = fetchBaseQuery({
   /* Auth headers */
   prepareHeaders: (headers, { getState, endpoint  }) => {
 
-    if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat' || endpoint === 'getToken' || endpoint === 'guestSendMessage') {
+    if (endpoint === 'login' || endpoint === 'initiateChat' || endpoint === 'completeChat' || endpoint === 'getToken' || endpoint === 'guestSendMessage' || endpoint === 'getGuestChatStatus') {
       return headers; // No auth header for login
     }
 
@@ -209,8 +209,10 @@ export const tribet_api = createApi({
       }),
     }),
     
-
-
+    // `GET /api/chat/get_chat_status/?chat_room_id=uuid-string`
+    getGuestChatStatus: builder.query<void, { chat_room_id: string }>({
+      query: ({ chat_room_id }) => ({ url: endpoints.GUEST_CHAT_STATUS(chat_room_id), method: 'GET' }),
+    }),
 
 
 
@@ -228,8 +230,8 @@ export const tribet_api = createApi({
 
 
     /* 
-    TODO: MOCK UP DATA DOWN HERE
-     */
+      TODO: MOCK UP DATA DOWN HERE
+    */
     // `GET /api/tickets/`
     getTickets: builder.query<TicketsResponse, void>({
       async queryFn() {
@@ -315,6 +317,7 @@ export const {
   useUnassignAgentMutation,
   useCloseChatMutation,
   useAgentSendMessageMutation,
+  useGetGuestChatStatusQuery,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
