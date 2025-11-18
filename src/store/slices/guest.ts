@@ -13,6 +13,7 @@ interface GuesstState {
   messages: { type: string; content: string; }[];
   isUserConected: boolean;
   created_at: string;
+  status: string;
 }
 
 const initialState: GuesstState = {
@@ -26,6 +27,7 @@ const initialState: GuesstState = {
   messages: [],
   isUserConected: false,
   created_at: '',
+  status: ''
 };
   
 export const guestSlice = createSlice({
@@ -44,8 +46,14 @@ export const guestSlice = createSlice({
     setGuestMessages: (state, action: PayloadAction<{ type: string; content: string; }[]>) => {
       state.messages = action.payload;
     },
+    setGuestStatus: (state, action: PayloadAction<string>) => {
+      state.status = action.payload;
+    },
+    unsetGuest: () => {
+      return initialState;
+    }
   },
 });
 
-export const { setGuestProfile, setGuestSessionId, setIsUserConected, setGuestMessages } = guestSlice.actions;
+export const { setGuestProfile, setGuestSessionId, setIsUserConected, setGuestMessages, setGuestStatus, unsetGuest } = guestSlice.actions;
 export default guestSlice.reducer;

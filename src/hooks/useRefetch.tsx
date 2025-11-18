@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useGetAssignedChatsQuery, useGetWaitingChatsQuery, useGetGuestChatStatusQuery } from '../services/service';
 import { setAssignedChats } from '../store/slices/agent';
 import { setTickets } from '../store/slices/base';
-import { setGuestMessages } from '../store/slices/guest';
+import { setGuestMessages, setGuestStatus } from '../store/slices/guest';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
@@ -38,8 +38,8 @@ export const useRefetchWaitingChats = () => {
 
 /* Refetches guest chat status */
 export const useRefetchGuestChatStatus = () => {
-  const { id: chat_room_id, session_id: sessionId } = useSelector((state: any) => state.guest);
-  const skipQuery = !sessionId;
+  const { id: chat_room_id, session_id: sessionId, status } = useSelector((state: any) => state.guest);
+  const skipQuery = !sessionId || status === 'closed' || status === 'resolved';
   const { data: guestChatStatusData } = useGetGuestChatStatusQuery<any>({ chat_room_id }, { pollingInterval: 5000, skip: skipQuery });
   const dispatch = useDispatch();
 
@@ -54,6 +54,7 @@ export const useRefetchGuestChatStatus = () => {
       content: msg.content
     }));
     console.log(settableMessages)
+    dispatch(setGuestStatus(guestChatStatusData?.status || ''));
     dispatch(setGuestMessages(settableMessages));
 
 

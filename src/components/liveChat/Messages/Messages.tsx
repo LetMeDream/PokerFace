@@ -2,6 +2,13 @@ import type { FC } from "react";
 import { guestMessage, agentMessage } from "../../../constants/chat";
 import type { MessagesProps } from "../../../types/Chat";
 import ContactForm from "../ContactForm/ContactForm";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/slices/auth";
+import { clearUser } from "../../../store/slices/user";
+import { unsetChatProfile } from "../../../store/slices/agent";
+import { unsetBase } from "../../../store/slices/base";
+import { unsetGuest } from "../../../store/slices/guest";
 
 // helper: comprueba existencia (no confundir con truthy/falsy)
 // devuelve true si el valor NO es null ni undefined
@@ -15,11 +22,23 @@ const Messages: FC<MessagesProps> = ({
   type = 'guest'
 }) => {
   const guestPropertiesExist = [isSending, setIsSending, chatBodyRef].every(exists);
+  const guestStatus = useSelector((state: any) => state.guest.status);
+  const dispatch = useDispatch();
+
+  const resetRedux = () => {
+    dispatch(logout())
+    dispatch(clearUser())
+    dispatch(unsetChatProfile())
+    dispatch(unsetBase())
+    dispatch(unsetGuest())
+  }
+
   if (type === 'guest' && guestPropertiesExist) {
     // * Messages for the Guest user, in the Landing Page chat widget
     return (
       <>
         {chatMessages.map((msg, index) => (
+          <>
             <div 
               key={index}
             >
@@ -38,6 +57,29 @@ const Messages: FC<MessagesProps> = ({
                 />
               ) : null}
             </div>
+            {/*  */}
+            {index === chatMessages.length - 1 && (guestStatus === 'closed') && (
+              <div className="text-center text-sm text-gray-500 mt-2 mb-4">
+                <p className="mb-2">
+                  La conversación ha finalizado. Si deseas continuar, por favor inicia un nuevo chat.
+                </p>
+                <button onClick={resetRedux}>
+                  Iniciar nuevo chat
+                </button>
+              </div>
+            )}
+            {index === chatMessages.length - 1 && (guestStatus === 'resolved') && (
+              <div className="text-center text-sm text-gray-500 mt-2 mb-4">
+                <p className="mb-2">
+                  La conversación ha sido marcada como <span className="text-secondary">Resuelta</span>. Si deseas continuar, por favor inicia un nuevo chat.
+                </p>
+                <button onClick={resetRedux}>
+                  Iniciar nuevo chat
+                </button>
+              </div>
+            )}
+          </>
+              
         ))}
       </>
     )
