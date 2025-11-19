@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { normalizeTickets } from '../../utils/helpers';
 
-interface AgentState {
+export interface AgentState {
   can_take_chat: boolean;
   currently_active_chats: number;
   department: string | null;

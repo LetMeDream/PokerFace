@@ -15,6 +15,7 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
   const selectedTicketId = useSelector((state: any) => state.base.selectedTicketId);
   const personalChats = useSelector((state: RootState) => selectPersonalChatsArray(state.agent as any));
   const personalChatsQty = personalChats.length;
+  const is_superuser = useSelector((state: any) => state.user.is_superuser);
   /*
   TODO: Commented since we would need to pass searchValue from DashboardPage to here
   TODO: and currently 'searchValue' is a local state of DashboardPage only used in SideBar component.
@@ -39,7 +40,10 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
 
             {/* Button for drawer */}
             <label 
-              htmlFor="my-drawer-1" className={classnames.drawerBtn}
+              htmlFor="my-drawer-1" 
+              className={`${classnames.drawerBtn} 
+                ${is_superuser ? 'hidden' : ''}
+              `}
               ref={drawerButtonRef}
             >
                 Conversaciones <span className="badge bg-secondary">{personalChatsQty}</span>

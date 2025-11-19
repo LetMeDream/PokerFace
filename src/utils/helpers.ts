@@ -1,4 +1,4 @@
-import type { AllTickets, NormalizedTickets } from "../types/Slices";
+import type { AllTickets, NormalizedTickets, NormalizedAgents } from "../types/Slices";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import type { SerializedError } from "@reduxjs/toolkit"
 import toast from "react-hot-toast";
@@ -13,6 +13,23 @@ export const normalizeTickets = (tickets: AllTickets = []) => {
       const id = ticket.id;
       if (id) {
         acc.byId[id] = ticket;
+        acc.allIds.push(id);
+      }
+      return acc;
+    },
+    { byId: {}, allIds: [] }
+  );
+};
+
+/**
+ * Normaliza un array de Agents a { byId, allIds }
+ */
+export const normalizeAgents = (agents: any[] = []) => {
+  return agents.reduce<NormalizedAgents>(
+    (acc, agent) => {
+      const id = agent.id;
+      if (id) {
+        acc.byId[id] = agent;
         acc.allIds.push(id);
       }
       return acc;

@@ -214,6 +214,11 @@ export const tribet_api = createApi({
       query: ({ chat_room_id }) => ({ url: endpoints.GUEST_CHAT_STATUS(chat_room_id), method: 'GET' }),
     }),
 
+    // GET /api/admin-agents/
+    getAdminAgents: builder.query<void, void>({
+      query: () => ({ url: endpoints.ADMIN_AGENTS, method: 'GET' }),
+    }),
+
 
 
 
@@ -318,6 +323,7 @@ export const {
   useCloseChatMutation,
   useAgentSendMessageMutation,
   useGetGuestChatStatusQuery,
+  useGetAdminAgentsQuery,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

@@ -9,7 +9,8 @@ import { useSelector } from 'react-redux';
 /* Refetches and re-set assigned chats  */
 export const useRefetchMyChat = () => {
   const dispatch = useDispatch();
-  const { data: assignChatsData } = useGetAssignedChatsQuery<any>(undefined, { pollingInterval: 5000 });
+  const is_superuser = useSelector((state: any) => state.user.is_superuser);
+  const { data: assignChatsData } = useGetAssignedChatsQuery<any>(undefined, { pollingInterval: 5000, skip: is_superuser });
 
   useEffect(() => {
     dispatch(setAssignedChats(assignChatsData?.chats || []));
@@ -24,7 +25,8 @@ export const useRefetchMyChat = () => {
 /* Refetches and re-set waiting chats  */
 export const useRefetchWaitingChats = () => {
   const dispatch = useDispatch();
-  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { pollingInterval: 5000 });
+  const is_superuser = useSelector((state: any) => state.user.is_superuser);
+  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { pollingInterval: 5000, skip: is_superuser });
 
   useEffect(() => {
     dispatch(setTickets(waitingChatsData?.chats || []));

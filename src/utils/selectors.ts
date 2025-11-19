@@ -162,3 +162,13 @@ export const selectGuestMessagePayload = createSelector(
     }
   })
 );
+
+
+
+
+/* De-normalize received Agents */
+export const selectAgentsArray = createSelector(
+  (state: RootState) => state.user.assigned_agents.byId,
+  (state: RootState) => state.user.assigned_agents.allIds,
+  (byId, allIds) => allIds.map(id => byId[id]).filter((a): a is any => a !== undefined)
+);

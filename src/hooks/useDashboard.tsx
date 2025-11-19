@@ -23,9 +23,10 @@ const useDashboard = () => {
 
   /* Opening drawer automatically upon login in */
   const { hasAutoOpened } = useSelector((state: any) => state.base);
+  const is_superuser = useSelector((state: any) => state.user.is_superuser);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!hasAutoOpened) {
+    if (!hasAutoOpened && !is_superuser) {
       setTimeout(() => {
         const drawerCheckbox = document.getElementById('my-drawer-1') as HTMLInputElement;
         if (drawerCheckbox) drawerCheckbox.checked = true;

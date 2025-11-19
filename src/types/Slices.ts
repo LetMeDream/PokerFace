@@ -2,6 +2,7 @@
 /* 
 * For user 
 */
+import type { AgentState } from "../store/slices/agent";
 export interface UserState {
   id: number | null;
   username: string | null;
@@ -9,6 +10,11 @@ export interface UserState {
   first_name: string | null;
   last_name: string | null;
   is_active: boolean | null;
+  is_superuser: boolean;
+  assigned_agents:  {
+    byId: Record<number, AgentState>,
+    allIds: number[]
+  };
 }
 
 /* 
@@ -53,6 +59,11 @@ export type AllTickets = ChatTicket[];
 
 export type NormalizedTickets = {
     byId: Record<number, AllTickets[number]>,
+    allIds: number[]
+}
+
+export type NormalizedAgents = {
+    byId: Record<number, AgentState>,
     allIds: number[]
 }
 

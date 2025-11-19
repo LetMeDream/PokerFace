@@ -1,6 +1,7 @@
 /* User slice */
 import { createSlice } from '@reduxjs/toolkit';
 import type { UserState } from '../../types/Slices';
+import { normalizeAgents } from '../../utils/helpers';
 
 const initialState: UserState = {
   id: null,
@@ -9,6 +10,11 @@ const initialState: UserState = {
   first_name: null,
   last_name: null,
   is_active: null,
+  is_superuser: false,
+  assigned_agents: {
+    byId: {},
+    allIds: []
+  }
 };
 
 export const userSlice = createSlice({
@@ -22,7 +28,7 @@ export const userSlice = createSlice({
       state.first_name = action.payload.first_name;
       state.last_name = action.payload.last_name;
       state.is_active = action.payload.is_active;
-      
+      state.is_superuser = action.payload.is_superuser; 
     },
     clearUser: (state) => {
       state.id = null;
@@ -31,11 +37,19 @@ export const userSlice = createSlice({
       state.first_name = null;
       state.last_name = null;
       state.is_active = null;
+      state.is_superuser = false;
+      state.assigned_agents = {
+        byId: {},
+        allIds: []
+      };
+    },
+    setAppAgents: (state, action) => {
+      const normalizedAgents = normalizeAgents(action.payload);
+      state.assigned_agents = normalizedAgents;
     }
-    
   },
 });
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, clearUser, setAppAgents } = userSlice.actions;
 
 export default userSlice.reducer;
