@@ -8,8 +8,8 @@
 
 /* keyframes: pulso breve (0-20%), luego reposo (20-100%) */
 @keyframes chatPulse {
-  0%   { transform: translateX(-50%) scale(1); }
-  20%  { transform: translateX(-50%) scale(1.06); } /* crecer */
-  40%  { transform: translateX(-50%) scale(1); }    /* volver tamaño */
-  100% { transform: translateX(-50%) scale(1); }    /* pausa hasta la próxima repetición */
+  0%   { transform: translateX(50%) scale(1); }
+  20%  { transform: translateX(50%) scale(1.06); } /* crecer */
+  40%  { transform: translateX(50%) scale(1); }    /* volver tamaño */
+  100% { transform: translateX(50%) scale(1); }    /* pausa hasta la próxima repetición */
 }
