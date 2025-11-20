@@ -8,6 +8,7 @@ import Messages from "../Messages/Messages";
 import { FaEnvelope } from "react-icons/fa";
 import { useRefetchGuestChatStatus } from "../../../hooks/useRefetch";
 import "./Chat.css";
+import { useEffect } from "react";
 
 const Chat = () => {
   const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, inputRef, bannerRef, isChatInitiationSuccess, 
@@ -18,11 +19,26 @@ const Chat = () => {
   const { isBannerHidden, showBanner, modifiedToggleChat } = useMobileChat({ isOpen, toggleChat, bannerRef, inputRef, chatBodyRef });
   useRefetchGuestChatStatus();
 
+  /* useEffect para bindear function a tecla Escape */
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen) {
+        toggleChat();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => {
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, toggleChat]);
+
   return (
     <>
       <div className={classnames.widgetWrapper}>
         
         <div 
+          id="chat-banner"
           className={`
             ${classnames.banner} ${isBannerHidden ? 'hidden' : 'flex'} 
           `}
