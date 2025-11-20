@@ -1,12 +1,18 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectAgentsArray } from '../../../utils/selectors';
-import AgentsCRUDEntry from './AgentsCRUDEntry';
+import { AgentsCRUDEntry } from './AgentsCRUDEntry';
+import CreateAgentModal from './CreateAgentModal';
 
 const AgentsCRUD = () => {
 
   const agents = useSelector(selectAgentsArray);  
-  console.log(agents)
+
+  const handleCreateAgent = () => {
+    const modal = document.getElementById('my_create_agent_modal') as HTMLDialogElement;
+    if (modal) {
+      modal.showModal();
+    }
+  }
 
   return (
       <div className='flex flex-col items-center justify-center pb-14'>
@@ -25,7 +31,7 @@ const AgentsCRUD = () => {
         </div>
  
         {/* --- BARRA DE HERRAMIENTAS: CONTADOR, BUSCADOR Y BOTÓN --- */}
-        <div className='flex flex-col md:flex-row items-center justify-between bg-cyan-50 px-4 py-2 gap-4'>
+        <div className='flex flex-row items-center justify-between bg-cyan-50 px-4 py-2 gap-4'>
           
           {/* 1. Agent count (Alineado a la izquierda) */}
           <div className="text-black text-xs opacity-60 tracking-wide whitespace-nowrap">
@@ -36,11 +42,11 @@ const AgentsCRUD = () => {
           </div>
 
           {/* Contenedor derecho: Buscador + Botón */}
-          <div className='flex items-center gap-2 w-full md:w-auto flex-1 md:justify-end'>
+          <div className='flex gap-2 flex-1 justify-end'>
             
             <button 
               className="btn h-10 min-h-0 bg-blue-600 hover:bg-blue-700 text-white border-none flex items-center gap-2 px-4 shadow-sm transition-transform active:scale-95"
-              onClick={() => console.log("Crear agente clickeado")} 
+              onClick={handleCreateAgent}
             >
               {/* Icono Plus SVG */}
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
@@ -52,17 +58,8 @@ const AgentsCRUD = () => {
           </div>
         </div>
 
-        {/* Ticket list */}
+        {/* Agent list */}
         <ul className="list bg-cyan-50 text-black rounded-none rounded-box shadow-md">
-          {/* {paginatedTickets.map(ticket => (
-            <InboxEntry 
-              key={ticket.id} 
-              ticket={ticket} 
-              deleteModalId={deleteModalId}
-              closeTicketModalId={closeTicketModalId}
-              reopenTicketModalId={reopenTicketModalId}
-            />
-          ))} */}
 
           {agents.length === 0 && (
             <li className="p-4 text-center text-gray-600">
@@ -71,7 +68,7 @@ const AgentsCRUD = () => {
           )}
 
           {agents.length > 0 && agents.map(agent => (
-            <li key={agent.id} className="p-4 border-b border-gray-300">
+            <li key={agent.id} className=" pt-2 border-b border-gray-300">
               <AgentsCRUDEntry agent={agent} />
             </li>
           ))}
@@ -93,41 +90,11 @@ const AgentsCRUD = () => {
         </div>
       )}
 
-      {/* <Modal // Modal for auto-assign ticket and go to chat
-        acceptFunction={handleAssign} 
-        isLoading={isTakingChat}
-        type='confirm'
-        message='¿Desear auto-asignarse el ticket e ir a la conversación?'
-        btnMessage='Asignar e Ir'
-        id={'my_modal_1'}
-      /> */}
-      {/* <Modal // Modal for deleting ticket
-        acceptFunction={handleDelete}
-        isLoading={isClosing}
-        type='danger'
-        message='¿Estás seguro de que deseas eliminar este ticket?'
-        id={deleteModalId}
-        btnMessage='Eliminar'
-        closeBtnId={closeDeleteTicketBntId}
-      /> */}
-      {/* <Modal // Modal for closing ticket
-        acceptFunction={handleResolveChat}
-        isLoading={isClosingTicket}
-        type='info'
-        message='¿Estás seguro de que deseas marcar este ticket como cerrado?'
-        id={closeTicketModalId}
-        btnMessage='Cerrar'
-        closeBtnId={closeCloseTicketBntId}
-      /> */}
-      {/* <Modal // Modal for reopening ticket
-        acceptFunction={handleReopenTicket}
-        isLoading={isReopeningTicket}
-        type='info'
-        message='¿Estás seguro de que deseas marcar este ticket como reabierto?'
-        id={reopenTicketModalId}
-        btnMessage='Reabrir'
-        closeBtnId={closeReopenTicketBntId}
-      /> */}
+      <CreateAgentModal // Modal for CREATING AGENT
+        isLoading={false}
+        id={'my_create_agent_modal'}
+      />
+
     </div>
   )
 }

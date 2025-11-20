@@ -155,3 +155,17 @@ export interface ReceivedChatMessage {
   tags: string; // probably should be array
   updated_at: string;
 }
+
+
+/* Type for Agents Creation */
+export interface CreateAgentPayload {
+  username: string;
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  employee_id?: string;
+  department?: string;
+  is_available?: boolean;
+  max_concurrent_chats?: number;
+}

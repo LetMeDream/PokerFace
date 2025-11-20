@@ -15,5 +15,8 @@ export const endpoints = {
   RESOLVE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/resolve/`,
   CLOSE_CHAT: (id: number | string | null | undefined) => `/chat-rooms/${id}/close/`,
   GUEST_CHAT_STATUS: (chat_room_id: string) => `/chat/get_chat_status/?chat_room_id=${chat_room_id}`,
-  ADMIN_AGENTS: `/admin-agents/`,
+  ADMIN_AGENTS: `/admin-agents/`, // Get
+  ADMIN_CREATE_AGENT: `/admin-agents/`, // Post
+  DELETE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Delete
+  UPDATE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Put
 }

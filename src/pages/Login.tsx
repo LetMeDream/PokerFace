@@ -3,7 +3,7 @@ import { FaUserCog } from "react-icons/fa";
 import useLogin from '../hooks/useLogin'
 import '../components/liveChat/MaskedInput/MaskedInput.css'
 import { inputErrors } from '../constants/chat';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import MaskedInput from '../components/liveChat/MaskedInput/MaskedInput';
 import '../components/liveChat/ContactForm/ContactForm.css'
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +12,6 @@ const Login = () => {
   const { classNames, register, handleSubmit, onSubmit, errors, isLoading } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log('isLoading changed:', isLoading);
-  }, [isLoading])
 
   return (
     <>

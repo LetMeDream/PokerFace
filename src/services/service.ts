@@ -4,7 +4,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 import { endpoints } from '../constants/envSettings';
-import type { LOGINJWTSuccess, TicketsResponse, ticketsSuccess, guestMessage, LoginResponse } from '../types/Slices';
+import type { LOGINJWTSuccess, TicketsResponse, ticketsSuccess, guestMessage, LoginResponse, CreateAgentPayload } from '../types/Slices';
 import type { RootState } from '../store/store';
 import type { ContactFormValues } from '../types/Chat';
 
@@ -108,7 +108,7 @@ const baseQueryWithReAuth: BaseQueryFn<
 
 export const tribet_api = createApi({
   // declare known tag types so providesTags/invalidatesTags accept string literals
-  tagTypes: ['WaitingChats', 'AssignedChats'],
+  tagTypes: ['WaitingChats', 'AssignedChats', 'AdminAgents'],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
 
@@ -119,7 +119,7 @@ export const tribet_api = createApi({
     // POST 'api/auth/login/'
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
       query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
-      invalidatesTags: ['WaitingChats', 'AssignedChats'],
+      invalidatesTags: ['WaitingChats', 'AssignedChats', 'AdminAgents'],
     }),
     // `POST /api/auth/logout/`
     logout: builder.mutation<void, void>({
@@ -217,9 +217,25 @@ export const tribet_api = createApi({
     // GET /api/admin-agents/
     getAdminAgents: builder.query<void, void>({
       query: () => ({ url: endpoints.ADMIN_AGENTS, method: 'GET' }),
+      providesTags: ['AdminAgents'],
     }),
 
+    // POST /api/admin-agents/` 
+    createAgent: builder.mutation<void, CreateAgentPayload>({
+      query: (agentData) => ({ url: endpoints.ADMIN_AGENTS, method: 'POST', body: agentData }),
+    }),
 
+    // DELETE /api/admin-agents/{id}/ 
+    deleteAgent: builder.mutation<void, { id: string | number }>({
+      query: ({ id }) => ({ url: endpoints.DELETE_ADMIN_AGENT(id), method: 'DELETE' }),
+      invalidatesTags: ['AdminAgents'],
+    }),
+
+    // `PUT /api/admin-agents/{id}/`
+    updateAgent: builder.mutation<void, { id: string | number; agentData: Partial<CreateAgentPayload> }>({
+      query: ({ id, agentData }) => ({ url: endpoints.DELETE_ADMIN_AGENT(id), method: 'PUT', body: agentData }),
+      invalidatesTags: ['AdminAgents'],
+    }),
 
 
 
@@ -324,6 +340,9 @@ export const {
   useAgentSendMessageMutation,
   useGetGuestChatStatusQuery,
   useGetAdminAgentsQuery,
+  useCreateAgentMutation,
+  useDeleteAgentMutation,
+  useUpdateAgentMutation,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
