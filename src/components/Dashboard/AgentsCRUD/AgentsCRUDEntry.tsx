@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 
 export const AgentsCRUDEntry = ({ agent } : { agent: Agent }) => {
   const [deleteAgent, { isLoading: isAgentDeleting }] = useDeleteAgentMutation();
@@ -154,9 +153,7 @@ const EditAgentModal = ({
       is_available: agent.is_available || true,
       max_concurrent_chats: agent.max_concurrent_chats || 4,
     }
-  })
-  const employee_id = useSelector((state: any) => state.user.id);
-  
+  })  
 
   const { register, formState: { errors }, handleSubmit } = methods;
   
@@ -172,7 +169,6 @@ const EditAgentModal = ({
         department: data.department,
         is_available: data.is_available,
         max_concurrent_chats: data.max_concurrent_chats,
-        employee_id: employee_id
       } });
       toast.success('Agente Actualizado Con Éxito!');
       // Close modal
@@ -251,7 +247,9 @@ const EditAgentModal = ({
           >
             Guardar Cambios
           </div>
-          <button className='!btn !btn-ghost' type='button'
+          <button 
+            className='!btn !btn-ghost' type='button'
+            id={`close_edit_agent_modal_${agent.id}`}
             onClick={() => {
               const modal = document.getElementById(`modal_edit_agent_${agent.id}`) as HTMLDialogElement | null;
               if (modal) modal.close();
@@ -261,6 +259,9 @@ const EditAgentModal = ({
           </button>
         </form>
       </div>
+      {/* <div className="modal-box bg-black opacity-50">
+          Another
+      </div> */}
     </dialog>
   )
 }

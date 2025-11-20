@@ -164,7 +164,7 @@ export interface CreateAgentPayload {
   password: string;
   first_name: string;
   last_name: string;
-  employee_id?: string;
+  employee_id?: string | number;
   department?: string;
   is_available?: boolean;
   max_concurrent_chats?: number;
