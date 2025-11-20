@@ -13,7 +13,7 @@ interface GuesstState {
   messages: { type: string; content: string; }[];
   isUserConected: boolean;
   created_at: string;
-  status: string;
+  status?: string;
 }
 
 const initialState: GuesstState = {
@@ -27,7 +27,7 @@ const initialState: GuesstState = {
   messages: [],
   isUserConected: false,
   created_at: '',
-  status: ''
+  status: undefined
 };
   
 export const guestSlice = createSlice({
