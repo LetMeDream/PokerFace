@@ -1,6 +1,6 @@
 import './Second.css'
-import dekstop from '../../assets/sections/second/desktop.png'
-import bigercreen from '../../assets/sections/second/3220.png'
+import dekstop from '../../assets/sections/second/banner-second-web-juega365.png'
+import bigercreen from '../../assets/sections/second/banner-second-3220-juega365.png'
 
 const Second = () => {
   return (
