@@ -25,15 +25,14 @@ const useGeneralInbox = () => {
 
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
-    // dispatch(assignTicketToAgent({ ticketId: assigningTicketId, agentChatId: agentId, agentName: `${first_name} ${last_name}` }));
     const result = await refetchAssignedChats();
     const data = (result as any)?.data;
-    const waitingResult = await refetchWaitingChats();
-    const waitingData = (waitingResult as any)?.data;
     if (data && data.chats) {
       // Update assigned chats in the store
       dispatch(setAssignedChats(data.chats));
     }
+    const waitingResult = await refetchWaitingChats();
+    const waitingData = (waitingResult as any)?.data;
     if (waitingData && waitingData.chats) {
       // Update waiting chats in the store
       dispatch(setTickets(waitingData.chats));
