@@ -1,5 +1,5 @@
 import React from 'react'
-import Header from './Header';
+import Header from './Header/Header';
 import GeneralInbox from './GeneralInbox/GeneralInbox';
 import { useSelector } from 'react-redux';
 /* We NORMALIZED tickets in our store, so now we need to SELECT them properly */

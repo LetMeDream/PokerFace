@@ -1,9 +1,11 @@
-import { logUserOut } from "../../utils/actions"
+import { logUserOut } from "../../../utils/actions"
 import { useSelector } from "react-redux"
-import type { UserState } from "../../types/Slices";
+import type { UserState } from "../../../types/Slices";
+import { Notifications } from "./Notifications";
 
 const Header = () => {
   const user = useSelector((state: any) => state.user) as UserState;
+  
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
@@ -13,6 +15,9 @@ const Header = () => {
       </div>
 
       <div className="navbar-end gap-4">
+
+        <Notifications />
+
         <span>
           Bienvenido, {user.username || 'Usuario'}!
         </span>
