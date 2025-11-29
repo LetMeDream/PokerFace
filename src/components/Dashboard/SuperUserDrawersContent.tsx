@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import Header from './Header'
+import Header from './Header/Header'
 import AgentsCRUD from './AgentsCRUD/AgentsCRUD';
 import { useGetAdminAgentsQuery } from '../../services/service';
 import { setAppAgents } from '../../store/slices/user';
