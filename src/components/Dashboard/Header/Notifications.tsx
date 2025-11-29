@@ -1,61 +1,34 @@
-import { useEffect, useState, useRef } from 'react';
-import { useGetNotificationsQuery } from '../../../services/service';
 import { IoIosNotifications } from 'react-icons/io';
-import { useDispatch } from 'react-redux';
-import { setNotifications } from '../../../store/slices/agent';
 import type { NotificationItem } from '../../../types/Slices';
 import { formatDistance } from "date-fns";
+import useNotifications from '../../../hooks/useNotifications';
+import { useEffect } from 'react';
 
 export const Notifications = () => {
-  const { data: notificationsData } = useGetNotificationsQuery();
-  const dispatch = useDispatch();
+  const {
+    isOpen,
+    setIsOpen,
+    dropdownRef,
+    lastFiveNotifications,
+    notificationsData
+  } = useNotifications();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (notificationsData) {
-      dispatch(setNotifications(notificationsData.notifications));
-    }
-  }, [notificationsData, dispatch]);
-
-  // cerrar al hacer click fuera
-  useEffect(() => {
-    const onClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
-    };
-
-    document.addEventListener('mousedown', onClickOutside);
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('mousedown', onClickOutside);
-      document.removeEventListener('keydown', onKey);
-    };
-  }, []);
-
-  const lastFiveNotifications = notificationsData
-    ? notificationsData.notifications.slice(0, 5)
-    : [];
-
-  useEffect(() => {
-    console.log(isOpen)
-  }, [isOpen])
-  
+    useEffect(() => {
+      console.log(isOpen)
+    }, [isOpen])
 
   return (
     <>
       {/* añadir la clase dropdown-open cuando isOpen es true */}
-      <div ref={dropdownRef} className={`dropdown ${isOpen ? 'dropdown-open' : ''}`}>
-        <button
-          tabIndex={0}
-          className="btn btn-secondary !bg-secondary gap-0 !px-3 group"
-          onClick={() => setIsOpen(!isOpen)} 
-          aria-expanded={isOpen}
+      <div ref={dropdownRef} className={`dropdown`}>
+          
+        {/* change popover-1 and --anchor-1 names. Use unique names for each dropdown */}
+        {/* For TSX uncomment the commented types below */}
+        <button 
+          className="btn" popoverTarget="popover-1" style={{ anchorName: "--anchor-1" } as React.CSSProperties}
+          onClick={() => {
+            setIsOpen(!isOpen)
+          }}   
         >
           <IoIosNotifications size={20} className="group-hover:text-primary" />
           <div className="badge badge-sm badge-secondary !px-0 group-hover:text-primary">
@@ -63,10 +36,8 @@ export const Notifications = () => {
           </div>
         </button>
 
-        <div
-          tabIndex={-1}
-          className="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm w-[40ch] truncate"
-        >
+        <div className="dropdown menu w-[40ch] rounded-box bg-base-100 shadow-sm !truncate"
+            popover="auto" id="popover-1" style={{ positionAnchor: "--anchor-1" } as React.CSSProperties }>
           <li>
             <h3 className="font-bold !text-white border-b-1 border-b-gray-200 pb-2 mb-2 text-center">Notificaciones</h3>
           </li>
