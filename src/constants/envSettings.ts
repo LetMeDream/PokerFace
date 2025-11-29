@@ -19,4 +19,5 @@ export const endpoints = {
   ADMIN_CREATE_AGENT: `/admin-agents/`, // Post
   DELETE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Delete
   UPDATE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Put
+  NOTIFICATIONS: `/notifications/`, // Get
 }

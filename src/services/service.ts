@@ -4,7 +4,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 import { endpoints } from '../constants/envSettings';
-import type { LOGINJWTSuccess, TicketsResponse, ticketsSuccess, guestMessage, LoginResponse, CreateAgentPayload } from '../types/Slices';
+import type { LOGINJWTSuccess, TicketsResponse, ticketsSuccess, guestMessage, LoginResponse, CreateAgentPayload, Notifications } from '../types/Slices';
 import type { RootState } from '../store/store';
 import type { ContactFormValues } from '../types/Chat';
 
@@ -237,6 +237,12 @@ export const tribet_api = createApi({
       invalidatesTags: ['AdminAgents'],
     }),
 
+    // * NOTIFICATIONS
+    // `GET /api/notifications/`
+    getNotifications: builder.query<Notifications, void>({
+      query: () => ({ url: endpoints.NOTIFICATIONS, method: 'GET' }),
+    }),
+
 
 
 
@@ -343,6 +349,7 @@ export const {
   useCreateAgentMutation,
   useDeleteAgentMutation,
   useUpdateAgentMutation,
+  useGetNotificationsQuery,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

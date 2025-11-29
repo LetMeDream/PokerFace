@@ -1,10 +1,10 @@
-import type { AllTickets, NormalizedTickets, NormalizedAgents } from "../types/Slices";
+import type { AllTickets, NormalizedTickets, NormalizedAgents, NormalizedNotifications } from "../types/Slices";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import type { SerializedError } from "@reduxjs/toolkit"
 import toast from "react-hot-toast";
 
 /**
- * Normaliza un array de tickets a { byId, allIds }
+ * Normalizando un array de tickets a { byId, allIds }
  * Usa 'chat_room_id' como clave única
  */
 export const normalizeTickets = (tickets: AllTickets = []) => {
@@ -22,7 +22,7 @@ export const normalizeTickets = (tickets: AllTickets = []) => {
 };
 
 /**
- * Normaliza un array de Agents a { byId, allIds }
+ * Normalizando un array de Agents a { byId, allIds }
  */
 export const normalizeAgents = (agents: any[] = []) => {
   return agents.reduce<NormalizedAgents>(
@@ -37,6 +37,23 @@ export const normalizeAgents = (agents: any[] = []) => {
     { byId: {}, allIds: [] }
   );
 };
+
+
+/* Normalizing a Notifications Array to a { byId, allIds } form */
+export const normalizeNotifications = (notifications: any[] = []) => {
+  return notifications.reduce<NormalizedNotifications>(
+    (acc, notification) => {
+      const id = notification.id;
+      if (id) {
+        acc.byId[id] = notification;
+        acc.allIds.push(id);
+      }
+      return acc;
+    },
+    { byId: {}, allIds: [] }
+  );
+};
+
 
 /** Utility function that returns a Promise that resolves after a specified delay in milliseconds */
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

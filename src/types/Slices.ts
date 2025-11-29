@@ -67,6 +67,11 @@ export type NormalizedAgents = {
     allIds: number[]
 }
 
+export type NormalizedNotifications = {
+    byId: Record<number, any>,
+    allIds: number[]
+}
+
 /* For 
 * Service
 */
@@ -168,4 +173,25 @@ export interface CreateAgentPayload {
   department?: string;
   is_available?: boolean;
   max_concurrent_chats?: number;
+}
+
+
+
+/* Type for NOTIFICATIONS GET endpoint */
+export interface Notifications {
+  notifications: NotificationItem[];
+  total_count: number;
+  unread_count: number;
+}
+
+export interface NotificationItem {
+  id: number;
+  chat_room_id: string;
+  chat_room_subject: string;
+  created_at: string; // ISO 8601
+  is_read: boolean;
+  message: string;
+  notification_type: string;
+  read_at: string | null; // ISO 8601 or null
+  title: string;
 }

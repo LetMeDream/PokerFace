@@ -1,7 +1,7 @@
 /* User slice */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { normalizeTickets } from '../../utils/helpers';
+import { normalizeTickets, normalizeNotifications } from '../../utils/helpers';
 
 export interface AgentState {
   can_take_chat: boolean;
@@ -19,6 +19,11 @@ export interface AgentState {
     byId: Record<string, any>,
     allIds: string[] | number[];
   }
+  /* Normalized Notifications */
+  notifications: {
+    byId: Record<string, any>,
+    allIds: string[] | number[];
+  }
 }
 
 const initialState: AgentState = {
@@ -32,7 +37,8 @@ const initialState: AgentState = {
   max_concurrent_chats: 0,
   rating: null,
   total_resolved_chats: 0,
-  assigned_chats: { byId: {}, allIds: [] }
+  assigned_chats: { byId: {}, allIds: [] },
+  notifications: { byId: {}, allIds: []  }
 };
   
 export const agentSlice = createSlice({
@@ -48,10 +54,14 @@ export const agentSlice = createSlice({
     setAssignedChats: (state, action) => {
       const { byId, allIds } = normalizeTickets(action.payload);
       state.assigned_chats = { byId, allIds };
-    }
+    },
+    setNotifications: (state, action) => {
+      const { byId, allIds } = normalizeNotifications(action.payload);
+      state.notifications = { byId, allIds };
+    },
   },
 });
 
-export const { setChatProfile, unsetChatProfile, setAssignedChats } = agentSlice.actions;
+export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications } = agentSlice.actions;
 
 export default agentSlice.reducer;
