@@ -5,7 +5,7 @@ import { Notifications } from "./Notifications";
 
 const Header = () => {
   const user = useSelector((state: any) => state.user) as UserState;
-  
+  const fullName = `${user.first_name || ''} ${user.last_name || ''}`.trim(); 
 
   return (
     <div className="navbar bg-base-300 shadow-sm">
@@ -18,8 +18,11 @@ const Header = () => {
 
         <Notifications />
 
-        <span>
-          Bienvenido, {user.username || 'Usuario'}!
+        <span
+          className="welcome text-sm font-medium leading-4"
+        >
+          Bienvenido, <br/> 
+          {fullName || user.username || 'Usuario'}!
         </span>
         <a className="btn !text-primary !bg-secondary" onClick={logUserOut}>Log out</a>
       </div>
