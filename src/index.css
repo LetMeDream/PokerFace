@@ -10,11 +10,13 @@
 * {
   --color-primary: #ffb400;
   --color-secondary: #242834;
+  --color-secondary-light: #2e3246;
 }
 
 @theme {
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
+  --color-secondary-light: var(--color-secondary-light);
 }
 
 #root {
