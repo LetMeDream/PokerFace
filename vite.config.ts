@@ -7,7 +7,11 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: '/PokerFace/',
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: ['babel-plugin-react-compiler']
+      }
+    }),
     tailwindcss()
   ]
 })
