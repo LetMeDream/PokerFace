@@ -108,7 +108,7 @@ const baseQueryWithReAuth: BaseQueryFn<
 
 export const tribet_api = createApi({
   // declare known tag types so providesTags/invalidatesTags accept string literals
-  tagTypes: ['WaitingChats', 'AssignedChats', 'AdminAgents'],
+  tagTypes: ['WaitingChats', 'AssignedChats', 'AdminAgents', 'Notifications'],
   baseQuery: baseQueryWithReAuth,
   endpoints: (builder) => ({
 
@@ -119,7 +119,7 @@ export const tribet_api = createApi({
     // POST 'api/auth/login/'
     login: builder.mutation<LoginResponse, { username: string; password: string }>({
       query: (credentials) => ({ url: endpoints.LOGIN, method: 'POST', body: credentials }),
-      invalidatesTags: ['WaitingChats', 'AssignedChats', 'AdminAgents'],
+      invalidatesTags: ['WaitingChats', 'AssignedChats', 'AdminAgents', 'Notifications'],
     }),
     // `POST /api/auth/logout/`
     logout: builder.mutation<void, void>({
@@ -241,8 +241,14 @@ export const tribet_api = createApi({
     // `GET /api/notifications/`
     getNotifications: builder.query<Notifications, void>({
       query: () => ({ url: endpoints.NOTIFICATIONS, method: 'GET' }),
+      providesTags: ['Notifications'],
     }),
 
+    // POST /api/notifications/mark_read/`
+    markNotificationRead: builder.mutation<boolean, { notificationIds: number[] }>({
+      query: ({ notificationIds }) => ({ url: endpoints.MARK_NOTIFICATION_READ(), method: 'POST', body: { notification_ids: notificationIds } }),
+      invalidatesTags: ['Notifications'],
+    }),
 
 
 
@@ -350,6 +356,7 @@ export const {
   useDeleteAgentMutation,
   useUpdateAgentMutation,
   useGetNotificationsQuery,
+  useMarkNotificationReadMutation,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

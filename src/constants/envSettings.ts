@@ -20,4 +20,5 @@ export const endpoints = {
   DELETE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Delete
   UPDATE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Put
   NOTIFICATIONS: `/notifications/`, // Get
+  MARK_NOTIFICATION_READ: () => `/notifications/mark_read/`, // Post
 }
