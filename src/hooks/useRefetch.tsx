@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { useGetAssignedChatsQuery, useGetWaitingChatsQuery, useGetGuestChatStatusQuery } from '../services/service';
-import { setAssignedChats } from '../store/slices/agent';
+import { useGetAssignedChatsQuery, useGetWaitingChatsQuery, useGetGuestChatStatusQuery, useGetNotificationsQuery } from '../services/service';
+import { setAssignedChats, setNotifications } from '../store/slices/agent';
 import { setTickets } from '../store/slices/base';
 import { setGuestMessages, setGuestStatus } from '../store/slices/guest';
 import { useDispatch } from 'react-redux';
@@ -37,6 +37,15 @@ export const useRefetchWaitingChats = () => {
   }
 }
 
+/* Refetches Notifications */
+export const useRefetchNotifications = () => {
+  const dispatch = useDispatch();
+  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000 });
+
+  useEffect(() => {
+    dispatch(setNotifications(notificationsData?.notifications || []));
+  }, [notificationsData, dispatch]);
+}
 
 /* Refetches guest chat status */
 export const useRefetchGuestChatStatus = () => {
