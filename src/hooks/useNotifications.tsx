@@ -28,12 +28,20 @@ const useNotifications = () => {
     /* See More */
     useEffect(() => {
       if (notificationsData) {
-        const sortedNotifications = [...notificationsData.notifications].sort((a, b) => 
+        const sortedNotifications = [...notificationsData.notifications.filter(n => !n.is_read)].sort((a, b) => 
           (Number(a.is_read) - Number(b.is_read))
         );
         setLastFiveNotifications(sortedNotifications.slice(0, 5 + extraNotificationsLoaded));
       }
     }, [extraNotificationsLoaded, setLastFiveNotifications, notificationsData]);
+
+    /* Get Unread notifications */
+    useEffect(() => {
+      if (notificationsData) {
+        const unreadNotifications = notificationsData.notifications.filter(n => !n.is_read);
+        setLastFiveNotifications(unreadNotifications.slice(0, 5 + extraNotificationsLoaded));
+      }
+    }, [notificationsData, extraNotificationsLoaded]);
 
     /* Reset */
     useEffect(() => {
