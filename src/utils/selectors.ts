@@ -172,3 +172,10 @@ export const selectAgentsArray = createSelector(
   (state: RootState) => state.user.assigned_agents.allIds,
   (byId, allIds) => allIds.map(id => byId[id]).filter((a): a is any => a !== undefined)
 );
+
+/* De-normalize Notifications */
+export const selectNotificationsArray = createSelector(
+  (state: RootState) => state.agent.notifications.byId,
+  (state: RootState) => state.agent.notifications.allIds,
+  (byId, allIds) => allIds.map(id => byId[id]).filter((n): n is any => n !== undefined)
+);
