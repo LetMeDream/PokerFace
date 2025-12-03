@@ -4,7 +4,7 @@ import { useMarkNotificationReadMutation } from '../../services/service'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
-const SingularNotification = () => {
+const AllNotifications = () => {
   const classnames = {
     container: 'bg-secondary container !min-w-full !min-h-[100dvh]',
   }
@@ -47,4 +47,4 @@ const SingularNotification = () => {
   )
 }
 
-export default SingularNotification
+export default AllNotifications
