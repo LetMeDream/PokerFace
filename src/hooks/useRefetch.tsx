@@ -40,11 +40,15 @@ export const useRefetchWaitingChats = () => {
 /* Refetches Notifications */
 export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
-  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000 });
+  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
 
   useEffect(() => {
     dispatch(setNotifications(notificationsData?.notifications || []));
   }, [notificationsData, dispatch]);
+
+  return {
+    
+  }
 }
 
 /* Refetches guest chat status */
