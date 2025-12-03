@@ -6,9 +6,11 @@ import { useMarkNotificationReadMutation } from '../services/service'
 import type { NotificationItem } from '../types/Slices'
 import { useTakeChatMutation } from '../services/service'
 import { setSelectedTicketId } from '../store/slices/base'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../store/store'
 
 const useNotifications = () => {
-    const { data: notificationsData } = useGetNotificationsQuery();
+    const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
     const dispatch = useDispatch();
   
     const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +31,7 @@ const useNotifications = () => {
     /* See More */
     useEffect(() => {
       if (notificationsData) {
-        const sortedNotifications = [...notificationsData.notifications.filter(n => !n.is_read)].sort((a, b) => 
+        const sortedNotifications = [...notificationsData.notifications.filter((n: NotificationItem) => !n.is_read)].sort((a, b) => 
           (Number(a.is_read) - Number(b.is_read))
         );
         setLastFiveNotifications(sortedNotifications.slice(0, 5 + extraNotificationsLoaded));
@@ -39,7 +41,7 @@ const useNotifications = () => {
     /* Get Unread notifications */
     useEffect(() => {
       if (notificationsData) {
-        const unreadNotifications = notificationsData.notifications.filter(n => !n.is_read);
+        const unreadNotifications = notificationsData.notifications.filter((n: NotificationItem) => !n.is_read);
         setLastFiveNotifications(unreadNotifications.slice(0, 5 + extraNotificationsLoaded));
       }
     }, [notificationsData, extraNotificationsLoaded]);
@@ -56,19 +58,32 @@ const useNotifications = () => {
 
     /* Refactor read notification logic */
     const [takeChat] = useTakeChatMutation();
+    const assignedChats = useSelector((state: RootState) => state.agent.assigned_chats);
+
     const goToNotification = async (notification: NotificationItem) => {
       try {
+        const isAssigned = assignedChats.byId[notification.chat_room_id];
+
         if (notification.notification_type === 'new_chat') {
-          await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+          if (!isAssigned) {
+            await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+          }
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
           dispatch(setSelectedTicketId(notification.chat_room_id));
         } else if (notification.notification_type === 'agent_assigned') {
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
           dispatch(setSelectedTicketId(notification.chat_room_id));
         } else if (notification.notification_type === 'new_message') {
+          if (!isAssigned) {
+            await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+          }
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
           dispatch(setSelectedTicketId(notification.chat_room_id));
-        } else if (notification.notification_type === 'chat_resolved' || notification.notification_type === 'chat_closed' || notification.notification_type === 'agent_unassigned') {
+        } else if (
+          notification.notification_type === 'chat_resolved'  || 
+          notification.notification_type === 'chat_closed'    || 
+          notification.notification_type === 'agent_unassigned'
+        ) {
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
         }
       } catch (error) {
