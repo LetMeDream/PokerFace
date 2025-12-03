@@ -28,7 +28,10 @@ const useNotifications = () => {
     /* See More */
     useEffect(() => {
       if (notificationsData) {
-        setLastFiveNotifications(notificationsData.notifications.slice(0, 5 + extraNotificationsLoaded));
+        const sortedNotifications = [...notificationsData.notifications].sort((a, b) => 
+          (Number(a.is_read) - Number(b.is_read))
+        );
+        setLastFiveNotifications(sortedNotifications.slice(0, 5 + extraNotificationsLoaded));
       }
     }, [extraNotificationsLoaded, setLastFiveNotifications, notificationsData]);
 
