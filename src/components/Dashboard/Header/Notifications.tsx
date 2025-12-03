@@ -44,7 +44,6 @@ export const Notifications = () => {
               handleSeeNotification={handleSeeNotification}
               key={notification.id}
               notification={notification}
-              // onSelect={() => setIsOpen(false)}
             />
           ))}
           {/* No notifications */}

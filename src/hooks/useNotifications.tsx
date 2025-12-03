@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
 import { useGetNotificationsQuery } from '../services/service'
 import { useDispatch } from 'react-redux'
-import { setCurrentNotification, setNotifications } from '../store/slices/agent'
+import { setNotifications } from '../store/slices/agent'
 import { useMarkNotificationReadMutation } from '../services/service'
 import type { NotificationItem } from '../types/Slices'
-import { useNavigate } from 'react-router-dom'
+import { useTakeChatMutation } from '../services/service'
+import { setSelectedTicketId } from '../store/slices/base'
 
 const useNotifications = () => {
     const { data: notificationsData } = useGetNotificationsQuery();
@@ -54,15 +55,25 @@ const useNotifications = () => {
     const [markNotificationRead] = useMarkNotificationReadMutation();
 
     /* Refactor read notification logic */
-    const navigate = useNavigate();
-    const goToNotification = (notification: NotificationItem) => {
+    const [takeChat] = useTakeChatMutation();
+    const goToNotification = async (notification: NotificationItem) => {
       try {
-        dispatch(setCurrentNotification(notification));
-        navigate(`/dashboard/notification/${notification.chat_room_id}`);
+        if (notification.notification_type === 'new_chat') {
+          await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+          await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+          dispatch(setSelectedTicketId(notification.chat_room_id));
+        } else if (notification.notification_type === 'agent_assigned') {
+          await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+          dispatch(setSelectedTicketId(notification.chat_room_id));
+        } else if (notification.notification_type === 'new_message') {
+          await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+          dispatch(setSelectedTicketId(notification.chat_room_id));
+        } else if (notification.notification_type === 'chat_resolved' || notification.notification_type === 'chat_closed' || notification.notification_type === 'agent_unassigned') {
+          await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+        }
       } catch (error) {
         console.error('Failed to navigate to notification:', error);
       }
-
     }
 
 

@@ -7,8 +7,8 @@ export interface BaseState {
     byId: Record<number, ChatTicket>,
     allIds: number[]
   };
-  selectedTicketId: number | null // Id for the currently established conversation/ticket
-  assigningTicketId?: number | null // Id for the ticket being assigned right now
+  selectedTicketId: string | null  | undefined// Id for the currently established conversation/ticket
+  assigningTicketId?: string | null  | undefined// Id for the ticket being assigned right now
   hasAutoOpened: boolean
 }
 

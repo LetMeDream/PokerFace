@@ -191,7 +191,8 @@ export interface NotificationItem {
   created_at: string; // ISO 8601
   is_read: boolean;
   message: string;
-  notification_type: string;
+  // "notification_type": "new_chat|new_message|chat_assigned|chat_transferred|chat_resolved",
+  notification_type: 'new_chat' | 'agent_assigned' | 'new_message' | 'chat_resolved' | 'chat_closed' | 'agent_unassigned' ;
   read_at: string | null; // ISO 8601 or null
   title: string;
 }

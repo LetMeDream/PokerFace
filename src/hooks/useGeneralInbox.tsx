@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
-import { reopenTicket, setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
-import { useCloseChatMutation, useOpenTicketMutation, useTakeChatMutation } from '../services/service';
+import { setHasAutoOpened, setSelectedTicketId } from '../store/slices/base';
+import { useCloseChatMutation, useTakeChatMutation } from '../services/service';
 import { deleteTicket } from '../store/slices/base';
 import { useDispatch } from "react-redux";
 import { selectFilteredUnassignedTickets } from '../utils/selectors';
@@ -106,18 +106,7 @@ const useGeneralInbox = () => {
   */
   const reopenTicketModalId = 'reopen_ticket_modal'
   const closeReopenTicketBntId = `reopen_ticket_btn_${assigningTicketId}`;
-  const [ reopenTicketApiCall, { isLoading: isReopeningTicket } ] = useOpenTicketMutation();
-  const handleReopenTicket = async () => {
-    try {
-      await reopenTicketApiCall({ ticketId: assigningTicketId });
-      dispatch(reopenTicket({ ticketId: assigningTicketId }));
-      // Close modal
-      const closeModalButton = document.getElementById(closeReopenTicketBntId) as HTMLButtonElement | null;
-      if (closeModalButton) closeModalButton.click();
-    } catch (error) {
-      console.error('Error reopening ticket:', error);
-    }
-  }
+
 
 
 
@@ -136,8 +125,6 @@ const useGeneralInbox = () => {
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,
-    handleReopenTicket,
-    isReopeningTicket,
     closeReopenTicketBntId
   }
 }

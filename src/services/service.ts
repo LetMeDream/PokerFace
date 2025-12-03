@@ -140,25 +140,25 @@ export const tribet_api = createApi({
     }),
     
     // `POST /api/chat-rooms/{id}/take_chat/` (assign ticket/chat to agent)
-    takeChat: builder.mutation<boolean, { ticketId: number | null | undefined}>({
+    takeChat: builder.mutation<boolean, { ticketId: string | null | undefined}>({
       query: ({ ticketId }) => ({ url: endpoints.TAKE_CHAT(ticketId), method: 'POST' }),
       invalidatesTags: ['WaitingChats', 'AssignedChats'],
     }),
 
     // `POST /api/chat-rooms/{id}/resolve/` Resolve Chat
-    resolveChat: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+    resolveChat: builder.mutation<boolean, { ticketId: string | null | undefined }>({
       query: ({ ticketId }) => ({ url:endpoints.RESOLVE_CHAT(ticketId), method: 'POST' }),
       invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),
 
     // `POST /api/chat-rooms/{id}/unassign_agent/` Unassign Agent from Chat
-    unassignAgent: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+    unassignAgent: builder.mutation<boolean, { ticketId: string | null | undefined }>({
       query: ({ ticketId }) => ({ url: endpoints.UNASSING_AGENT(ticketId), method: 'POST' }),
       invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),
 
     // `POST /api/chat-rooms/{id}/close/` Close Chat
-    closeChat: builder.mutation<boolean, { ticketId: number | null | undefined }>({
+    closeChat: builder.mutation<boolean, { ticketId: string | null | undefined }>({
       query: ({ ticketId }) => ({ url: endpoints.CLOSE_CHAT(ticketId), method: 'POST' }),
       invalidatesTags: ['WaitingChats', 'AssignedChats']
     }),

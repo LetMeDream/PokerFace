@@ -111,7 +111,7 @@ const Login = () => {
                   className={`
                     focus:!outline-none focus:!ring-2 dark:focus:!ring-green-400 focus:!ring-opacity-75 
                   dark:text-white py-2.5 px-4 rounded-lg font-semibold border border-gray-200!
-                    mt-2 relative overflow-hidden w-full transition duration-100 mx-auto`
+                    mt-2 relative overflow-hidden w-full transition duration-100 mx-auto bg-[#1a1a1a]`
                   }
                   disabled={isLoading}
                 >
