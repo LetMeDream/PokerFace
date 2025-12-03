@@ -1,11 +1,11 @@
-import useDashboard from "../hooks/useDashboard";
-import { setSelectedTicketId } from "../store/slices/base";
+import useDashboard from "../../hooks/useDashboard";
+import { setSelectedTicketId } from "../../store/slices/base";
 import { useDispatch } from "react-redux";
-import type { ChatTicket } from "../types/Slices";
-import SideBar from "../components/Dashboard/SideBar";
-import DrawersContent from "../components/Dashboard/DrawersContent";
+import type { ChatTicket } from "../../types/Slices";
+import SideBar from "../../components/Dashboard/SideBar";
+import DrawersContent from "../../components/Dashboard/DrawersContent";
 import { useSelector } from "react-redux";
-import SuperUserDrawersContent from "../components/Dashboard/SuperUserDrawersContent";
+import SuperUserDrawersContent from "../../components/Dashboard/SuperUserDrawersContent";
 
 export default function DashboardPage() {
   const { drawerButtonRef, containerRef, searchValue, setSearchValue, classnames } = useDashboard();
