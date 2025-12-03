@@ -30,7 +30,7 @@ export const Notifications = () => {
         >
           <IoIosNotifications size={20} className="group-hover:text-primary" />
           <div className="badge badge-sm badge-secondary group-hover:text-primary !bg-red-400 p-2">
-            {notificationsData ? notificationsData.notifications.length : 0}
+            {notificationsData ? notificationsData.notifications.filter(n => !n.is_read).length : 0}
           </div>
         </button>
 
