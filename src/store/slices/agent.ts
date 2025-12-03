@@ -2,6 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { normalizeTickets, normalizeNotifications } from '../../utils/helpers';
+import type { NotificationItem } from '../../types/Slices';
 
 export interface AgentState {
   can_take_chat: boolean;
@@ -23,7 +24,8 @@ export interface AgentState {
   notifications: {
     byId: Record<string, any>,
     allIds: string[] | number[];
-  }
+  },
+  current_notification: null | NotificationItem;
 }
 
 const initialState: AgentState = {
@@ -38,7 +40,8 @@ const initialState: AgentState = {
   rating: null,
   total_resolved_chats: 0,
   assigned_chats: { byId: {}, allIds: [] },
-  notifications: { byId: {}, allIds: []  }
+  notifications: { byId: {}, allIds: []  },
+  current_notification: null,
 };
   
 export const agentSlice = createSlice({
@@ -59,9 +62,11 @@ export const agentSlice = createSlice({
       const { byId, allIds } = normalizeNotifications(action.payload);
       state.notifications = { byId, allIds };
     },
+    setCurrentNotification: (state, action: PayloadAction<NotificationItem | null>) => {
+      state.current_notification = action.payload;
+    }
   },
 });
 
-export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications } = agentSlice.actions;
-
+export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification } = agentSlice.actions;
 export default agentSlice.reducer;
