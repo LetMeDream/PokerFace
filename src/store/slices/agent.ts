@@ -23,7 +23,7 @@ export interface AgentState {
   /* Normalized Notifications */
   notifications: {
     byId: Record<string, any>,
-    allIds: string[] | number[];
+    allIds: (string | number)[];
   },
   current_notification: null | NotificationItem;
 }
@@ -62,11 +62,18 @@ export const agentSlice = createSlice({
       const { byId, allIds } = normalizeNotifications(action.payload);
       state.notifications = { byId, allIds };
     },
+    removeNotification: (state, action) => {
+      const idToRemove = action.payload;
+      delete state.notifications.byId[idToRemove];
+      state.notifications.allIds = state.notifications.allIds.filter(
+        (id) => id !== idToRemove
+      );
+    },
     setCurrentNotification: (state, action: PayloadAction<NotificationItem | null>) => {
       state.current_notification = action.payload;
     }
   },
 });
 
-export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification } = agentSlice.actions;
+export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification, removeNotification } = agentSlice.actions;
 export default agentSlice.reducer;
