@@ -109,8 +109,8 @@ const Login = () => {
                 <button
                   type="submit" 
                   className={`
-                    focus:!outline-none focus:!ring-2 focus:!ring-green-400 focus:!ring-opacity-75 
-                  text-white py-2.5 px-4 rounded-lg font-semibold
+                    focus:!outline-none focus:!ring-2 dark:focus:!ring-green-400 focus:!ring-opacity-75 
+                  dark:text-white py-2.5 px-4 rounded-lg font-semibold border border-gray-200!
                     mt-2 relative overflow-hidden w-full transition duration-100 mx-auto`
                   }
                   disabled={isLoading}
@@ -123,7 +123,7 @@ const Login = () => {
                   </span>
                   {/* spinner shown while animating */}
                   <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-75 ${isLoading ? 'opacity-100' : 'opacity-0'}`}>
-                      <div className="border-2 border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
+                      <div className="border-2 dark:border-white border-t-transparent rounded-full w-6 h-6 animate-spin"></div>
                   </div>
                 </button>
               </div>

@@ -62,7 +62,7 @@ const Pagination: React.FC<PaginationProps> = ({
     <div className="join">
       {/* Botón anterior */}
       <button
-        className="join-item btn"
+        className="join-item btn bg-gray-600!"
         onClick={handlePrev}
         disabled={currentPage === 1}
       >
@@ -73,7 +73,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {pages.map((page, index) => {
         if (page === '...') {
           return (
-            <button key={`ellipsis-${index}`} className="join-item btn !p-3" disabled>
+            <button key={`ellipsis-${index}`} className="join-item btn !p-3 bg-gray-600!" disabled>
               ...
             </button>
           );
@@ -83,7 +83,7 @@ const Pagination: React.FC<PaginationProps> = ({
         return (
           <button
             key={pageNum}
-            className={`join-item btn ${currentPage === pageNum ? '!btn-active !bg-indigo-600' : ''}`}
+            className={`join-item btn bg-gray-600! ${currentPage === pageNum ? '!btn-active !bg-indigo-600' : ''}`}
             onClick={() => goToPage(pageNum)}
           >
             {pageNum}
@@ -93,9 +93,9 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* Botón siguiente */}
       <button
-        className="join-item btn"
+        className="join-item btn bg-gray-600!"
         onClick={handleNext}
-        disabled={currentPage === totalPages}
+        disabled={currentPage === totalPages || totalPages === 0}
       >
         »
       </button>

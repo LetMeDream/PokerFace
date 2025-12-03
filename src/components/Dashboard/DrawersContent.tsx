@@ -46,7 +46,7 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
         `}
         ref={drawerButtonRef}
       >
-          Conversaciones <span className="badge bg-secondary">{personalChatsQty}</span>
+          Conversaciones <span className="badge bg-secondary text-white">{personalChatsQty}</span>
       </label>
     </div>  
   )

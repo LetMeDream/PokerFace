@@ -23,7 +23,7 @@ export const Notifications = () => {
         {/* change popover-1 and --anchor-1 names. Use unique names for each dropdown */}
         {/* For TSX uncomment the commented types below */}
         <button 
-          className="btn !bg-secondary" popoverTarget="popover-1" style={{ anchorName: "--anchor-1" } as React.CSSProperties}
+          className="btn !bg-secondary text-gray-200" popoverTarget="popover-1" style={{ anchorName: "--anchor-1" } as React.CSSProperties}
           onClick={() => {
             setIsOpen(!isOpen)
           }}   

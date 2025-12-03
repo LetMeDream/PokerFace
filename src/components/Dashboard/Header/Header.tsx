@@ -10,7 +10,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="navbar bg-base-300 shadow-sm">
+    <div className="navbar bg-gray-600 shadow-sm">
       <div className="navbar-start">
 
         <a className="btn btn-ghost text-lg !text-sky-50" onClick={() => navigate('/dashboard')}>Agente</a>
@@ -21,7 +21,7 @@ const Header = () => {
         <Notifications />
 
         <span
-          className="welcome text-sm font-medium leading-4"
+          className="welcome text-sm font-medium leading-4 text-gray-200"
         >
           Bienvenido, <br/> 
           {fullName || user.username || 'Usuario'}!

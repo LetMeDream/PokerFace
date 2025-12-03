@@ -38,7 +38,7 @@ const useDashboard = () => {
 
   const classnames = {
     container: 'bg-secondary container !min-w-full !min-h-[100dvh]',
-    drawerBtn: 'btn drawer-button bg-base-300 rounded-none fixed bottom-[0.5px] left-[0.25px] px-10 py-6',
+    drawerBtn: 'btn drawer-button bg-gray-600 rounded-none fixed bottom-[0.5px] left-[0.25px] px-10 py-6',
     searchInput: "input input-bordered w-full caret-primary active:!ring-1 focus-within:!ring-1 focus-visible:!ring-1 focus:!ring-1 active:!outline-none focus-within:!outline-none focus-visible:!outline-none focus:!outline-none active:!border-none focus-within:!border-none focus-visible:!border-none focus:!border-none"
   }
 
