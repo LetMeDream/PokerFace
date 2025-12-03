@@ -25,30 +25,30 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
 
   return (
     <div 
-            className={classnames.container}
-            ref={containerRef}
-          >
-            {/* Header */}
-            <Header />
+      className={classnames.container}
+      ref={containerRef}
+    >
+      {/* Header */}
+      <Header />
 
-            {/* Current Selected chat conversation */}
-            {selectedTicketId ? (                
-              <AgentChat selectedTicketId={selectedTicketId} />
-            ) : (
-                <GeneralInbox />
-            )}
+      {/* Current Selected chat conversation */}
+      {selectedTicketId ? (                
+        <AgentChat selectedTicketId={selectedTicketId} />
+      ) : (
+          <GeneralInbox />
+      )}
 
-            {/* Button for drawer */}
-            <label 
-              htmlFor="my-drawer-1" 
-              className={`${classnames.drawerBtn} 
-                ${is_superuser ? 'hidden' : ''}
-              `}
-              ref={drawerButtonRef}
-            >
-                Conversaciones <span className="badge bg-secondary">{personalChatsQty}</span>
-            </label>
-          </div>  
+      {/* Button for drawer */}
+      <label 
+        htmlFor="my-drawer-1" 
+        className={`${classnames.drawerBtn} 
+          ${is_superuser ? 'hidden' : ''}
+        `}
+        ref={drawerButtonRef}
+      >
+          Conversaciones <span className="badge bg-secondary">{personalChatsQty}</span>
+      </label>
+    </div>  
   )
 }
 
