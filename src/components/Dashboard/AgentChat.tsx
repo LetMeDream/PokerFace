@@ -8,7 +8,7 @@ import type { RootState } from '../../store/store';
 import Modal from './Modal';
 import useAgentChat from '../../hooks/useAgentChat';
 
-const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
+const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
   /* Input state */
   const [newMessage, setNewMessage] = useState<string>("");
   /* Get selected ticket using supah cool selector */
@@ -25,13 +25,9 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
     isResolving,
     resolveChatHandler,
     handleReopenTicket,
-    isOpening,
-    reopenTicketHandler,
     unassignModalId,
     closeTicketModalId,
     closeBtnId,
-    reopenTicketModalId,
-    closeOpenTicketBtnId
   } = useAgentChat(selectedTicketId, newMessage, setNewMessage);
 
 
@@ -135,15 +131,6 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: number | null}) => {
         btnMessage='Cerrar Ticket'
         id={closeTicketModalId}
         closeBtnId={closeBtnId}
-      />
-      <Modal
-        acceptFunction={reopenTicketHandler}
-        isLoading={isOpening}
-        type='info'
-        message='¿Desea reabrir el ticket?'
-        btnMessage='Reabrir Ticket'
-        id={reopenTicketModalId}
-        closeBtnId={closeOpenTicketBtnId}
       />
     </div>
   )
