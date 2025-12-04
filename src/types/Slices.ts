@@ -3,6 +3,7 @@
 * For user 
 */
 import type { AgentState } from "../store/slices/agent";
+import type { notificationStatusKey } from "../constants/chat";
 export interface UserState {
   id: number | null;
   username: string | null;
@@ -67,8 +68,24 @@ export type NormalizedAgents = {
     allIds: number[]
 }
 
+
+export interface NotificationItem {
+  id: number;
+  chat_room_id: string;
+  chat_room_subject: string;
+  created_at: string; // ISO 8601
+  is_read: boolean;
+  message: string;
+  // "notification_type": "new_chat|new_message|chat_assigned|chat_transferred|chat_resolved",
+  notification_type: notificationStatusKey;
+  read_at: string | null; // ISO 8601 or null
+  title: string;
+}
+
+export type AllNotifications = NotificationItem[];
+
 export type NormalizedNotifications = {
-    byId: Record<number, any>,
+    byId: Record<number, NotificationItem>,
     allIds: number[]
 }
 
@@ -182,17 +199,4 @@ export interface Notifications {
   notifications: NotificationItem[];
   total_count: number;
   unread_count: number;
-}
-
-export interface NotificationItem {
-  id: number;
-  chat_room_id: string;
-  chat_room_subject: string;
-  created_at: string; // ISO 8601
-  is_read: boolean;
-  message: string;
-  // "notification_type": "new_chat|new_message|chat_assigned|chat_transferred|chat_resolved",
-  notification_type: 'new_chat' | 'agent_assigned' | 'new_message' | 'chat_resolved' | 'chat_closed' | 'agent_unassigned' ;
-  read_at: string | null; // ISO 8601 or null
-  title: string;
 }
