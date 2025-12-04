@@ -3,7 +3,7 @@ import useMediaQuery from "../hooks/useMediaQuery";
 import { useSelector } from "react-redux";
 import { setHasAutoOpened } from "../store/slices/base";
 import { useDispatch } from "react-redux";
-import { useRefetchWaitingChats, useRefetchNotifications } from "./useRefetch";
+import { useRefetchWaitingChats } from "./useRefetch";
 
 const useDashboard = () => {
   /* Resizing Logic */
@@ -45,7 +45,6 @@ const useDashboard = () => {
   /* Search logic value */
   const [searchValue, setSearchValue] = useState<string>('');
   useRefetchWaitingChats();
-  useRefetchNotifications();
 
   return {
     drawerButtonRef,
