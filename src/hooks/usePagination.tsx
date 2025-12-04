@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
-import type { AllTickets } from '../types/Slices';
 
-const usePagination = ({
-  elements,
-  itemsPerPage,
-  inboxSearchValue
+function usePagination<T>({ 
+    elements,
+    itemsPerPage,
+    inboxSearchValue
 }: {
-  elements: AllTickets;
-  itemsPerPage: number;
-  inboxSearchValue?: string;
-}) => {
+    elements: T[];
+    itemsPerPage: number;
+    inboxSearchValue?: string;
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(elements.length / itemsPerPage);
   /* Calculate indexes for the returned array */
