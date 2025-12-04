@@ -30,10 +30,12 @@ const useNotifications = () => {
       : []
     );
 
+    const currentNotifications = useSelector(selectNotificationsArray);
+
     /* See More */
     useEffect(() => {
       if (notificationsData) {
-        const sortedNotifications = [...notificationsData.notifications.filter((n: NotificationItem) => !n.is_read)].sort((a, b) => 
+        const sortedNotifications = [...currentNotifications.filter((n: NotificationItem) => !n.is_read)].sort((a, b) => 
           (Number(a.is_read) - Number(b.is_read))
         );
         setLastFiveNotifications(sortedNotifications.slice(0, 5));
@@ -43,10 +45,10 @@ const useNotifications = () => {
     /* Get Unread notifications */
     useEffect(() => {
       if (notificationsData) {
-        const unreadNotifications = notificationsData.notifications.filter((n: NotificationItem) => !n.is_read);
+        const unreadNotifications = currentNotifications.filter((n: NotificationItem) => !n.is_read);
         setLastFiveNotifications(unreadNotifications.slice(0, 5));
       }
-    }, [notificationsData]);
+    }, [notificationsData, currentNotifications]);
 
 
     
@@ -55,7 +57,6 @@ const useNotifications = () => {
     /* Refactor read notification logic */
     const [takeChat] = useTakeChatMutation();
     const assignedChats = useSelector((state: RootState) => state.agent.assigned_chats);
-    const currentNotifications = useSelector(selectNotificationsArray);
 
     const goToNotification = async (notification: NotificationItem) => {
       try {
@@ -72,7 +73,7 @@ const useNotifications = () => {
           dispatch(setSelectedTicketId(notification.chat_room_id));
         } else if (notification.notification_type === 'new_message') {
           if (!isAssigned) {
-            await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+            takeChat({ ticketId: notification.chat_room_id })
           }
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
           dispatch(setSelectedTicketId(notification.chat_room_id));
@@ -87,7 +88,7 @@ const useNotifications = () => {
         toast.success('');
       } catch (error) {
         // reset previously removed notification, if needed
-        dispatch(setNotifications(currentNotifications));
+        // dispatch(setNotifications(currentNotifications));
         console.error('Failed to navigate to notification:', error);
       }
     }
