@@ -7,6 +7,7 @@ interface PaginationProps {
   goToPrevPage?: () => void;
   goToNextPage?: () => void;
   isMobile?: boolean;
+  maxVisiblePages?: number;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -15,37 +16,47 @@ const Pagination: React.FC<PaginationProps> = ({
   goToPage,
   goToPrevPage,
   goToNextPage,
-  isMobile = true
+  maxVisiblePages = 5
 }) => {
   const pages: (number | string)[] = [];
 
-  if (totalPages <= 5) {
-    // Mostrar todas las páginas si son 5 o menos
+// 1. Caso Trivial: Si el total es menor o igual al máximo visible, mostrar todos.
+  if (totalPages <= maxVisiblePages) {
     for (let i = 1; i <= totalPages; i++) {
       pages.push(i);
     }
-  } else {
-    // Lógica para más de 5 páginas
-    if (currentPage <= 2) {
-      // Cerca del inicio: 1 2 3 ... último
-      if (isMobile) {
-        pages.push(1, 2, '...', totalPages);
-      } 
-    } else if (currentPage >= totalPages - 1) {
-      // Cerca del final: 1 ... n-2 n-1 n
-      if (isMobile) {
-        pages.push(1, '...', totalPages - 1, totalPages);
-      } else {
-        pages.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
-      }
-    } else {
-      // En el medio: 1 ... current-1 current current+1 ... último
-      if (isMobile) {
-        pages.push(1, '...', currentPage, '...', totalPages);
-      } else {
-        pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
-      }
+  }
+
+  // 2. Definir cuántas páginas fijas se mostrarán en los bordes (ej: 1, 2, ... o ..., 9, 10).
+  // Y cuántas alrededor de la página actual.
+  const edgeCount = 1; // Páginas fijas al inicio y al final (1 y totalPages)
+  const boundaryCount = 1; // Páginas adyacentes a la actual (current-1, current+1)
+  
+  // Calcular el rango del centro (alrededor de currentPage)
+  const startPage = Math.max(edgeCount + 1, currentPage - boundaryCount);
+  const endPage = Math.min(totalPages - edgeCount, currentPage + boundaryCount);
+
+  // 3. Agregar la primera página y los puntos suspensivos iniciales
+  if (!(totalPages <= maxVisiblePages)) pages.push(1);
+  if (startPage > edgeCount + 1) {
+    pages.push('...');
+  }
+  
+  // 4. Agregar las páginas centrales
+  for (let i = startPage; i <= endPage; i++) {
+    // Asegurar que no se repitan páginas ya agregadas (como la 1)
+    if (i > 1 && i < totalPages) {
+      pages.push(i);
     }
+  }
+
+  // 5. Agregar los puntos suspensivos finales y la última página
+  if (endPage < totalPages - edgeCount) {
+    pages.push('...');
+  }
+  // Asegurar que la última página se agregue solo si no es la página 1
+  if (totalPages > 1 && pages[pages.length - 1] !== totalPages) {
+    pages.push(totalPages);
   }
 
   const handlePrev = () => {
