@@ -1,14 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { useDispatch,  } from 'react-redux';
-import { useAgentSendMessageMutation, useUnassignAgentMutation, useResolveChatMutation, useOpenTicketMutation, useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
-import { reopenTicket } from '../store/slices/base';
+import { useAgentSendMessageMutation, useUnassignAgentMutation, useResolveChatMutation, useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
 import { setAssignedChats } from '../store/slices/agent';
 import { setTickets } from '../store/slices/base';
 import { unsetSelectedTicketId } from '../store/slices/base';
 import toast from 'react-hot-toast';
 import { useRefetchMyChat } from './useRefetch';
 
-const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNewMessage: (message: string) => void) => {
+const useAgentChat = (selectedTicketId: string | null, newMessage: string, setNewMessage: (message: string) => void) => {
     /* Ref to scroll */
     const chatBodyRef = useRef<HTMLDivElement | null>(null);
     const dispatch = useDispatch();
@@ -146,21 +145,8 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
       if (dialog) dialog.showModal();
     }
   
-    const [openTicketMutation, { isLoading: isOpening }] = useOpenTicketMutation();
     const closeOpenTicketBtnId = 'close_open_ticket_btn'
-    const reopenTicketHandler = async () => {
-      try {
-        if (selectedTicketId) {
-          await openTicketMutation({ ticketId: selectedTicketId }).unwrap();
-          dispatch(reopenTicket({ ticketId: selectedTicketId }));
-        }
-        const closeBtn = document.getElementById(closeOpenTicketBtnId) as HTMLButtonElement | null;
-        if (closeBtn) closeBtn.click();
-  
-      } catch (error) {
-        console.error('Error reabriendo el ticket:', error);
-      }
-    }
+
   
     const handleUnassign = () => {
       const dialog = document.getElementById(unassignModalId) as HTMLDialogElement | null;
@@ -188,8 +174,6 @@ const useAgentChat = (selectedTicketId: number | null, newMessage: string, setNe
     isResolving,
     resolveChatHandler,
     handleReopenTicket,
-    isOpening,
-    reopenTicketHandler,
     unassignModalId,
     closeTicketModalId,
     closeBtnId,
