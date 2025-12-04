@@ -22,7 +22,7 @@ export interface AgentState {
   }
   /* Normalized Notifications */
   notifications: {
-    byId: Record<string, any>,
+    byId: Record<string, NotificationItem>,
     allIds: (string | number)[];
   },
   current_notification: null | NotificationItem;
