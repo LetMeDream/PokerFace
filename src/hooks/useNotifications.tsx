@@ -1,13 +1,16 @@
 import { useEffect, useState, useRef } from 'react'
 import { useGetNotificationsQuery } from '../services/service'
 import { useDispatch } from 'react-redux'
-import { setNotifications } from '../store/slices/agent'
+import { setNotifications, removeNotification} from '../store/slices/agent'
 import { useMarkNotificationReadMutation } from '../services/service'
 import type { NotificationItem } from '../types/Slices'
 import { useTakeChatMutation } from '../services/service'
 import { setSelectedTicketId } from '../store/slices/base'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../store/store'
+import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
+import { selectNotificationsArray } from '../utils/selectors'
 
 const useNotifications = () => {
     const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
@@ -22,7 +25,6 @@ const useNotifications = () => {
       }
     }, [notificationsData, dispatch]);
 
-    const [extraNotificationsLoaded, setExtraNotificationsLoaded] = useState(0);
     const [lastFiveNotifications, setLastFiveNotifications] = useState<Array<NotificationItem>>(notificationsData 
       ? notificationsData.notifications.slice(0, 5) 
       : []
@@ -34,24 +36,18 @@ const useNotifications = () => {
         const sortedNotifications = [...notificationsData.notifications.filter((n: NotificationItem) => !n.is_read)].sort((a, b) => 
           (Number(a.is_read) - Number(b.is_read))
         );
-        setLastFiveNotifications(sortedNotifications.slice(0, 5 + extraNotificationsLoaded));
+        setLastFiveNotifications(sortedNotifications.slice(0, 5));
       }
-    }, [extraNotificationsLoaded, setLastFiveNotifications, notificationsData]);
+    }, [setLastFiveNotifications, notificationsData]);
 
     /* Get Unread notifications */
     useEffect(() => {
       if (notificationsData) {
         const unreadNotifications = notificationsData.notifications.filter((n: NotificationItem) => !n.is_read);
-        setLastFiveNotifications(unreadNotifications.slice(0, 5 + extraNotificationsLoaded));
+        setLastFiveNotifications(unreadNotifications.slice(0, 5));
       }
-    }, [notificationsData, extraNotificationsLoaded]);
+    }, [notificationsData]);
 
-    /* Reset */
-    useEffect(() => {
-      if (!isOpen) {
-        setExtraNotificationsLoaded(0);
-      }
-    }, [isOpen, setExtraNotificationsLoaded]);
 
     
     const [markNotificationRead] = useMarkNotificationReadMutation();
@@ -59,11 +55,12 @@ const useNotifications = () => {
     /* Refactor read notification logic */
     const [takeChat] = useTakeChatMutation();
     const assignedChats = useSelector((state: RootState) => state.agent.assigned_chats);
+    const currentNotifications = useSelector(selectNotificationsArray);
 
     const goToNotification = async (notification: NotificationItem) => {
       try {
         const isAssigned = assignedChats.byId[notification.chat_room_id];
-
+        dispatch(removeNotification(notification.id));
         if (notification.notification_type === 'new_chat') {
           if (!isAssigned) {
             await takeChat({ ticketId: notification.chat_room_id }).unwrap();
@@ -86,7 +83,11 @@ const useNotifications = () => {
         ) {
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
         }
+        // Signal success in some way, e.g., with a toast notification using icons
+        toast.success('');
       } catch (error) {
+        // reset previously removed notification, if needed
+        dispatch(setNotifications(currentNotifications));
         console.error('Failed to navigate to notification:', error);
       }
     }
@@ -104,8 +105,9 @@ const useNotifications = () => {
       }
     };
     /* see more notifications */
+    const navigate = useNavigate();
     const handleSeeMoreNotifications = () => {
-      setExtraNotificationsLoaded(prev => prev + 2);
+      navigate('/dashboard/notifications');
     }
 
   return {
