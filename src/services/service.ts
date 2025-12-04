@@ -1,34 +1,11 @@
 // api/tribet_api.ts
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { allTickets48 } from '../constants/chat';
 import { sleep } from '../utils/helpers';
 import { endpoints } from '../constants/envSettings';
-import type { LOGINJWTSuccess, TicketsResponse, ticketsSuccess, guestMessage, LoginResponse, CreateAgentPayload, Notifications } from '../types/Slices';
+import type { LOGINJWTSuccess, guestMessage, LoginResponse, CreateAgentPayload, Notifications } from '../types/Slices';
 import type { RootState } from '../store/store';
 import type { ContactFormValues } from '../types/Chat';
-
-// Datos mockeados (puedes cambiarlos o hacerlos dinámicos)
-const mockData = {
-  
-  /* Mocks para tickets */
-  tickets: {
-    success: true,
-    data: allTickets48
-  } as ticketsSuccess,
-
-  /* Mock for closing tickets */
-  closeTicket: async () => {
-    await sleep(1500); // Simula un retardo
-    return { success: true };
-  },
-
-  /* Mock for opening tickets */
-  openTicket: async () => {
-    await sleep(1500); // Simula un retardo
-    return { success: true };
-  }
-};
 
 
 /* Base Query */
@@ -164,7 +141,7 @@ export const tribet_api = createApi({
     }),
 
     // `POST /api/chat-rooms/{id}/send_message/` Agent Send Message
-    agentSendMessage: builder.mutation<void, { chatRoomId: number | string | null | undefined; payload: { content: string, message_type: string }; }>({
+    agentSendMessage: builder.mutation<void, { chatRoomId: string | null ; payload: { content: string, message_type: string }; }>({
       query: ({ chatRoomId, payload }) => ({
         url: endpoints.AGENT_SEND_MESSAGE(chatRoomId),
         method: 'POST',
@@ -265,18 +242,6 @@ export const tribet_api = createApi({
     /* 
       TODO: MOCK UP DATA DOWN HERE
     */
-    // `GET /api/tickets/`
-    getTickets: builder.query<TicketsResponse, void>({
-      async queryFn() {
-        await sleep(800); // 800ms delay
-        const result = mockData.tickets as TicketsResponse;
-        if (result && result.success) {
-          return { data: result };
-        } else {
-          return { error: { status: 500, data: 'Error al obtener los tickets' } };
-        }
-      }
-    }),
     // Assign ticket to agent
     assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
       async queryFn({ ticketId, agentId }) {
@@ -308,31 +273,7 @@ export const tribet_api = createApi({
       }
     }),
 
-    // Close Ticket (mark as resolved)
-    closeTicket: builder.mutation<boolean, { ticketId: number | null | undefined }>({
-      async queryFn({ ticketId }) {
-        // Aquí podrías agregar lógica para cerrar el ticket en tu mock
-        const response = await mockData.closeTicket();
-        if (!response.success) {
-          return { error: { status: 500, data: 'Error al cerrar el ticket' } };
-        }
-        console.info(`Ticket ${ticketId} cerrado`);
-        return { data: true, success: true };
-      }
-    }),
 
-    // Re-open Ticket
-    openTicket: builder.mutation<boolean, { ticketId: number | null | undefined }>({
-      async queryFn({ ticketId }) {
-        // Here we could add logic to reopen the ticket in your mock
-        const response = await mockData.openTicket();
-        if (!response.success) {
-          return { error: { status: 500, data: 'Error al reabrir el ticket' } };
-        }
-        console.info(`Ticket ${ticketId} reabierto`);
-        return { data: true, success: true };
-      }
-    }),
   }),
 });
 
@@ -361,10 +302,7 @@ export const {
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED
   */
-  useGetTicketsQuery,
   useAssignTicketMutation,
   useUnassignTicketMutation,
   useDeleteTicketMutation,
-  useCloseTicketMutation,
-  useOpenTicketMutation
 } = tribet_api;
