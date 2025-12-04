@@ -2,6 +2,8 @@ import { IoIosNotifications } from 'react-icons/io';
 import type { NotificationItem } from '../../../types/Slices';
 import { formatDistance } from "date-fns";
 import useNotifications from '../../../hooks/useNotifications';
+import { useSelector } from 'react-redux';
+import { selectNotificationsArray } from '../../../utils/selectors';
 
 export const Notifications = () => {
   const {
@@ -14,6 +16,7 @@ export const Notifications = () => {
     handleMarkAllAsRead,
     handleSeeMoreNotifications
   } = useNotifications();
+  const currentNotifications = useSelector(selectNotificationsArray);
 
   return (
     <>
@@ -30,7 +33,7 @@ export const Notifications = () => {
         >
           <IoIosNotifications size={20} className="group-hover:text-primary" />
           <div className="badge badge-sm badge-secondary group-hover:text-primary !bg-red-400 p-2">
-            {notificationsData ? notificationsData.notifications.filter(n => !n.is_read).length : 0}
+            {currentNotifications ? currentNotifications.filter((n: NotificationItem) => !n.is_read).length : 0}
           </div>
         </button>
 
