@@ -17,7 +17,7 @@ const ReceivedMessage = ({
 
   const notifications = useSelector(selectNotificationsArray);
 
-  const isUnread = notifications.some(n => n.chat_room_id === lastMessage.chat_room_id && !n.is_read);
+  const isUnread = notifications?.some(n => n.chat_room_id === lastMessage.chat_room_id && !n.is_read);
 
   return (
     <li className={`flex-row items-center flex-nowrap group !rounded-sm border min-h-[80px] max-w-full ${isUnread ? 'border-orange-400 border-2' : ''}`} onClick={onClick}>

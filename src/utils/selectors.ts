@@ -168,14 +168,14 @@ export const selectGuestMessagePayload = createSelector(
 
 /* De-normalize received Agents */
 export const selectAgentsArray = createSelector(
-  (state: RootState) => state.user.assigned_agents.byId,
-  (state: RootState) => state.user.assigned_agents.allIds,
+  (state: RootState) => state.user.assigned_agents?.byId,
+  (state: RootState) => state.user.assigned_agents?.allIds,
   (byId, allIds) => allIds.map(id => byId[id]).filter((a): a is any => a !== undefined)
 );
 
 /* De-normalize Notifications */
 export const selectNotificationsArray = createSelector(
-  (state: RootState) => state.agent.notifications.byId,
-  (state: RootState) => state.agent.notifications.allIds,
-  (byId, allIds) => allIds.map(id => byId[id]).filter((n): n is any => n !== undefined)
+  (state: RootState) => state.agent.notifications?.byId,
+  (state: RootState) => state.agent.notifications?.allIds,
+  (byId, allIds) => allIds?.map(id => byId[id]).filter((n): n is any => n !== undefined)
 );
