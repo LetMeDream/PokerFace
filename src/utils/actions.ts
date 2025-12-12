@@ -1,4 +1,4 @@
-import { logout, login, setToken } from "../store/slices/auth"
+import { logout, login, setToken, setKeepLoggedIn } from "../store/slices/auth"
 import { clearUser, setUser } from "../store/slices/user"
 import { unsetChatProfile, setChatProfile, setAssignedChats } from "../store/slices/agent"
 import { unsetBase, setTickets } from "../store/slices/base"
@@ -53,4 +53,9 @@ export const setLoggedInUser = async (result: LoginSuccess) => {
   const myChatsRes: any = await store.dispatch(tribet_api.endpoints.getAssignedChats.initiate())
   const myChats = myChatsRes?.data?.chats ?? []
   store.dispatch(setAssignedChats(myChats))
+}
+
+/* Set 'keepLoggedIn' flag */
+export const setKeepLoggedInFlag = (keepLoggedIn: boolean) => {
+  store.dispatch(setKeepLoggedIn(keepLoggedIn));
 }

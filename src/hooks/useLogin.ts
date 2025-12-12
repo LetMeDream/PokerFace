@@ -5,17 +5,19 @@ import { useGetTokenMutation, useLoginMutation } from "../services/service";
 import type { LOGINJWTSuccess, LoginSuccess } from "../types/Slices";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { setLoggedInUser, setAuthToken } from "../utils/actions";
+import { setLoggedInUser, setAuthToken, setKeepLoggedInFlag } from "../utils/actions";
 
 interface LoginForm {
   username: string;
   password: string;
+  keepLoggedIn: boolean;
 }
 
 /* Create yup validation schema */
   const schema = yup.object().shape({
     username: yup.string().required('Usuario es requerido'),
     password: yup.string().required('Contraseña es requerida').min(6, 'Contraseña debe tener al menos 3 caracteres'),
+    keepLoggedIn: yup.boolean().required()
   }); 
 
 const useLogin = () => {
@@ -27,7 +29,8 @@ const useLogin = () => {
   const methods = useForm<LoginForm>({
     defaultValues: {
       username: '',
-      password: ''
+      password: '',
+      keepLoggedIn: false
     },
     mode: 'onBlur',
     resolver: yupResolver(schema)
@@ -65,6 +68,7 @@ const useLogin = () => {
         }
         setAuthToken(result);
         const loginResults = await loginMutation(data).unwrap() as LoginSuccess;
+        setKeepLoggedInFlag(data.keepLoggedIn);
         await setLoggedInUser(loginResults);
         navigate('/dashboard')
     } catch (err: any) {
