@@ -35,7 +35,7 @@ const DrawersContent = ({classnames, containerRef, drawerButtonRef}: {
       {selectedTicketId ? (                
         <AgentChat selectedTicketId={selectedTicketId} />
       ) : (
-          <GeneralInbox />
+        <GeneralInbox />
       )}
 
       {/* Button for drawer */}
