@@ -4,7 +4,7 @@ import { logUserOut } from '../utils/actions';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 
-const minutes = 1/60; // 1 second for testing
+const minutes = 10;
 const AUTO_LOGOUT_TIME = minutes * 60 * 1000; // 10 minutes in milliseconds
 
 function AutoLogoutWrapper({ children }: { children: React.ReactNode }) {
