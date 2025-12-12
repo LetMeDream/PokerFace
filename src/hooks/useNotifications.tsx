@@ -11,6 +11,8 @@ import type { RootState } from '../store/store'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { selectNotificationsArray } from '../utils/selectors'
+import useSound from 'use-sound'
+import guest from '../assets/sounds/guest.mp3'
 
 const useNotifications = () => {
     const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
@@ -51,6 +53,16 @@ const useNotifications = () => {
     }, [notificationsData, currentNotifications]);
 
 
+    /* Sound when new notifications (for 'new_message' || 'new_chat') arrive */
+    const [guestPing] = useSound(guest);
+    useEffect(() => {
+      if (!lastFiveNotifications) return;
+      console.log(lastFiveNotifications)
+      if (lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
+        guestPing();
+      }
+
+    }, [lastFiveNotifications, guestPing]);
     
     const [markNotificationRead] = useMarkNotificationReadMutation();
 
