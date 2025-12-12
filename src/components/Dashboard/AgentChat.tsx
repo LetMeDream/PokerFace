@@ -38,7 +38,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
       <div className="flex flex-col items-start justify-start h-full p-4 mt-4-">
         {/* Placeholder for selected chat messages */}
         <div className="flex flex-col text-secondary w-full items-center">
-          <h1 className="text-xl! font-semibold mb-4 text-white">
+          <h1 className="text-xl! font-semibold mb-4 text-white text-center">
             Conversación con user: {selectedTicket?.chat_user_info?.phone_number || 'Desconocido'}
           </h1>
           {/* Chat Body */}
