@@ -28,23 +28,26 @@ function AutoLogoutWrapper({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Initial setup of the timer
-    if (!keepLoggedIn) resetLogoutTimer();
-
-    // Add event listeners for user activity
-    const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-    activityEvents.forEach(event => {
-      window.addEventListener(event, resetLogoutTimer);
-    });
-
-    // Cleanup function to remove event listeners and clear timer on unmount
-    return () => {
+    if (!keepLoggedIn){
+      resetLogoutTimer();
+  
+      // Add event listeners for user activity
+      const activityEvents = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
       activityEvents.forEach(event => {
-        window.removeEventListener(event, resetLogoutTimer);
+        window.addEventListener(event, resetLogoutTimer);
       });
-      if (logoutTimer.current) {
-        clearTimeout(logoutTimer.current);
-      }
-    };
+
+      // Cleanup function to remove event listeners and clear timer on unmount
+      return () => {
+        activityEvents.forEach(event => {
+          window.removeEventListener(event, resetLogoutTimer);
+        });
+        if (logoutTimer.current) {
+          clearTimeout(logoutTimer.current);
+        }
+      };
+    } 
+
   }, [resetLogoutTimer]);
 
   return <>{children}</>;
