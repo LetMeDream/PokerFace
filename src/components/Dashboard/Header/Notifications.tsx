@@ -52,7 +52,7 @@ export const Notifications = () => {
           {/* No notifications */}
           {lastFiveNotifications.length === 0 && (
             <li>
-              <a>No notifications</a>
+              <a>No hay notificaciones</a>
             </li>
           )}
           {/* See More Notifications */}

@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 function usePagination<T>({ 
     elements,
     itemsPerPage,
-    inboxSearchValue
 }: {
     elements: T[];
     itemsPerPage: number;
-    inboxSearchValue?: string;
 }) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(elements.length / itemsPerPage);
@@ -32,10 +30,6 @@ function usePagination<T>({
   const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === totalPages;
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [inboxSearchValue]);
-
   return {
     currentItems,
     totalPages,
@@ -45,7 +39,8 @@ function usePagination<T>({
     paginationNumbers,
     isFirstPage,
     isLastPage,
-    currentPage
+    currentPage,
+    setCurrentPage
   }
 }
 

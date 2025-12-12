@@ -32,7 +32,7 @@ const GeneralInbox = () => {
     currentPage,
     goToNextPage,
     goToPreviousPage
-  } = usePagination({elements: filteredUnassignedTickets, itemsPerPage: isMobile ? 3 : 5, inboxSearchValue})
+  } = usePagination({elements: filteredUnassignedTickets, itemsPerPage: isMobile ? 3 : 5})
 
   return (
     <div className='flex flex-col items-center justify-center pb-14'>
