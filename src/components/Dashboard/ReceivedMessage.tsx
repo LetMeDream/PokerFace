@@ -32,7 +32,7 @@ const ReceivedMessage = ({
       <div className="content rounded-r-sm rounded-l-none flex flex-col overflow-hidden items-start grow group-hover:!bg-slate-600 relative -left-[0.75px] self-stretch">
         <a className="!text-primary">{chatMessage?.chat_user_info?.phone_number || 'Missing Phone Number'}</a>
         <span className="text-sm text-white break-words">{lastMessage?.content}</span>
-        <span className="absolute bottom-0.5 text-gray-400 right-2 text-[10px]">
+        <span className="absolute bottom-0.5 text-gray-400 right-2 text-[10px] bg-secondary rounded-sm px-1">
           {lastMessage ? formatDistance(new Date(lastMessage.created_at), new Date(), { addSuffix: true, locale: es }) : ''}
         </span>
       </div>
