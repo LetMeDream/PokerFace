@@ -110,10 +110,22 @@ const useNotifications = () => {
     const handleMarkAllAsRead = () => {
       try {
         const ids = lastFiveNotifications.map(notification => notification.id);
+        let updatedNotifications = [...currentNotifications];
+        ids.forEach(id => {
+          updatedNotifications = updatedNotifications.map(notification =>
+            notification.id === id ? { ...notification, is_read: true } : notification
+          );
+        });
+        // Updating notifications locally instantly 
+        dispatch(setNotifications(updatedNotifications));
+        
+        // Updating notifications in the server 
         if (ids.length > 0) {
           markNotificationRead({ notificationIds: ids }).unwrap();
         }
       } catch (error) {
+        // reset previously removed notification, if needed
+        // dispatch(setNotifications(currentNotifications));
         console.error('Failed to mark all notifications as read:', error);
       }
     };
