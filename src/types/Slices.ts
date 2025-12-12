@@ -176,6 +176,7 @@ export interface ReceivedChatMessage {
   subject: string;
   tags: string; // probably should be array
   updated_at: string;
+  chat_room_id: string;
 }
 
 
