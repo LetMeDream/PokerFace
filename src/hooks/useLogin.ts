@@ -24,7 +24,7 @@ const useLogin = () => {
   const { isLoading } = resMutation;
     /* Fetch tickets */
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+  const methods = useForm<LoginForm>({
     defaultValues: {
       username: '',
       password: ''
@@ -32,6 +32,7 @@ const useLogin = () => {
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
+  const { register, handleSubmit, formState: { errors } } = methods;
 
   /* Classes for Login */
   const classNames = {
@@ -66,10 +67,10 @@ const useLogin = () => {
         const loginResults = await loginMutation(data).unwrap() as LoginSuccess;
         await setLoggedInUser(loginResults);
         navigate('/dashboard')
-      } catch (err: any) {
-        console.error('login failed', err);
-        // already handled by toast.promise, but you can add extra handling here
-      }
+    } catch (err: any) {
+      console.error('login failed', err);
+      // already handled by toast.promise, but you can add extra handling here
+    }
   }
 
   return {
@@ -78,7 +79,8 @@ const useLogin = () => {
     handleSubmit,
     onSubmit,
     errors,
-    isLoading
+    isLoading,
+    methods
   }
 }
 

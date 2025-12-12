@@ -7,9 +7,11 @@ import { useState } from 'react';
 // import MaskedInput from '../components/liveChat/MaskedInput/MaskedInput';
 import '../components/liveChat/ContactForm/ContactForm.css'
 import { useNavigate } from 'react-router-dom';
+import SwitchCheckbox from '../components/SwitchCheckbox';
+import { FormProvider } from 'react-hook-form';
 
 const Login = () => {
-  const { classNames, register, handleSubmit, onSubmit, errors, isLoading } = useLogin()
+  const { classNames, register, handleSubmit, onSubmit, errors, isLoading, methods } = useLogin()
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate();
 
@@ -40,58 +42,66 @@ const Login = () => {
               autoComplete="off"
               onSubmit={handleSubmit(onSubmit)}
             >
+              <FormProvider {...methods}>
+                <div className="relative">
+                  <FaUserCog 
+                    className={`
+                      ${classNames.icon}
+                      ${errors.username ? 'text-red-400' : ''}
+                    `}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Usuario"
+                    className={
+                      classNames.inputBase
+                      + (errors.username ? inputErrors : '')}
+                    autoComplete="on"
+                    {...register('username', { required: true })}
+                  />
+                </div>
 
-              <div className="relative">
-                <FaUserCog 
-                  className={`
-                    ${classNames.icon}
-                    ${errors.username ? 'text-red-400' : ''}
-                  `}
-                />
-                <input
-                  type="text"
-                  placeholder="Usuario"
-                  className={
-                    classNames.inputBase
-                    + (errors.username ? inputErrors : '')}
-                  autoComplete="on"
-                  {...register('username', { required: true })}
-                />
-              </div>
+                <div className="relative">
+                  <MdLock 
+                    className={`
+                      ${classNames.icon}
+                      ${errors.password ? 'text-red-400' : ''}
+                    `} 
+                  />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id='password-input'
+                    placeholder="Contraseña"
+                    className={`
+                      ${classNames.inputBase}
+                      ${errors.password ? inputErrors : ''}
+                    `}
+                    autoComplete="off"
+                    {...register('password', { required: true })}
+                  />
+                  {/* Eye toggle */}
+                  <span
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                    onClick={() => setShowPassword(s => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
+                  >
+                    {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
+                  </span>
+                </div>
+                
+                <div className="text-right border border-transparent flex items-center justify-between">
 
-              <div className="relative">
-                <MdLock 
-                  className={`
-                    ${classNames.icon}
-                    ${errors.password ? 'text-red-400' : ''}
-                  `} 
-                />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id='password-input'
-                  placeholder="Contraseña"
-                  className={`
-                    ${classNames.inputBase}
-                    ${errors.password ? inputErrors : ''}
-                  `}
-                  autoComplete="off"
-                  {...register('password', { required: true })}
-                />
-                {/* Eye toggle */}
-                <span
-                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                  onClick={() => setShowPassword(s => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 cursor-pointer"
-                >
-                  {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
-                </span>
-              </div>
-              
-              <div className="text-right border border-transparent">
-                <a href="#" className={classNames.passwordForgot}>
-                  ¿Olvidaste tu contraseña?
-                </a>
-              </div>
+                  <SwitchCheckbox
+                    text='Mantener sesión abierta'
+                    name='keepLoggedIn'
+                  />
+
+
+                  <a href="#" className={classNames.passwordForgot + ' relative top-2'}>
+                    ¿Olvidaste tu contraseña?
+                  </a>
+                </div>
+              </FormProvider>
 
               {/* <button
                 type="submit"
