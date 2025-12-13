@@ -4,5 +4,4 @@ import * as yup from 'yup'
 export const ContactFormSchema = yup.object({
   phone: yup.string().transform((val) => (val ? String(val).trim() : ''))
     .required('Phone is required').min(6, 'Phone must have at least 9 digits'), // enforce minimum digits
-  recaptcha: yup.string().nullable().required('Please complete the reCAPTCHA')
 }).required();

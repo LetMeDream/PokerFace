@@ -4,8 +4,7 @@ import type { SubmitHandler } from "react-hook-form"
 import type { FormValues } from "../../../types/Chat"
 import { ContactFormSchema } from '../../../constants/schemas'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useState, useEffect, useRef } from 'react'
-import ReCaptcha from 'react-google-recaptcha'
+import { useState, useEffect } from 'react'
 import { useCompleteChatMutation } from '../../../services/service'
 import type { RootState } from '../../../store/store'
 import { handleCompleteChatError } from '../../../utils/helpers'
@@ -35,7 +34,6 @@ const ContactForm = ({
 
   const { register, handleSubmit, formState: { isValid } } = methods;
   const { id: guestSessionId } = useSelector((state: RootState) => state.guest); // get chat state if needed
-  const recaptchaRef = useRef<ReCaptcha>(null);
   const { isUserConected, phone_number } = useSelector((state: RootState) => state.guest);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -51,7 +49,6 @@ const ContactForm = ({
     await completeChat({
       session_id: guestSessionId,
       phone_number: values.phone || '',
-      recaptcha_token: values.recaptcha,
     }).unwrap()
 
   };
@@ -83,9 +80,6 @@ const ContactForm = ({
       setTimeout(() => {
         setIsSending(false); // reset animation state
         handleCompleteChatError(error);
-        if (error && (error as any).status === 400) {
-          recaptchaRef.current?.reset();
-        }
       }, 1000);
     }
   }, [isSuccess, setIsSending, isError, error]);
@@ -131,29 +125,6 @@ const ContactForm = ({
                     defaultValue={phone_number || ''}
                   />
                 </div>
-              </div>
-              <div className={`
-                  w-full overflow-hidden
-                  ${isUserConected ? 'hidden' : 'block'}
-                `
-              }>
-                { !isUserConected && (
-                  <ReCaptcha 
-                    ref={recaptchaRef}
-                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} 
-                    onChange={(value: string | null) => {
-                      methods.setValue('recaptcha', value || '', {
-                        shouldValidate: true,   // ← Fuerza validación
-                        shouldDirty: true,      // ← Marca como "sucio"
-                        shouldTouch: true,      // ← Marca como "tocado"
-                      });
-                    }}
-                    onExpired={() => {
-                      methods.setValue('recaptcha', '', { shouldValidate: true });
-                      recaptchaRef.current?.reset();
-                    }}
-                  />
-                ) }
               </div>
               {/* Send Contact Form Button */}
               {!isUserConected && (

@@ -32,7 +32,6 @@ export type FormValues = {
   name?: string;
   phone: string;
   email?: string;
-  recaptcha: string;
 };
 
 export type ContactFormValues = {
@@ -40,5 +39,4 @@ export type ContactFormValues = {
   email?: string;
   full_name?: string;
   phone_number: string;
-  recaptcha_token: string;
 }
