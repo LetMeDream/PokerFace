@@ -2,7 +2,7 @@ import { RiMessage2Line, RiCloseLine, RiSendPlane2Fill  } from "react-icons/ri";
 import { IoArrowUpCircle } from "react-icons/io5";
 import useChat from "../../../hooks/useChat";
 import usePresentation from "../../../hooks/usePresentation";
-import useContactForm from "../../../hooks/useContactForm";
+import { useContactForm } from "../../../hooks/useContactForm";
 import useMobileChat from "../../../hooks/useMobileChat";
 import Messages from "../Messages/Messages";
 import { FaEnvelope } from "react-icons/fa";

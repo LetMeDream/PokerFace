@@ -1,16 +1,7 @@
 import './ContactForm.css'
-import { useForm, FormProvider } from "react-hook-form"
-import type { SubmitHandler } from "react-hook-form"
-import type { FormValues } from "../../../types/Chat"
-import { ContactFormSchema } from '../../../constants/schemas'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useState, useEffect } from 'react'
-import { useCompleteChatMutation } from '../../../services/service'
-import type { RootState } from '../../../store/store'
-import { handleCompleteChatError } from '../../../utils/helpers'
-import { setGuestProfile } from '../../../store/slices/guest'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
+import { FormProvider } from "react-hook-form"
+import { useContactFormInternal } from '../../../hooks/useContactForm';
+import { useEffect } from 'react';
 
 const ContactForm = ({
   isSending,
@@ -22,84 +13,31 @@ const ContactForm = ({
   chatBodyRef: React.RefObject<HTMLDivElement | null>;
 }) => {
 
+  const {
+    methods,
+    register,
+    handleSubmit,
+    isValid,
+    onSubmit,
+    isUserConected,
+    phone_number,
+    isAgentAlerted,
+    handleSubmitContactForm
+  } = useContactFormInternal({ isSending, setIsSending, chatBodyRef });
 
-  // Use FormValues as the form generic and cast the resolver to that type to avoid type mismatch
-  const methods = useForm<FormValues>({
-    mode: 'onChange',
-    resolver: yupResolver(ContactFormSchema),
-    defaultValues: {
-      phone: undefined,
-    }
-  });
-
-  const { register, handleSubmit, formState: { isValid } } = methods;
-  const { id: guestSessionId } = useSelector((state: RootState) => state.guest); // get chat state if needed
-  const { isUserConected, phone_number } = useSelector((state: RootState) => state.guest);
-
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
-  };
-  const [completeChat, { isSuccess, isError, error, data }] = useCompleteChatMutation();
-
-  const handleSend = async () => {
-    if (isSending) return; // prevent duplicate animations
-    (document.activeElement as HTMLElement | null)?.blur(); // remove focus from input
-    setIsSending(true);
-    const values = methods.getValues();
-    await completeChat({
-      session_id: guestSessionId,
-      phone_number: values.phone || '',
-    }).unwrap()
-
-  };
-
-  const dispatch = useDispatch();
+  const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY_V3 || '';
   useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => {
-        setIsSending(false); // reset animation state
-        console.log(data)
-        // Ensure data exists and normalize shape to satisfy GuesstState
-        if (!data) return;
-        const resp: any = data;
-        const user = resp.user_data ?? resp.user ?? {};
-        dispatch(setGuestProfile({
-          id: user.id,
-          session_id: user.session_id,
-          chatRoomId: user.chat_room_id,
-          email: user.email,
-          full_name: user.full_name,
-          phone_number: user.phone_number,
-          is_temporary: user.is_temporary ?? false,
-          messages: resp.messages ?? [],
-          isUserConected: true,
-          created_at: user.created_at ?? new Date().toISOString(),
-        }));
-      }, 1000); // match animation duration
-    } else if (isError) {
-      setTimeout(() => {
-        setIsSending(false); // reset animation state
-        handleCompleteChatError(error);
-      }, 1000);
-    }
-  }, [isSuccess, setIsSending, isError, error]);
+    const script = document.createElement('script');
+    script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
 
-
-  const [isAgentAlerted, setIsAgentAlerted] = useState(false);
-
-  useEffect(() => {
-    if (isUserConected) {
-      setTimeout(() => {
-        setIsAgentAlerted(true);
-      }, 333);
-    }
-  }, [isUserConected]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (chatBodyRef.current) chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
-    }, 333);
-  }, [isAgentAlerted, chatBodyRef]);
+    return () => {
+      // Limpieza (opcional): se puede eliminar el script si el componente se desmonta
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
     <>
@@ -126,11 +64,15 @@ const ContactForm = ({
                   />
                 </div>
               </div>
+
+
+
+
               {/* Send Contact Form Button */}
               {!isUserConected && (
                 <button
                   type="button" // use button (not form submit)
-                  onClick={isValid ? handleSend : undefined}
+                  onClick={isValid ? handleSubmitContactForm : undefined}
                   onMouseDown={(e) => e.preventDefault()} // prevent focus stealing on mousedown
                   className={`
                     ${isUserConected ? 'opacity-50 !cursor-not-allowed' : ''}
