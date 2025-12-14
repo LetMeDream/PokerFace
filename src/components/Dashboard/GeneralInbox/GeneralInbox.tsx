@@ -5,6 +5,7 @@ import usePagination from '../../../hooks/usePagination';
 import Pagination from '../Pagination';
 import useMediaQuery from '../../../hooks/useMediaQuery';
 
+
 const GeneralInbox = () => {
   const {
     isTakingChat,
@@ -34,8 +35,12 @@ const GeneralInbox = () => {
     goToPreviousPage
   } = usePagination({elements: filteredUnassignedTickets, itemsPerPage: isMobile ? 3 : 5})
 
+
+  const orderedTickets = paginatedTickets.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+
+
   return (
-    <div className='flex flex-col items-center justify-center pb-14'>
+    <div className='flex flex-col items-center justify-center pb-14 '>
       <div className=" h-full pt-6 text-white">
         <h1 className="!text-xl md:!text-3xl  font-bold mb-4">Gestión de Tickets</h1>
       </div>
@@ -74,7 +79,7 @@ const GeneralInbox = () => {
 
         {/* Ticket list */}
         <ul className="list bg-cyan-50 text-black rounded-none rounded-box shadow-md">
-          {paginatedTickets.map(ticket => (
+          {orderedTickets.map(ticket => (
             <InboxEntry 
               key={ticket.id} 
               ticket={ticket} 
