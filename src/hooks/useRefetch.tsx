@@ -52,7 +52,7 @@ export const useRefetchNotifications = () => {
 
   useEffect(() => {
     dispatch(setNotifications(notificationsData?.notifications || []));
-    if (!selectedTicketId && lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
+    if (!selectedTicketId && lastFiveNotifications.some(n => n.notification_type === 'new_message')) {
       dispatch(setHasAutoOpened(false));
     }
   }, [notificationsData, dispatch, selectedTicketId]);
