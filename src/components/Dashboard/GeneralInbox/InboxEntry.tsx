@@ -5,6 +5,11 @@ import { FaUserAstronaut } from 'react-icons/fa';
 import useInboxEntry from "../../../hooks/useInboxEntry";
 import { useDispatch } from "react-redux";
 import { setAssigningTicketId } from "../../../store/slices/base";
+import { formatDistance } from 'date-fns'
+import { es } from 'date-fns/locale';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../../store/store';
+import { selectNotificationsArray } from '../../../utils/selectors';
 
 const InboxEntry = ({ 
   ticket, 
@@ -19,7 +24,12 @@ const InboxEntry = ({
 }) => {
   const { lastMessage, lastRemitent, showModal, showOptions } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
+  const timeStamps = formatDistance(new Date(ticket.updated_at), new Date(), { addSuffix: true, locale: es });
 
+  const notifications = useSelector((state: RootState) => selectNotificationsArray(state));
+  const isUnread = notifications.filter(n => !n.is_read).some(notification =>
+    notification.chat_room_id === ticket.id
+  );
 
   const handleDeleteTicket = () => {
     // Implement ticket deletion logic here
@@ -46,24 +56,24 @@ const InboxEntry = ({
   let status 
   switch (ticket.status.toLowerCase()) {
     case 'active':
-      status = <div className=" text-left !text-xs uppercase font-semibold">
+      status = <div className=" text-left font-semibold">
                   Activo
                 </div>;
       break;
 
     case 'closed':
-      status = <div className=" text-left !text-xs uppercase text-red-700 font-semibold">
+      status = <div className=" text-left text-red-700 font-semibold">
                   Cerrado
                 </div>;
       break;
 
     case 'pending':
-      status = (<div className=" text-left !text-xs uppercase font-semibold">
+      status = (<div className=" text-left font-semibold">
                   Pendiente
                 </div>);
       break
     case 'waiting':
-      status = (<div className=" text-left !text-xs uppercase font-semibold">
+      status = (<div className=" text-left font-semibold">
                   En Espera
                 </div>);  
       break;
@@ -72,9 +82,9 @@ const InboxEntry = ({
   }
   return (
     <>
-      <div className=" border-b border-gray-300">
+      <div className='border-b border-gray-300 cursor-pointer' >
           <div 
-            className="flex items-center gap-3 px-3 py-0.5 bg-cyan-50 hover:bg-indigo-100 duration-300 text-secondary transition-colors cursor-pointer" 
+            className={`flex items-center gap-3 px-3 py-0.5 bg-cyan-50 hover:bg-indigo-100 ${isUnread ? 'bg-[#00CC99]/50! hover:bg-[#00CC99]/80!' : ''} duration-300 text-secondary transition-colors cursor-pointer" `}
             onClick={showOptions}
             data-custom-id={ticket.id}
           >
@@ -90,7 +100,7 @@ const InboxEntry = ({
                 <div className="md:px-2 text-xs font-medium truncate">
                   {ticket?.chat_user_info?.phone_number || 'Usuario Anónimo'}
                 </div>
-                <div className="md:px-2 !text-xs uppercase font-semibold opacity-60">
+                <div className="md:px-2 text-[10px]! uppercase font-semibold opacity-60">
                   {status || 'Desconocido'}
                 </div>
               </div>
@@ -114,11 +124,18 @@ const InboxEntry = ({
                       {ticket?.chat_user_info?.phone_number || 'Usuario'}
                     </span>
                     )}
+
+                    
                 </div>
                 {/* Message */}
                 <p className="text-xs text-gray-700 line-clamp-3 overflow-hidden md:px-4">
                   {lastMessage}
                 </p>
+                <div className="flex justify-end items-center md:px-4 mt-1">
+                  <span className="text-gray-500 text-xs ml-2">
+                    {timeStamps}
+                  </span>
+                </div>
               </div>
             </div>
 

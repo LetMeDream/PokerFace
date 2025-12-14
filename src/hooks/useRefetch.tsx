@@ -5,6 +5,8 @@ import { setTickets } from '../store/slices/base';
 import { setGuestMessages, setGuestStatus } from '../store/slices/guest';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { setHasAutoOpened } from '../store/slices/base';
+import type { RootState } from '../store/store';
 
 /* Refetches and re-set assigned chats  */
 export const useRefetchMyChat = () => {
@@ -41,10 +43,12 @@ export const useRefetchWaitingChats = () => {
 export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
   const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
+  const selectedTicketId = useSelector((state: RootState) => state.base.selectedTicketId);
 
   useEffect(() => {
     dispatch(setNotifications(notificationsData?.notifications || []));
-  }, [notificationsData, dispatch]);
+    if (!selectedTicketId) dispatch(setHasAutoOpened(false));
+  }, [notificationsData, dispatch, selectedTicketId]);
 
   return {
     
