@@ -69,7 +69,7 @@ const useNotifications = () => {
     const [takeChat] = useTakeChatMutation();
     const assignedChats = useSelector((state: RootState) => state.agent.assigned_chats);
 
-    const goToNotification = async (notification: NotificationItem) => {
+    const handleSeeNotification = async (notification: NotificationItem) => {
       try {
         const isAssigned = assignedChats.byId[notification.chat_room_id];
         dispatch(removeNotification(notification.id));
@@ -140,7 +140,7 @@ const useNotifications = () => {
     dropdownRef,
     lastFiveNotifications,
     notificationsData,
-    handleSeeNotification: goToNotification,
+    handleSeeNotification,
     handleMarkAllAsRead,
     handleSeeMoreNotifications
   }

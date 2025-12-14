@@ -15,6 +15,8 @@ const useInboxEntry = ({ticket}: {ticket: ChatTicket}) => {
       : 'Desconocido';
   
     const dispatch = useDispatch();
+
+    /* Show modal when assigning a ticket */
     const showModal = (e: React.MouseEvent) => {
       e.stopPropagation();
       const dialog = document.getElementById('my_modal_1') as HTMLDialogElement | null;
