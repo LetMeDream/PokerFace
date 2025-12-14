@@ -168,7 +168,7 @@ export interface ReceivedChatMessage {
     phone_number: string;
   };
   created_at: string;
-  id: number;
+  id: string;
   initial_message: string;
   messages: any []; // needs to be typed better
   priority: number;
