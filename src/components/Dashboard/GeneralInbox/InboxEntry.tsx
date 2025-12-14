@@ -175,8 +175,8 @@ const InboxEntry = ({
                   </button>
                   <ul tabIndex={-1} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                     {/* give appearance of disabled button */}
-                    <li className="pointer-events-none">
-                      <a className=" !text-gray-600 ">
+                    <li onClick={showModal}>
+                      <a className="">
                         Asignar 
                       </a>
                     </li>
