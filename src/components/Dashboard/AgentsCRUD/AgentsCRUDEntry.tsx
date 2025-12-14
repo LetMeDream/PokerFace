@@ -3,7 +3,7 @@ import { FaUserTie } from "react-icons/fa6";
 /* import { CgDetailsMore } from "react-icons/cg"; */
 import { TbEdit } from "react-icons/tb";
 import { AiTwotoneDelete } from "react-icons/ai";
-import { useDeleteAgentMutation, useUpdateAgentMutation } from '../../../services/service';
+import { useDeleteAgentMutation, useGetAdminAgentsQuery, useUpdateAgentMutation } from '../../../services/service';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -11,13 +11,21 @@ import toast from 'react-hot-toast';
 
 export const AgentsCRUDEntry = ({ agent } : { agent: Agent }) => {
   const [deleteAgent, { isLoading: isAgentDeleting }] = useDeleteAgentMutation();
+  const { refetch: refetchAdminAgents } = useGetAdminAgentsQuery();
+  
 
   const handleDelete = async () => {
     if (agent?.id) {
       try {
         await deleteAgent({ id: agent.id }).unwrap();
+        toast.success('Agente eliminado con éxito');
+        setTimeout(() => {
+          refetchAdminAgents();
+        }, 20);
       } catch (error) {
-        console.error('Failed to delete the agent:', error);
+        const { data } = error as { data?: { error?: string }, error?: string };
+        console.error('Failed to delete the agent:', data?.error);
+        toast.error(typeof data?.error === 'string' ? data.error : 'Error deleting agent. Please try again.');
       }
     }
   };
