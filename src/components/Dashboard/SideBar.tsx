@@ -58,9 +58,11 @@ const SideBar = (
     } = usePagination({elements: orderedTickets, itemsPerPage: 5});
 
     const handleSelectTicket = async (ticket: ReceivedChatMessage) => {
+      const notificationForTicket = unreadNotifications.find(n => n.chat_room_id === ticket.id);
       try {
-        const notificationForTicket = unreadNotifications.find(n => n.chat_room_id === ticket.id);
-        await markNotificationRead({ notificationIds: [notificationForTicket.id] }).unwrap();
+        if (notificationForTicket) {
+          await markNotificationRead({ notificationIds: [notificationForTicket.id] }).unwrap();
+        }
         dispatch(removeNotification(notificationForTicket?.id));
         dispatch(setSelectedTicketId(ticket.id));
         const drawerCheckbox = document.getElementById('my-drawer-1') as HTMLInputElement;
