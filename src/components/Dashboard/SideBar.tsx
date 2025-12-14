@@ -2,28 +2,32 @@ import ReceivedMessage from '../Dashboard/ReceivedMessage';
 // import type { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import type { ReceivedChatMessage } from '../../types/Slices';
-import { selectFilteredPersonalAssignedChat } from '../../utils/selectors';
+import { selectFilteredPersonalAssignedChat, selectNotificationsArray } from '../../utils/selectors';
 import Pagination from './Pagination';
 import usePagination from '../../hooks/usePagination';
 import { useRefetchMyChat } from '../../hooks/useRefetch';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setSelectedTicketId } from '../../store/slices/base';
+import { removeNotification } from '../../store/slices/agent';
+import { useMarkNotificationReadMutation } from '../../services/service';
+import toast from 'react-hot-toast';
 /* import { formatDistance } from 'date-fns';
  */
 const SideBar = (
   { 
-    searchValue, setSearchValue, classnames, handleTicketClick 
+    searchValue, setSearchValue, classnames 
   }: 
   {
     searchValue: string;
     setSearchValue: (value: string) => void;
     classnames: { searchInput: string };
-    handleTicketClick: (ticket: any) => void;
   }) => {
     const assignedChats = useSelector((state: any) => selectFilteredPersonalAssignedChat(state.agent, searchValue)) as unknown as ReceivedChatMessage[];
     useRefetchMyChat();
+    const unreadNotifications = useSelector(selectNotificationsArray).filter(n => !n.is_read);
 
  
-
     const orderedTickets = [...assignedChats].sort((a, b) => {
         // Si un chat no tiene mensajes, se va al final.
         if (!a.messages || a.messages.length === 0) return 1;
@@ -40,7 +44,10 @@ const SideBar = (
         const bCalculatedTime = new Date(bLastMessage.created_at).getTime();
       
         return bCalculatedTime - aCalculatedTime;
-      });
+    });
+
+    const dispatch = useDispatch(); 
+    const [markNotificationRead] = useMarkNotificationReadMutation();
 
     const {
       currentItems: paginatedTickets,
@@ -50,14 +57,22 @@ const SideBar = (
       setCurrentPage
     } = usePagination({elements: orderedTickets, itemsPerPage: 5});
 
-    /* console.log(paginatedTickets.length)
-    paginatedTickets.forEach(ticket => {
-      if (!ticket) return;
-
-      const lastMessage = ticket.messages[ticket.messages.length - 1];
-      console.log('Last message from: ' + ticket.chat_user_info.phone_number + ' was ', formatDistance(new Date(lastMessage.created_at), new Date(), { addSuffix: true })
-      );
-    }) */
+    const handleSelectTicket = async (ticket: ReceivedChatMessage) => {
+      try {
+        const notificationForTicket = unreadNotifications.find(n => n.chat_room_id === ticket.id);
+        await markNotificationRead({ notificationIds: [notificationForTicket.id] }).unwrap();
+        dispatch(removeNotification(notificationForTicket?.id));
+        dispatch(setSelectedTicketId(ticket.id));
+        const drawerCheckbox = document.getElementById('my-drawer-1') as HTMLInputElement;
+        if (drawerCheckbox && drawerCheckbox.checked) {
+          drawerCheckbox.checked = false; // Cierra el drawer al seleccionar un ticket
+        }
+        
+      } catch (error) {
+        console.error('Failed to navigate to ticket from sidebar:', error);
+        toast.error('Hubo un error al abrir el chat. Inténtalo de nuevo.');
+      } 
+    }
 
     useEffect(() => {
       setCurrentPage(1);
@@ -94,13 +109,7 @@ const SideBar = (
               <ReceivedMessage 
                 key={ticket?.id}
                 chatMessage={ticket}
-                onClick={() => {
-                  handleTicketClick(ticket);
-                  const drawerCheckbox = document.getElementById('my-drawer-1') as HTMLInputElement;
-                  if (drawerCheckbox && drawerCheckbox.checked) {
-                    drawerCheckbox.checked = false; // Cierra el drawer al seleccionar un ticket
-                  }
-                }}
+                onClick={() => handleSelectTicket(ticket)}
               />
             ))}
         </div>
