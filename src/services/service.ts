@@ -168,8 +168,9 @@ export const tribet_api = createApi({
     completeChat: builder.mutation<void, ContactFormValues>({
       query: ({ 
         session_id,
-        phone_number
-       }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, phone_number } }),
+        phone_number,
+        recaptcha_token
+       }) => ({ url: endpoints.COMPLETE_CHAT, method: 'POST', body: { session_id, phone_number, recaptcha_token} }),
     }),
 
     // `POST /api/chat/send_message/`
