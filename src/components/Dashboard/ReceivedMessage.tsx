@@ -20,7 +20,7 @@ const ReceivedMessage = ({
   const isUnread = notifications?.some(n => n.chat_room_id === lastMessage.chat_room_id && !n.is_read);
 
   return (
-    <li className={`flex-row items-center flex-nowrap group !rounded-sm border min-h-[80px] max-w-full ${isUnread ? 'border-orange-400 border-2' : ''}`} onClick={onClick}>
+    <li className={`flex-row items-center flex-nowrap group !rounded-sm border min-h-[80px] md:min-w-[240px]! max-w-full ${isUnread ? 'border-orange-400 border-2' : ''}`} onClick={onClick}>
       {/* Avatar */}
 
       <div className="rounded-l-sm self-stretch flex justify-center group-hover:!bg-slate-600">
