@@ -45,7 +45,7 @@ const AgentsCRUD = () => {
           <div className='flex gap-2 flex-1 justify-end'>
             
             <button 
-              className="btn h-10 min-h-0 bg-blue-600 hover:bg-blue-700 text-white border-none flex items-center gap-2 px-4 shadow-sm transition-transform active:scale-95"
+              className="btn h-10 min-h-0 bg-secondary hover:bg-secondary/90 text-white border-none flex items-center gap-2 px-4 shadow-sm transition-transform active:scale-95"
               onClick={handleCreateAgent}
             >
               {/* Icono Plus SVG */}

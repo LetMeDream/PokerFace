@@ -1,6 +1,6 @@
 import {  useState } from 'react'
 import Messages from '../liveChat/Messages/Messages';
-import { RiSearchLine, RiSettingsLine, RiCloseLargeFill } from 'react-icons/ri';
+import { RiSettingsLine, RiCloseLargeFill } from 'react-icons/ri';
 import { BsSend } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { selectAssignedChatById } from '../../utils/selectors';
@@ -42,7 +42,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
             Conversación con user: {selectedTicket?.chat_user_info?.phone_number || 'Desconocido'}
           </h1>
           {/* Chat Body */}
-          <div className=" bg-cyan-50 rounded-xl max-w-[90vw] w-6xl py-5 pb-2 relative" >
+          <div className=" bg-cyan-50 rounded-xl md:max-w-[70vw] w-6xl py-5 pb-2 relative" >
               {/* Title and name */}
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
                 <div className="text-sm text-gray-600 md:text-end text-nowrap ">
@@ -59,7 +59,6 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
                 
                 {/* Icons for look for message, and settings */}
                 <div className="flex gap-2">
-                  <RiSearchLine className="!w-5 md:!w-6 md:!h-5 text-indigo-700 hover:text-indigo-900 cursor-pointer" />
                   <div className="dropdown dropdown-bottom dropdown-end">
                     {/* unset all styles for this button */}
                     <div className=' !bg-[unset]' role='button' tabIndex={0} >
