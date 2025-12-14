@@ -109,7 +109,7 @@ const GeneralInbox = () => {
         acceptFunction={handleAssign} 
         isLoading={isTakingChat}
         type='confirm'
-        message='¿Desear auto-asignarse el ticket e ir a la conversación?'
+        message='¿Desea auto-asignarse el ticket e ir a la conversación?'
         btnMessage='Asignar e Ir'
         id={'my_modal_1'}
       />
