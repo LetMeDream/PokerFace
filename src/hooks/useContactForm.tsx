@@ -86,8 +86,8 @@ export const useContactFormInternal = ({
   const { isUserConected, phone_number } = useSelector((state: RootState) => state.guest);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FormValues> = () => {
+    // console.log(data);
   };
   const [completeChat, { isSuccess, isError, error, data }] = useCompleteChatMutation();
 

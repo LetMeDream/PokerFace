@@ -63,7 +63,7 @@ export const useRefetchGuestChatStatus = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(guestChatStatusData)
+    // console.log(guestChatStatusData)
     
     let settableMessages = guestChatStatusData?.message_history || [];
     // Map the messages to match the guest slice structure
@@ -72,7 +72,7 @@ export const useRefetchGuestChatStatus = () => {
       type: msg.sender_type === 'user' ? 'guest' : (msg.sender_type === 'agent' || msg.sender_type === 'system') ? 'agent' : 'unknown',
       content: msg.content
     }));
-    console.log(settableMessages)
+    // console.log(settableMessages)
     dispatch(setGuestStatus(guestChatStatusData?.status || ''));
     dispatch(setGuestMessages(settableMessages));
 

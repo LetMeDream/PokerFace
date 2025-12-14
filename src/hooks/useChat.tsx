@@ -56,7 +56,7 @@ const useChat = () => {
   // Store chat messages to localStorage whenever they change
   useEffect(() => {
     if (chatMessages.length > 4) {
-      console.log('saving messages to localStorage');
+      // console.log('saving messages to localStorage');
       dispatch(setGuestMessages(chatMessages));
     }
   }, [chatMessages, dispatch]);

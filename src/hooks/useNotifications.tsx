@@ -57,7 +57,6 @@ const useNotifications = () => {
     const [guestPing] = useSound(guest);
     useEffect(() => {
       if (!lastFiveNotifications) return;
-      console.log(lastFiveNotifications)
       if (lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
         guestPing();
       }

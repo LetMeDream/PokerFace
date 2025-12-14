@@ -40,7 +40,7 @@ const CreateAgentModal = ({ id, isLoading }:
   const { refetch: refetchAdminAgents } = useGetAdminAgentsQuery();
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    // console.log(data);
     try {
       createAgent(data);
       toast.success('Agente creado con éxito!');

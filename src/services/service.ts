@@ -244,20 +244,20 @@ export const tribet_api = createApi({
     */
     // Assign ticket to agent
     assignTicket: builder.mutation<boolean, { ticketId: number | null | undefined; agentId: number | null }>({
-      async queryFn({ ticketId, agentId }) {
+      async queryFn() {
         await sleep(1500); // Simula un retardo
         // Aquí podrías agregar lógica para asignar el ticket en tu mock
-        console.log(`Ticket ${ticketId} asignado al agente ${agentId}`);
+        // console.log(`Ticket ${ticketId} asignado al agente ${agentId}`);
         return { data: true };
       },
     }),
 
     // Unassign ticket from agent
     unassignTicket: builder.mutation<boolean, { ticketId: number | null | undefined }>({
-      async queryFn({ ticketId }) {
+      async queryFn() {
         await sleep(1000); // Simulate delay
         // Here you could add logic to unassign the ticket in your mock
-        console.log(`Ticket ${ticketId} unassigned`);
+        // console.log(`Ticket ${ticketId} unassigned`);
         return { data: true };
       },
     }),
@@ -268,7 +268,7 @@ export const tribet_api = createApi({
         await sleep(1000); // Simula un retardo
         // Aquí podrías agregar lógica para eliminar el ticket en tu mock
         console.info(`Ticket ${ticketId} eliminado`);
-        console.log(typeof ticketId);
+        // console.log(typeof ticketId);
         return { data: true, success: true};
       }
     }),
