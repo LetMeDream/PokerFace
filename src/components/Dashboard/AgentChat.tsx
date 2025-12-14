@@ -121,7 +121,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
         acceptFunction={unassignAgentFromTicketHandler} 
         isLoading={isUnassigning}
         type='info'
-        message='¿Desear desasignarse del ticket y volver a la bandeja de entrada?'
+        message='¿Desea desasignarse del ticket y volver a la bandeja de entrada?'
         btnMessage='Desasignar'
         id={unassignModalId}
       />
