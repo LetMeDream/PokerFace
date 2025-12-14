@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setHasAutoOpened } from '../store/slices/base';
 import type { RootState } from '../store/store';
+import { selectNotificationsArray } from '../utils/selectors';
 
 /* Refetches and re-set assigned chats  */
 export const useRefetchMyChat = () => {
@@ -44,10 +45,16 @@ export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
   const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
   const selectedTicketId = useSelector((state: RootState) => state.base.selectedTicketId);
+  const unreadNotifications = useSelector(selectNotificationsArray).filter(notif => !notif.is_read);
+  const lastFiveNotifications = unreadNotifications.sort((a, b) => 
+    (Number(a.is_read) - Number(b.is_read))
+  ).slice(0, 5);
 
   useEffect(() => {
     dispatch(setNotifications(notificationsData?.notifications || []));
-    if (!selectedTicketId) dispatch(setHasAutoOpened(false));
+    if (!selectedTicketId && lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
+      dispatch(setHasAutoOpened(false));
+    }
   }, [notificationsData, dispatch, selectedTicketId]);
 
   return {
