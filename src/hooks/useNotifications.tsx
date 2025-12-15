@@ -13,6 +13,7 @@ import toast from 'react-hot-toast'
 import { selectNotificationsArray } from '../utils/selectors'
 import useSound from 'use-sound'
 import guest from '../assets/sounds/guest.mp3'
+import { setHasNotificationsSoundPlayed } from '../store/slices/base'
 
 const useNotifications = () => {
     const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
@@ -55,13 +56,25 @@ const useNotifications = () => {
 
     /* Sound when new notifications (for 'new_message' || 'new_chat') arrive */
     const [guestPing] = useSound(guest);
+    const hasNotificationSoundPlayed = useSelector((state: RootState) => state.base.hasNotificationsSoundPlayed);
+
+    useEffect(() => {
+      setTimeout(() => {
+        dispatch(setHasNotificationsSoundPlayed(false));
+      }, 2000);
+    }, [hasNotificationSoundPlayed, dispatch])
+
     useEffect(() => {
       if (!lastFiveNotifications) return;
       if (lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
-        guestPing();
+        if (!hasNotificationSoundPlayed) {
+          // console.log('arriving new message notification');
+          guestPing();
+          dispatch(setHasNotificationsSoundPlayed(true));
+        }
       }
 
-    }, [lastFiveNotifications, guestPing]);
+    }, [guestPing, dispatch, lastFiveNotifications]);
     
     const [markNotificationRead] = useMarkNotificationReadMutation();
 
