@@ -122,10 +122,12 @@ const Chat = () => {
       <div className={`
         md:hidden fixed bottom-5 right-5 bg-gray-700 rounded-full p-5
         ${ isOpen ? 'hidden' : 'block' }
-      `}>
+      `}
+        id='open-chat-mobile-icon'
+        onClick={showBanner} 
+      >
         <FaEnvelope 
           className='text-2xl text-white  opacity-90 cursor-pointer'
-          onClick={showBanner} 
         />
 
       </div>

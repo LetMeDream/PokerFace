@@ -1,6 +1,7 @@
 import './Second.css'
 import dekstop from '../../assets/sections/second/banner-second-web-juega365.webp'
 import bigercreen from '../../assets/sections/second/banner-second-3220-juega365.webp'
+import useMediaQuery from '../../hooks/useMediaQuery'
 
 export const Second = () => {
 
@@ -18,11 +19,15 @@ export const Second = () => {
 }
 
 const Chatear = () => {
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openChat = () => {
-    const chatBanner = document.getElementById('chat-banner');
-    if (chatBanner) {
-      chatBanner.click();
+    const mobileBtn = document.getElementById('open-chat-mobile-icon');
+    const desktopChatBanner = document.getElementById('chat-banner');
+
+    const btnToClick = isMobile ? mobileBtn : desktopChatBanner;
+    if (btnToClick) {
+      btnToClick.click();
     }
   }
 

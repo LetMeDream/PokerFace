@@ -17,6 +17,7 @@ const useMobileChat = ({
   chatBodyRef
 } : UseMobileChatProps) => {
     const isMobile = useMediaQuery('(max-width: 767px)');
+
   
     /* Adjusting Body Size to be fullscreen */
     useEffect(() => {
@@ -79,7 +80,7 @@ const useMobileChat = ({
     /*  */
     const modifiedToggleChat = () => {
       if (isMobile) {
-        setIsBannerHidden(!isBannerHidden);
+        setIsBannerHidden(true);
       }
       toggleChat();
     };

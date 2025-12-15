@@ -11,6 +11,7 @@ export interface BaseState {
   assigningTicketId?: string | null  | undefined// Id for the ticket being assigned right now
   hasAutoOpened: boolean
   hasNotificationsSoundPlayed?: boolean
+  isGuestChatOpen: boolean
 }
 
 const initialState: BaseState = {
@@ -22,7 +23,8 @@ const initialState: BaseState = {
     byId: {},
     allIds: []
   },
-  hasNotificationsSoundPlayed: false
+  hasNotificationsSoundPlayed: false,
+  isGuestChatOpen: false
 }
 
 export const baseSlice = createSlice({
@@ -123,14 +125,23 @@ export const baseSlice = createSlice({
     // Set notifications sound played
     setHasNotificationsSoundPlayed(state, action) {
       state.hasNotificationsSoundPlayed = action.payload
+    },
+
+    // Set guest chat open state
+    setIsGuestChatOpen(state, action) {
+      state.isGuestChatOpen = action.payload
     }
+
+
   }
 })
 
 export const { 
   setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, 
   unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket, 
-  deleteTicket, closeTicket, reopenTicket, setHasNotificationsSoundPlayed
+  deleteTicket, closeTicket, reopenTicket, setHasNotificationsSoundPlayed, 
+  // These below are use to fix the UI error when opening the chat from a different component
+  setIsGuestChatOpen
 } = baseSlice.actions
 
 export default baseSlice.reducer

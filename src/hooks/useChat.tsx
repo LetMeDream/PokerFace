@@ -11,6 +11,7 @@ import { useGuestSendMessageMutation } from "../services/service";
 import { selectGuestMessagePayload } from "../utils/selectors";
 import toast from "react-hot-toast";
 import { setGuestMessages } from "../store/slices/guest";
+import { setIsGuestChatOpen } from "../store/slices/base";
 
 type ChatMessage = {
   type: string;
@@ -18,7 +19,7 @@ type ChatMessage = {
 };
 
 const useChat = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isGuestChatOpen } = useSelector((state: RootState) => state.base);
   const dispatch = useDispatch();
 
   const classnames = {
@@ -31,8 +32,13 @@ const useChat = () => {
   };
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
+    dispatch(setIsGuestChatOpen(!isGuestChatOpen));
   };
+
+  /* Verify chat is closed on opening */
+  useEffect(() => {
+      dispatch(setIsGuestChatOpen(false));
+  }, [])
 
   const updateGuestChatAfterSend = (chatMessages: ChatMessage[], messageInput: string) => {
     dispatch(setGuestMessages([...chatMessages, { type: 'guest', content: messageInput }]));
@@ -95,7 +101,7 @@ const useChat = () => {
 
 
   return {
-    isOpen,
+    isOpen : isGuestChatOpen,
     toggleChat,
     classnames,
     messageInput,
