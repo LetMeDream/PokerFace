@@ -10,6 +10,7 @@ export interface BaseState {
   selectedTicketId: string | null  | undefined// Id for the currently established conversation/ticket
   assigningTicketId?: string | null  | undefined// Id for the ticket being assigned right now
   hasAutoOpened: boolean
+  hasNotificationsSoundPlayed?: boolean
 }
 
 const initialState: BaseState = {
@@ -21,6 +22,7 @@ const initialState: BaseState = {
     byId: {},
     allIds: []
   },
+  hasNotificationsSoundPlayed: false
 }
 
 export const baseSlice = createSlice({
@@ -117,13 +119,18 @@ export const baseSlice = createSlice({
         ticket.status = 'pending';
       }
     },
+
+    // Set notifications sound played
+    setHasNotificationsSoundPlayed(state, action) {
+      state.hasNotificationsSoundPlayed = action.payload
+    }
   }
 })
 
 export const { 
   setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, 
   unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket, 
-  deleteTicket, closeTicket, reopenTicket 
+  deleteTicket, closeTicket, reopenTicket, setHasNotificationsSoundPlayed
 } = baseSlice.actions
 
 export default baseSlice.reducer
