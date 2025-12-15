@@ -1,7 +1,7 @@
 import './Sixth.css'
-import tribetClub from '../../assets/sections/sixth/tribetJuega.png'
-import instagram from '../../assets/sections/sixth/instagram.png'
-import whatssap from '../../assets/sections/sixth/whatssapp.png'
+import tribetClub from '../../assets/sections/sixth/tribetJuega.webp'
+import instagram from '../../assets/sections/sixth/instagram.webp'
+import whatssap from '../../assets/sections/sixth/whatssapp.webp'
 
 const Sixth = () => {
   return (

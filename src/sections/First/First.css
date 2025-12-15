@@ -30,6 +30,23 @@
   }
 } */
 
+/* Solo para pantallas grandes (2xl en tu caso) */
+@media (min-width: 1536px) { /* El breakpoint 2xl de Tailwind CSS */
+  .first-bigerscreen-image {
+    background-image: url('../../assets/sections/first/tribet3220yellow.jpg');
+  }
+}
+
+@media (min-width: 768px) {
+  .first-desktop-image {
+    background-image: url('../../assets/sections/first/tribet1834820.jpg');
+  }
+}
+
+.first-mobile-image {
+  background-image: url('../../assets/sections/first/tribet1834820.jpg');
+}
+
 
 /* BREAKPOINT CHEAT SHEET
   * - Breakpoint prefix	Minimum width	CSS

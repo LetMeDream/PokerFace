@@ -1,6 +1,6 @@
-import testimoniosdesktop from '../../assets/sections/fourth/tribet juega desktop.svg'
-import testimonios3220 from '../../assets/sections/fourth/tribet juega 3220.svg'
-import testimoniosmobile from '../../assets/sections/fourth/tribet_juega_telefono.svg'
+import testimoniosdesktop from '../../assets/sections/fourth/tribet juega desktop.webp'
+import testimonios3220 from '../../assets/sections/fourth/tribet juega 3220.webp'
+import testimoniosmobile from '../../assets/sections/fourth/tribet_juega_telefono.webp'
 
 const Fourth = () => {
   return (

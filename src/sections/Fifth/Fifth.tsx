@@ -1,4 +1,4 @@
-import videoIcono from '../../assets/sections/fifth/video-icono.png'
+import videoIcono from '../../assets/sections/fifth/video-icono.webp'
 import video1 from '../../assets/videos/juega365bet.webm'
 import video2 from '../../assets/videos/juega365bet2.1.webm'
 import './Fifth.css'

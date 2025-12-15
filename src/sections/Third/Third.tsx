@@ -1,7 +1,7 @@
 import './Third.css'
-import ruleta from '../../assets/sections/third/ruleta.png'
-import slots from '../../assets/sections/third/slots.png'
-import deportes from '../../assets/sections/third/deportes.png'
+import ruleta from '../../assets/sections/third/ruleta.webp'
+import slots from '../../assets/sections/third/slots.webp'
+import deportes from '../../assets/sections/third/deportes.webp'
 
 const Third = () => {
   return (

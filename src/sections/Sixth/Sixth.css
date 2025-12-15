@@ -1,6 +1,6 @@
 .main-container {
   min-height: max-content;
-  background: url('../../assets/sections/sixth/banner-tlf-juega365.png') no-repeat;
+  background: url('../../assets/sections/sixth/banner-tlf-juega365.webp') no-repeat;
   background-size: cover;
 }
 .icon-container {
@@ -20,14 +20,14 @@
 
 @media (min-width: 48rem) {
   .main-container {
-    background: url('../../assets/sections/sixth/banner-web-juega365.png') no-repeat;
+    background: url('../../assets/sections/sixth/banner-web-juega365.webp') no-repeat;
     background-size: cover;
   }
 }
 
 @media (min-width: 96rem) {
   .main-container {
-    background: url('../../assets/sections/sixth/banner-3220-juega365.png') no-repeat;
+    background: url('../../assets/sections/sixth/banner-3220-juega365.webp') no-repeat;
     background-size: cover;
   }
 }

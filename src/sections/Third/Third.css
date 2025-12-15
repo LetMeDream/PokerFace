@@ -1,19 +1,19 @@
 .main-third-container {
   min-height: max-content;
-  background: url('../../assets/sections/third/banner-tlf-juega365.png') no-repeat;
+  background: url('../../assets/sections/third/banner-tlf-juega365.webp') no-repeat;
   background-size: cover;
 }
 
 @media (min-width: 48rem) {
   .main-third-container {
-    background: url('../../assets/sections/third/banner-web-juega365.png') no-repeat;
+    background: url('../../assets/sections/third/banner-web-juega365.webp') no-repeat;
     background-size: cover;
   }
 }
 
 @media (min-width: 96rem) {
   .main-third-container {
-    background: url('../../assets/sections/third/banner-3220-juega365.png') no-repeat;
+    background: url('../../assets/sections/third/banner-3220-juega365.webp') no-repeat;
     background-size: cover;
   }
 }
