@@ -1,12 +1,11 @@
 import { useEffect } from 'react'
 import { useGetAssignedChatsQuery, useGetWaitingChatsQuery, useGetGuestChatStatusQuery, useGetNotificationsQuery } from '../services/service';
 import { setAssignedChats, setNotifications } from '../store/slices/agent';
-import { setTickets } from '../store/slices/base';
+import { setHasNotificationsSoundPlayed, setTickets } from '../store/slices/base';
 import { setGuestMessages, setGuestStatus } from '../store/slices/guest';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setHasAutoOpened } from '../store/slices/base';
-import type { RootState } from '../store/store';
 import { selectNotificationsArray } from '../utils/selectors';
 
 /* Refetches and re-set assigned chats  */
@@ -44,7 +43,6 @@ export const useRefetchWaitingChats = () => {
 export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
   const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
-  const selectedTicketId = useSelector((state: RootState) => state.base.selectedTicketId);
   const unreadNotifications = useSelector(selectNotificationsArray).filter(notif => !notif.is_read);
   const lastFiveNotifications = unreadNotifications.sort((a, b) => 
     (Number(a.is_read) - Number(b.is_read))
@@ -52,10 +50,11 @@ export const useRefetchNotifications = () => {
 
   useEffect(() => {
     dispatch(setNotifications(notificationsData?.notifications || []));
-    if (!selectedTicketId && lastFiveNotifications.some(n => n.notification_type === 'new_message')) {
+    if (lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
+      dispatch(setHasNotificationsSoundPlayed(false));
       dispatch(setHasAutoOpened(false));
     }
-  }, [notificationsData, dispatch, selectedTicketId]);
+  }, [notificationsData, dispatch]);
 
   return {
     
