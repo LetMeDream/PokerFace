@@ -42,7 +42,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
             Conversación con user: {selectedTicket?.chat_user_info?.phone_number || 'Desconocido'}
           </h1>
           {/* Chat Body */}
-          <div className=" bg-cyan-50 rounded-xl md:max-w-[70vw] w-6xl py-5 pb-2 relative" >
+          <div className=" bg-cyan-50 rounded-xl max-w-[90vw] md:max-w-[70vw] w-6xl py-5 pb-2 relative" >
               {/* Title and name */}
               <div className="md:p-6 p-2 px-8 border-b border-gray-300 flex items-center gap-2 justify-between">
                 <div className="text-sm text-gray-600 md:text-end text-nowrap ">
@@ -130,7 +130,7 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
         isLoading={isResolving}
         type='info'
         message='¿Desea marcar el ticket como resuelto y cerrarlo?'
-        btnMessage='Cerrar Ticket'
+        btnMessage='Marcar como Resuelto'
         id={closeTicketModalId}
         closeBtnId={closeBtnId}
       />

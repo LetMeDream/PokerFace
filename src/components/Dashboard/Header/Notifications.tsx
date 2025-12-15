@@ -16,7 +16,7 @@ export const Notifications = () => {
     handleMarkAllAsRead,
     handleSeeMoreNotifications
   } = useNotifications();
-  const currentNotifications = useSelector(selectNotificationsArray);
+  const currentNotifications = useSelector(selectNotificationsArray);  
 
   return (
     <>
@@ -26,7 +26,9 @@ export const Notifications = () => {
         {/* change popover-1 and --anchor-1 names. Use unique names for each dropdown */}
         {/* For TSX uncomment the commented types below */}
         <button 
-          className="btn !bg-secondary text-gray-200" popoverTarget="popover-1" style={{ anchorName: "--anchor-1" } as React.CSSProperties}
+          className="btn !bg-secondary text-gray-200" 
+          popoverTarget="popover-1" 
+          style={{ anchorName: "--anchor-1" } as React.CSSProperties}
           onClick={() => {
             setIsOpen(!isOpen)
           }}   
@@ -37,8 +39,10 @@ export const Notifications = () => {
           </div>
         </button>
 
-        <div className="dropdown menu w-[40ch] rounded-box bg-base-100 shadow-sm !truncate"
-            popover="auto" id="popover-1" style={{ positionAnchor: "--anchor-1" } as React.CSSProperties }>
+        <div 
+          className={`dropdown dropdown-down dropdown-end menu w-[40ch] rounded-box bg-base-100 shadow-sm !truncate`}
+          popover="auto" id="popover-1" style={{ positionAnchor: "--anchor-1" } as React.CSSProperties }
+        >
           <li>
             <h3 className="font-bold !text-white border-b-1 border-b-gray-200 pb-2 mb-2 text-center">Notificaciones</h3>
           </li>

@@ -5,7 +5,7 @@ import deportes from '../../assets/sections/third/deportes.webp'
 
 const Third = () => {
   return (
-    <div className='caret-transparent'>
+    <div className='caret-transparent mt-3'>
       <div className='bg-secondary montserrat-font text-center text-[#FFB400] text-[13px] px-2 md:px-4 pb-2 md:py-4 md:pt-0 md:text-[26px] lg:text-3xl xl:text-[32px] xl:pt-1 xl:pb-4 relative'>
         Los juegos que más te gustan, en un solo lugar:
       </div>
