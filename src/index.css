@@ -13,6 +13,10 @@
   --color-secondary-light: #2e3246;
 }
 
+.grecaptcha-badge, .grecaptcha-logo {
+  bottom: 100px !important;
+}
+
 body {
   background-color: #242834;
 }
