@@ -7,6 +7,7 @@ import { FaEnvelope } from "react-icons/fa";
 import { useRefetchGuestChatStatus } from "../../../hooks/useRefetch";
 import "./Chat.css";
 import { useEffect } from "react";
+import useRecaptcha from "../../../hooks/useRecaptcha";
 
 const Chat = () => {
   const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, inputRef, bannerRef, 
@@ -14,6 +15,7 @@ const Chat = () => {
    } = useChat();
   const { isBannerHidden, showBanner, modifiedToggleChat } = useMobileChat({ isOpen, toggleChat, bannerRef, inputRef, chatBodyRef });
   useRefetchGuestChatStatus();
+  useRecaptcha();
 
   /* useEffect para bindear function a tecla Escape */
   useEffect(() => {
