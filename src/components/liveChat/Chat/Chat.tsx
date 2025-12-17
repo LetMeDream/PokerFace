@@ -1,8 +1,6 @@
 import { RiMessage2Line, RiCloseLine, RiSendPlane2Fill  } from "react-icons/ri";
 import { IoArrowUpCircle } from "react-icons/io5";
 import useChat from "../../../hooks/useChat";
-import usePresentation from "../../../hooks/usePresentation";
-import { useContactForm } from "../../../hooks/useContactForm";
 import useMobileChat from "../../../hooks/useMobileChat";
 import Messages from "../Messages/Messages";
 import { FaEnvelope } from "react-icons/fa";
@@ -11,11 +9,9 @@ import "./Chat.css";
 import { useEffect } from "react";
 
 const Chat = () => {
-  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, inputRef, bannerRef, isChatInitiationSuccess, 
-    isChatIniationLoading
+  const { isOpen, toggleChat, classnames, messageInput, setMessageInput, chatMessages, send, chatBodyRef, inputRef, bannerRef, 
+    isChatIniationLoading, isSending, setIsSending, isUserConected
    } = useChat();
-  const { isContactFormVisible, isUserConected, setIsContactFormVisible, isSending, setIsSending } = useContactForm({ chatMessages, chatBodyRef, isChatInitiationSuccess });
-  usePresentation({ isOpen, chatMessages, setIsContactFormVisible, isUserConected });
   const { isBannerHidden, showBanner, modifiedToggleChat } = useMobileChat({ isOpen, toggleChat, bannerRef, inputRef, chatBodyRef });
   useRefetchGuestChatStatus();
 
@@ -85,7 +81,7 @@ const Chat = () => {
               autoComplete="off"
               name='message'
               placeholder="Escribí aquí tu mensaje..." 
-              className={`w-full p-2 border rounded-md text-black ${isContactFormVisible && !isUserConected ? 'caret-transparent' : 'caret-amber-400'} break-word overflow-clip pr-8`}
+              className={`w-full p-2 border rounded-md text-black ${!isUserConected ? 'caret-transparent' : 'caret-amber-400'} break-word overflow-clip pr-8`}
               value={messageInput}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {

@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
-interface ContactFormProps {
-  chatMessages: { type: string; content: string; }[];
-  chatBodyRef: React.RefObject<HTMLDivElement | null>;
-  isChatInitiationSuccess?: boolean;
-}
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
-import { setIsUserConected } from "../store/slices/guest";
-import { setGuestMessages } from "../store/slices/guest";
 import type { SubmitHandler } from "react-hook-form"
 import type { FormValues } from "../types/Chat"
 import { ContactFormSchema } from '../constants/schemas'
@@ -20,16 +13,16 @@ import { useForm } from "react-hook-form";
 
 declare const grecaptcha: any;
 
-/* Hook to actually be used in the PARENT of the ContactForm */
-export const useContactForm = ({ chatBodyRef, isChatInitiationSuccess }: ContactFormProps) => {
+// ! Deprecated
+// Hook to actually be used in the PARENT of the ContactForm
+/* export const useContactForm = ({ chatBodyRef, isChatInitiationSuccess }: ContactFormProps) => {
   const dispatch = useDispatch();
   const chatMessages = useSelector((state: RootState) => state.guest.messages);
   
-  /* Variables used to handle the form for the 'register' logic */
+  // Variables used to handle the form for the 'register' logic
   const [isContactFormVisible, setIsContactFormVisible] = useState(false);
-  const { isUserConected } = useSelector((state: RootState) => state.guest);
   // const [isUserConected, setIsUserConected] = useState(false);
-  /* useEffect to show the Contact Form */
+  // useEffect to show the Contact Form
   useEffect(() => {
     if (chatMessages.length === 1 && isChatInitiationSuccess) {
       setTimeout(() => {
@@ -45,21 +38,11 @@ export const useContactForm = ({ chatBodyRef, isChatInitiationSuccess }: Contact
     }
   }, [chatMessages, dispatch])
 
-  
-
-  /* State for handling logic for the animation form submition */
-  const [isSending, setIsSending] = useState(false);
-
-
   return {
     isContactFormVisible,
-    setIsContactFormVisible,
-    isSending,
-    setIsSending,
-    isUserConected,
-    setIsUserConected
+    setIsContactFormVisible
   }
-}
+} */
 
 /* Hook to be used INSIDE contact form */
 export const useContactFormInternal = ({

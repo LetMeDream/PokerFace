@@ -99,6 +99,10 @@ const useChat = () => {
     }, 100);
   }, [chatMessages]);
 
+  
+  // State for handling logic for the animation form submition
+  const [isSending, setIsSending] = useState(false);
+  const { isUserConected } = useSelector((state: RootState) => state.guest);
 
   return {
     isOpen : isGuestChatOpen,
@@ -113,7 +117,11 @@ const useChat = () => {
     bannerRef,
     isChatInitiationSuccess,
     setGuestMessages,
-    isChatIniationLoading
+    isChatIniationLoading,
+    isSending,
+    setIsSending,
+    isUserConected,
+  
   }
 }
 
