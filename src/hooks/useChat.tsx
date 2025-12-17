@@ -12,6 +12,11 @@ import { selectGuestMessagePayload } from "../utils/selectors";
 import toast from "react-hot-toast";
 import { setGuestMessages } from "../store/slices/guest";
 import { setIsGuestChatOpen } from "../store/slices/base";
+import { useCompleteChatMutation } from "../services/service";
+declare const grecaptcha: any;
+import { setGuestProfile } from "../store/slices/guest";
+import { handleCompleteChatError } from "../utils/helpers";
+
 
 type ChatMessage = {
   type: string;
@@ -69,15 +74,31 @@ const useChat = () => {
 
   /* Seng Message */
   const [beep] = useSound(guest);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [completeChat, { isSuccess: isChatCompleted, isError, error, data: completeChatData }] = useCompleteChatMutation();
+  
   const send = async () => {
     /* Call to Initiate a Chat */
     try {
       if (messageInput.trim() === "") return;
-        if (chatMessages.length === 0) {
+        if (chatMessages.length === 0 || !isUserconnected) {
             const data = await initiateChat({ initialMessage: messageInput }).unwrap();
             dispatch(setGuestSessionId(data.session_id));
             updateGuestChatAfterSend(chatMessages, messageInput); 
             beep()
+            // * Perform call to complete the chat in here with recaptcha
+            if (typeof grecaptcha !== 'undefined') {
+              grecaptcha.ready(() => {
+                grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY_V3, { action: 'complete_chat' }).then(async (token: string) => {
+                await completeChat({
+                  session_id: data.session_id,
+                  phone_number: '00000000000',
+                  recaptcha_token: token
+                }).unwrap()
+                  setIsSubmitting(false);
+                });
+              });
+            }
             
         } else {
           if (isUserconnected) {
@@ -92,6 +113,37 @@ const useChat = () => {
       }
     /* Should continue the chat here */
   }
+  // State for handling logic for the animation form submition
+  const [isSending, setIsSending] = useState(false);
+  useEffect(() => {
+      if (isChatCompleted) {
+        setTimeout(() => {
+          setIsSending(false); // reset animation state
+          // console.log(completeChatData)
+          // Ensure data exists and normalize shape to satisfy GuesstState
+          if (!completeChatData) return;
+          const resp: any = completeChatData;
+          const user = resp.user_data ?? resp.user ?? {};
+          dispatch(setGuestProfile({
+            id: user.id,
+            session_id: user.session_id,
+            chatRoomId: user.chat_room_id,
+            email: user.email,
+            full_name: user.full_name,
+            phone_number: user.phone_number,
+            is_temporary: user.is_temporary ?? false,
+            messages: resp.messages ?? [],
+            isUserConected: true,
+            created_at: user.created_at ?? new Date().toISOString(),
+          }));
+        }, 1000); // match animation duration
+      } else if (isError) {
+        setTimeout(() => {
+          setIsSending(false); // reset animation state
+          handleCompleteChatError(error);
+        }, 1000);
+      }
+    }, [isChatCompleted, setIsSending, isError, error]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -100,8 +152,7 @@ const useChat = () => {
   }, [chatMessages]);
 
   
-  // State for handling logic for the animation form submition
-  const [isSending, setIsSending] = useState(false);
+
   const { isUserConected } = useSelector((state: RootState) => state.guest);
 
   return {
@@ -121,7 +172,7 @@ const useChat = () => {
     isSending,
     setIsSending,
     isUserConected,
-  
+    isSubmitting
   }
 }
 
