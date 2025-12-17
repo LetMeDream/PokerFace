@@ -86,10 +86,6 @@ export const useContactFormInternal = ({
     }).unwrap()
   };
 
-  const handleRecaptchaToken = (token: string) => {
-    handleSend(token);
-  }
-
   //* Initial function used to complete the chat when the user submits the contact form
   const handleSubmitContactForm = async (e: any) => {
     e.preventDefault();
@@ -99,7 +95,7 @@ export const useContactFormInternal = ({
     if (typeof grecaptcha !== 'undefined') {
       grecaptcha.ready(() => {
         grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY_V3, { action: 'complete_chat' }).then((token: string) => {
-          handleRecaptchaToken(token);
+          handleSend(token);
           setIsSubmitting(false);
         });
       });
