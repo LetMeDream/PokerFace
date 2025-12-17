@@ -52,11 +52,10 @@ const useLogin = () => {
 
   const onSubmit = async (data: LoginForm) => {
     const getTokenPromise = getTokenMutation(data).unwrap(); // returns typed payload or throws
-    const error = (resMutation as any).error;
     toast.promise(getTokenPromise, {
       loading: 'Logging in...',
       success: 'Login exitoso',
-      error: error?.data || 'Error en el login',
+      error: 'Error en el login',
     });
     try {
         const result = await getTokenPromise as LOGINJWTSuccess; // no second request, sólo espera el mismo promise
