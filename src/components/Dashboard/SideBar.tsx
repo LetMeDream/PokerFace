@@ -34,7 +34,7 @@ const SideBar = (
         onChange={(e) => setSearchValue(e.target.value)}
         />
         </div> */}
-      <h2 className="caret-transparent text-xl mb-2">
+      <h2 className="caret-transparent text-xl mb-2 text-slate-100">
         Conversaciones:
       </h2>
 

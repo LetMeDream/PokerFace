@@ -43,8 +43,8 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-      <div className="flex items-center justify-between w-full px-2 gap-2">
-        <button onClick={handlePrev} className="btn btn-sm btn-outline" disabled={currentPage === 1}>
+      <div className="flex items-center justify-between w-full px-2 gap-2 text-slate-100">
+        <button onClick={handlePrev} className="btn btn-sm btn-outline bg-secondary! border-slate-500!" disabled={currentPage === 1}>
           «
         </button>
         
@@ -52,7 +52,7 @@ const Pagination: React.FC<PaginationProps> = ({
           {currentPage} / {totalPages}
         </span>
 
-        <button onClick={handleNext} className="btn btn-sm btn-outline" disabled={currentPage === totalPages}>
+        <button onClick={handleNext} className="btn btn-sm btn-outline bg-secondary! border-slate-500!" disabled={currentPage === totalPages}>
           »
         </button>
       </div>

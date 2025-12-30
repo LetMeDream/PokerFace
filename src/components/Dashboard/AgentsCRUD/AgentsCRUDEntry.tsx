@@ -191,7 +191,7 @@ const EditAgentModal = ({
 
   return (
     <dialog id={`modal_edit_agent_${agent.id}`} className="modal text-white placeholder:text-white">
-      <div className="modal-box bg-secondary">
+      <div className="modal-box bg-slate-100 text-secondary">
         <h3 className="font-bold text-lg">Editar Información de Agente</h3>
         <p className="pt-4">
           Aquí puedes editar la información del agente.

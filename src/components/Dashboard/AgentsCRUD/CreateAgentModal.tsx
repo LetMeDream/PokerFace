@@ -116,7 +116,7 @@ const CreateAgentModal = ({ id, isLoading }:
 
                 {/* text toggled during animation */}
                 <span 
-                  className={`transition-opacity duration-75 ${!isAgentCreationLoading ? 'opacity-100' : 'opacity-0'}`}
+                  className={`transition-opacity duration-75 text-slate-100 ${!isAgentCreationLoading ? 'opacity-100' : 'opacity-0'}`}
                 >
                   Crear
                 </span>
@@ -127,7 +127,7 @@ const CreateAgentModal = ({ id, isLoading }:
 
               </div>
               
-              <button className="btn !bg-secondary" id='close-agent-modal'>Cancelar</button>
+              <button className="btn !bg-secondary text-slate-100" id='close-agent-modal'>Cancelar</button>
             </form>
           </div>
         </div>
