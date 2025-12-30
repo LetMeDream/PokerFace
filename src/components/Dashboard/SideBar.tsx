@@ -42,7 +42,7 @@ const SideBar = (
 
       <div className="mb-4 flex justify-center">
         <Pagination 
-          totalPages={10}
+          totalPages={totalPages}
           currentPage={currentPage}
           goToPage={goToPage}
         />
