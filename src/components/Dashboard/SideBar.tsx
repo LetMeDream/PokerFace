@@ -22,8 +22,6 @@ const SideBar = (
     handleSelectTicket
   } = useSideBar({ searchValue });
 
-  console.log(totalPages)
-
   return (
     <ul className="menu bg-secondary min-h-full p-4 max-w-80">
       {/* Sidebar content here */}
