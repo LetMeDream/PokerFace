@@ -6,7 +6,7 @@ import useSideBar from '../../hooks/useSideBar';
 
 const SideBar = (
   { 
-    searchValue, setSearchValue, classnames 
+    searchValue 
   }: 
   {
     searchValue: string;
@@ -22,25 +22,27 @@ const SideBar = (
     handleSelectTicket
   } = useSideBar({ searchValue });
 
+  console.log(totalPages)
+
   return (
     <ul className="menu bg-secondary min-h-full p-4 max-w-80">
       {/* Sidebar content here */}
-      <div className="caret-transparent mb-4">
-        <h2 className="caret-transparent">
-          Buscar:
-        </h2>
+      {/* <div className="caret-transparent mb-4">
         <input 
-          type="text" 
-          placeholder="Buscar..." 
-          className={classnames.searchInput} 
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+        type="text" 
+        placeholder="Buscar..." 
+        className={classnames.searchInput} 
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
         />
-      </div>
+        </div> */}
+      <h2 className="caret-transparent text-xl mb-2">
+        Conversaciones:
+      </h2>
 
       <div className="mb-4 flex justify-center">
         <Pagination 
-          totalPages={totalPages}
+          totalPages={10}
           currentPage={currentPage}
           goToPage={goToPage}
         />
