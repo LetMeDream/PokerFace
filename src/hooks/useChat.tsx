@@ -25,6 +25,7 @@ type ChatMessage = {
 
 const useChat = () => {
   const { isGuestChatOpen } = useSelector((state: RootState) => state.base);
+  const { status } = useSelector((state: RootState) => state.guest);
   const dispatch = useDispatch();
 
   const classnames = {
@@ -66,7 +67,7 @@ const useChat = () => {
 
   // Store chat messages to localStorage whenever they change
   useEffect(() => {
-    if (chatMessages.length > 4) {
+    if (chatMessages.length > 1) {
       // console.log('saving messages to localStorage');
       dispatch(setGuestMessages(chatMessages));
     }
@@ -79,39 +80,51 @@ const useChat = () => {
   
   const send = async () => {
     /* Call to Initiate a Chat */
-    try {
-      if (messageInput.trim() === "") return;
-        if (chatMessages.length === 0 || !isUserconnected) {
-            const data = await initiateChat({ initialMessage: messageInput }).unwrap();
-            dispatch(setGuestSessionId(data.session_id));
-            updateGuestChatAfterSend(chatMessages, messageInput); 
-            beep()
-            // * Perform call to complete the chat in here with recaptcha
-            if (typeof grecaptcha !== 'undefined') {
-              grecaptcha.ready(() => {
-                grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY_V3, { action: 'complete_chat' }).then(async (token: string) => {
-                await completeChat({
-                  session_id: data.session_id,
-                  phone_number: '00000000000',
-                  recaptcha_token: token
-                }).unwrap()
-                  setIsSubmitting(false);
+    if (status !== 'closed' && status !== 'resolved') {
+      try {
+        if (messageInput.trim() === "") return;
+          if (chatMessages.length === 0 || !isUserconnected) {
+              const data = await initiateChat({ initialMessage: messageInput }).unwrap();
+              dispatch(setGuestSessionId(data.session_id));
+              updateGuestChatAfterSend(chatMessages, messageInput); 
+              beep()
+              // * Perform call to complete the chat in here with recaptcha
+              if (typeof grecaptcha !== 'undefined') {
+                grecaptcha.ready(() => {
+                  grecaptcha.execute(import.meta.env.VITE_RECAPTCHA_SITE_KEY_V3, { action: 'complete_chat' }).then(async (token: string) => {
+                  await completeChat({
+                    session_id: data.session_id,
+                    phone_number: '00000000000',
+                    recaptcha_token: token
+                  }).unwrap()
+                    setIsSubmitting(false);
+                  });
                 });
-              });
+              }
+              
+          } else {
+            if (isUserconnected) {
+              await guestSendMessage(guestMessagePayload).unwrap();
+              updateGuestChatAfterSend(chatMessages, messageInput); 
+              beep()
             }
-            
-        } else {
-          if (isUserconnected) {
-            await guestSendMessage(guestMessagePayload).unwrap();
-            updateGuestChatAfterSend(chatMessages, messageInput); 
-            beep()
           }
-        }
       } catch (error) {
         console.error("Error initiating chat:", error);
         toast.error("Error al enviar el mensaje. Por favor, inténtalo de nuevo.");
       }
-    /* Should continue the chat here */
+    } else {
+      toast('La conversación ha finalizado.', {
+        icon: 'ℹ️',
+      });
+      setTimeout(() => {
+        toast('Haga clic en "Iniciar nuevo chat" para continuar.', {
+          icon: '💬',
+        }); 
+      }, 600);
+    }
+
+
   }
   // State for handling logic for the animation form submition
   const [isSending, setIsSending] = useState(false);
