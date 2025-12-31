@@ -36,7 +36,21 @@ const GeneralInbox = () => {
   } = usePagination({elements: filteredUnassignedTickets, itemsPerPage: isMobile ? 3 : 5})
 
 
-  const orderedTickets = paginatedTickets.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+  const paginategTicketsOrderedByLastMessage = paginatedTickets.sort((a, b) => {
+    const aUserMessages = a.messages ? a.messages.filter(m => m.sender_type !== 'system') : [];
+    const bUserMessages = b.messages ? b.messages.filter(m => m.sender_type !== 'system') : [];
+    const aLastMessageDate = aUserMessages.length > 0
+      ? new Date(aUserMessages.reduce((latest, message) =>
+          new Date(message.created_at) > new Date(latest.created_at) ? message : latest
+        ).created_at).getTime()
+      : new Date(a.updated_at).getTime();
+    const bLastMessageDate = bUserMessages.length > 0
+      ? new Date(bUserMessages.reduce((latest, message) =>
+          new Date(message.created_at) > new Date(latest.created_at) ? message : latest
+        ).created_at).getTime()
+      : new Date(b.updated_at).getTime();
+    return bLastMessageDate - aLastMessageDate;
+  });
 
 
   return (
@@ -79,7 +93,7 @@ const GeneralInbox = () => {
 
         {/* Ticket list */}
         <ul className="list bg-cyan-50 text-black rounded-none rounded-box shadow-md">
-          {orderedTickets.map(ticket => (
+          {paginategTicketsOrderedByLastMessage.map(ticket => (
             <InboxEntry 
               key={ticket.id} 
               ticket={ticket} 
