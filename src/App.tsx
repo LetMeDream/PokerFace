@@ -20,7 +20,9 @@ function App() {
 
         </Routes>
       </HashRouter>
-      <Toaster />
+      <Toaster
+        reverseOrder={true}
+      />
     </>
   )
 }
