@@ -25,8 +25,6 @@ const InboxEntry = ({
   const { lastMessageText, lastMessage, lastRemitent, showModal, showOptions } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
 
-  // debugger
-
   const lastMsgDate = lastMessage?.created_at ? new Date(lastMessage.created_at) : null;
   // const updatedAtDate = new Date(ticket.updated_at);
   const mostRecentDate = lastMsgDate /* && lastMsgDate > updatedAtDate ? lastMsgDate : updatedAtDate; */
