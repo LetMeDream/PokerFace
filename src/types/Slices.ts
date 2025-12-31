@@ -30,6 +30,8 @@ export interface ChatMessage {
   // campos opcionales útiles
   timestamp?: string; // ISO 8601
   metadata?: Record<string, unknown>;
+  sender_type: 'user' | 'agent' | 'system';
+  created_at: string; // ISO 8601
 }
 
 export type TicketStatus = 'active' | 'pending' | 'closed' | 'on_hold' | string;

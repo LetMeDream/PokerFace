@@ -22,15 +22,21 @@ const InboxEntry = ({
   closeTicketModalId: string,
   reopenTicketModalId: string 
 }) => {
-  const { lastMessage, lastRemitent, showModal, showOptions } = useInboxEntry({ ticket });
+  const { lastMessageText, lastMessage, lastRemitent, showModal, showOptions } = useInboxEntry({ ticket });
   const dispatch = useDispatch();
-  const timeStamps = formatDistance(new Date(ticket.updated_at), new Date(), { addSuffix: true, locale: es });
 
+  // debugger
+
+  const lastMsgDate = lastMessage?.created_at ? new Date(lastMessage.created_at) : null;
+  // const updatedAtDate = new Date(ticket.updated_at);
+  const mostRecentDate = lastMsgDate /* && lastMsgDate > updatedAtDate ? lastMsgDate : updatedAtDate; */
+  const timeStamps = mostRecentDate ? formatDistance(mostRecentDate, new Date(), { addSuffix: true, locale: es }) : '';
+  
   const notifications = useSelector((state: RootState) => selectNotificationsArray(state));
   const isUnread = notifications.filter(n => !n.is_read).some(notification =>
     notification.chat_room_id === ticket.id
   );
-
+  
   const handleDeleteTicket = () => {
     // Implement ticket deletion logic here
     dispatch(setAssigningTicketId(ticket.id));
@@ -129,7 +135,7 @@ const InboxEntry = ({
                 </div>
                 {/* Message */}
                 <p className="text-xs text-gray-700 line-clamp-3 overflow-hidden md:px-4">
-                  {lastMessage}
+                  {lastMessageText}
                 </p>
                 <div className="flex justify-end items-center md:px-4 mt-1">
                   <span className="text-gray-500 text-xs ml-2">

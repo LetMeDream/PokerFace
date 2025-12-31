@@ -6,8 +6,10 @@ import { setAssigningTicketId } from '../store/slices/base';
 const useInboxEntry = ({ticket}: {ticket: ChatTicket}) => {
     const [imgError, setImgError] = React.useState(false);
   
-    const lastMessage = (ticket.messages && ticket.messages.length > 0)
-      ? ticket.messages[ticket.messages.length - 1].content
+    const systemMessages = ticket.messages.filter(msg => msg.sender_type !== 'system');
+    const lastMessage = systemMessages.length > 0 ? systemMessages[systemMessages.length - 1] : null;
+    const lastMessageText = (systemMessages.length > 0)
+      ? lastMessage?.content
       : 'No hay mensajes aún.';
   
     const lastRemitent = (ticket.messages && ticket.messages.length > 0)
@@ -37,6 +39,7 @@ const useInboxEntry = ({ticket}: {ticket: ChatTicket}) => {
   return {
     imgError,
     lastMessage,
+    lastMessageText,
     lastRemitent,
     showModal,
     showOptions,
