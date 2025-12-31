@@ -107,7 +107,7 @@ export const useContactFormInternal = ({
     if (isSuccess) {
       setTimeout(() => {
         setIsSending(false); // reset animation state
-        console.log(data)
+        // console.log(data)
         // Ensure data exists and normalize shape to satisfy GuesstState
         if (!data) return;
         const resp: any = data;

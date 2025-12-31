@@ -186,7 +186,7 @@ const EditAgentModal = ({
       console.error('Failed to update the agent:', error);
       toast.error('Error updating agent. Please try again.');
     }
-    console.log(data);
+    // console.log(data);
   }
 
   return (
