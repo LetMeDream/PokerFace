@@ -63,7 +63,7 @@ const Messages: FC<MessagesProps> = ({
                 <p className="mb-2">
                   La conversación ha finalizado. Si deseas continuar, por favor inicia un nuevo chat.
                 </p>
-                <button onClick={resetRedux}>
+                <button className="border! border-gray-300! hover:border-gray-500! hover:text-black!" onClick={resetRedux}>
                   Iniciar nuevo chat
                 </button>
               </div>
@@ -73,7 +73,7 @@ const Messages: FC<MessagesProps> = ({
                 <p className="mb-2">
                   La conversación ha sido marcada como <span className="text-secondary">Resuelta</span>. Si deseas continuar, por favor inicia un nuevo chat.
                 </p>
-                <button onClick={resetRedux}>
+                <button className="border! border-gray-300! hover:border-gray-500! hover:text-black!" onClick={resetRedux}>
                   Iniciar nuevo chat
                 </button>
               </div>
