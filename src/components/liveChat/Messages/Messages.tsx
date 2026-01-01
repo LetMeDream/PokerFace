@@ -9,6 +9,8 @@ import { clearUser } from "../../../store/slices/user";
 import { unsetChatProfile } from "../../../store/slices/agent";
 import { unsetBase } from "../../../store/slices/base";
 import { unsetGuest } from "../../../store/slices/guest";
+import { formatDistance } from "date-fns";
+import { es } from "date-fns/locale";
 
 // helper: comprueba existencia (no confundir con truthy/falsy)
 // devuelve true si el valor NO es null ni undefined
@@ -91,11 +93,12 @@ const Messages: FC<MessagesProps> = ({
         {chatMessages?.map((msg, index) => (
             <div 
               key={index}
+              title={formatDistance(new Date(msg.created_at || new Date()), new Date(), { addSuffix: true, locale: es })}
             >
               {/* Guest messages */}
-              {msg.sender_type === 'user' ? guestMessage(msg.content) : null}
+              {msg.sender_type === 'user' ? guestMessage(msg.content, msg.created_at) : null}
               {/* Agent messages */}
-              {(msg.sender_type === 'system' || msg.sender_type === 'agent') ? agentMessage(msg.content) : null}
+              {(msg.sender_type === 'system' || msg.sender_type === 'agent') ? agentMessage(msg.content, msg.created_at) : null}
             </div>
         ))}
       </>

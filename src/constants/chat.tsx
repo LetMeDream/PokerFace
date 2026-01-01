@@ -17,33 +17,54 @@ export const messages = [
 ]
 
 /* Message for Service Agent */
-export const agentMessage = (message: string) => (<>
-  <div className="flex justify-end gap-2.5 mb-4 ">
-    <div className="w-8 h-8 rounded-full bg-primary flex-shrink-0" title="Agente"></div>
-
-    <div className="flex flex-col gap-1">
-      <div className="bg-gray-100 p-2 rounded-lg max-w-[160px] break-words">
-        <p className="text-sm text-gray-700 max-w-[160px]">{message}</p>
+export const agentMessage = (message: string, createdAt?: string) => {
+  // Formatea la hora si existe createdAt
+  let time = '';
+  if (createdAt) {
+    const date = new Date(createdAt);
+    // Formato HH:mm, 24h
+    time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+  return (
+    <>
+      <div className="flex justify-end gap-2.5 mb-4 ">
+        <div className="w-8 h-8 rounded-full bg-primary flex-shrink-0" title="Agente"></div>
+        <div className="flex flex-col gap-1 items-end">
+          <div className="bg-gray-100 p-2 rounded-lg max-w-[160px] break-words">
+            <p className="text-sm text-gray-700 max-w-[160px]">{message}</p>
+          </div>
+          {time && (
+            <span className="text-xs text-gray-500 mt-0.5">{time}</span>
+          )}
+        </div>
       </div>
-    </div>
-  </div>
-
-</>)
+    </>
+  );
+};
 
 /* Message for visitor */
-export const guestMessage = (message: string) => (<>
-  <div className="flex gap-2.5 mb-4 ">
-    <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0" title="Visitante"></div>
-
-    <div className="flex flex-col gap-1">
-      <div className="bg-green-500 text-white p-2 rounded-lg max-w-[160px] break-words">
-          <p className="text-sm max-w-[160px]">{message}</p>
+export const guestMessage = (message: string, createdAt?: string) => {
+  let time = '';
+  if (createdAt) {
+    const date = new Date(createdAt);
+    time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+  return (
+    <>
+      <div className="flex gap-2.5 mb-4 ">
+        <div className="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0" title="Visitante"></div>
+        <div className="flex flex-col gap-1 items-start">
+          <div className="bg-green-500 text-white p-2 rounded-lg max-w-[160px] break-words">
+            <p className="text-sm max-w-[160px]">{message}</p>
+          </div>
+          {time && (
+            <span className="text-xs text-gray-500 mt-0.5">{time}</span>
+          )}
+        </div>
       </div>
-
-    </div>
-    
-  </div>
-</>)
+    </>
+  );
+};
 
 /* Classnames for errors on inputs */
 export const inputErrors = '!border-transparent !ring-1 !ring-red-400 focus-visible:!ring-red-400 focus:!ring-red-400 placeholder:text-red-400'
