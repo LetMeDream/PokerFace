@@ -65,12 +65,14 @@ export const useRefetchNotifications = () => {
 export const useRefetchGuestChatStatus = () => {
   const { id: chat_room_id, session_id: sessionId, status } = useSelector((state: any) => state.guest);
   const skipQuery = !sessionId || status === 'closed' || status === 'resolved';
-  const { data: guestChatStatusData } = useGetGuestChatStatusQuery<any>({ chat_room_id }, { pollingInterval: 5000, skip: skipQuery });
+  const { data: guestChatStatusData } = useGetGuestChatStatusQuery<any>({ chat_room_id }, { skip: skipQuery });
   const dispatch = useDispatch();
+  const currentMessages = useSelector((state: any) => state.guest.messages);
 
   useEffect(() => {
     // console.log(guestChatStatusData)
-    
+    if (!guestChatStatusData) return;
+
     let settableMessages = guestChatStatusData?.message_history || [];
     // Map the messages to match the guest slice structure
     settableMessages = settableMessages.filter((msg: any) => msg.sender_type !== 'system')
@@ -80,7 +82,9 @@ export const useRefetchGuestChatStatus = () => {
     }));
     // console.log(settableMessages)
     dispatch(setGuestStatus(guestChatStatusData?.status || ''));
-    dispatch(setGuestMessages(settableMessages));
+    if (currentMessages.length === 0 && settableMessages.length > 0) {
+      dispatch(setGuestMessages(settableMessages));
+    }
 
 
     // setGuestMessages(guestChatStatusData?.message_history || []);
