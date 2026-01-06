@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { store } from "../store/store";
 import useSound from "use-sound";
 import guest from '../assets/sounds/guest.mp3'
 // import { messages } from "../constants/chat";
@@ -67,8 +68,10 @@ const useChat = () => {
 
   // Store chat messages to localStorage whenever they change
   useEffect(() => {
-    if (chatMessages.length > 1) {
+    if (chatMessages.length > 0) {
       // console.log('saving messages to localStorage');
+      // console.log('A punto de recordar mensajes')
+      // console.log(chatMessages.length)
       dispatch(setGuestMessages(chatMessages));
     }
   }, [chatMessages, dispatch]);
@@ -164,9 +167,67 @@ const useChat = () => {
     }, 100);
   }, [chatMessages]);
 
-  
+
 
   const { isUserConected } = useSelector((state: RootState) => state.guest);
+
+  const wsRef = useRef<WebSocket | null>(null);
+  const { id: chat_room_id } = useSelector((state: any) => state.guest);
+  
+  useEffect(() => {
+    if (!chat_room_id) return;
+    const ws = new WebSocket(`ws://localhost:8000/ws/guest_chat_${chat_room_id}/`);
+    wsRef.current = ws;
+
+    ws.onopen = () => console.log('WebSocket abierto');
+    ws.onmessage = (event) => {
+      // Aquí manejas el mensaje recibido
+      let data;
+      try {
+        data = JSON.parse(event.data);
+      } catch {
+        data = { content: String(event.data) };
+      }
+      // Obtener el valor actualizado de messages directamente del store
+      if (data.sender === 'agent') {
+        const currentMessages = store.getState().guest.messages;
+        const receivedMessage: ChatMessage = {
+          type: 'agent',
+          content: String(data.message.content ?? '')
+        };
+        dispatch(setGuestMessages([...currentMessages, receivedMessage]));
+        console.log('Mensaje del AGENTE recibido:', event.data);
+      } else {
+        console.log('Mensaje del GUEST recibido:', event.data);
+      }
+
+    };
+    ws.onerror = (e) => console.error('WebSocket error', e);
+    ws.onclose = () => console.log('WebSocket cerrado');
+
+    return () => ws.close();
+  }, [chat_room_id, dispatch]);
+
+
+  
+  /*  useEffect(() => {
+    if (wsRef.current) {
+      console.log(wsRef.current);
+    }
+  }, [wsRef.current]); */
+
+  const sendAndEmitMessage = () => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      send()
+      wsRef.current.send(JSON.stringify({
+        type: 'guest_message',
+        chat_room_id: chat_room_id,
+        content: messageInput,
+        timestamp: Date.now()
+      }));
+    }
+  }
+
 
   return {
     isOpen : isGuestChatOpen,
@@ -175,7 +236,7 @@ const useChat = () => {
     messageInput,
     setMessageInput,
     chatMessages,
-    send,
+    send: sendAndEmitMessage,
     chatBodyRef,
     inputRef,
     bannerRef,
