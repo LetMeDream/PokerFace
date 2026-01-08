@@ -4,8 +4,8 @@ import { normalizeTickets } from '../../utils/helpers';
 
 export interface BaseState {
   tickets: {
-    byId: Record<number, ChatTicket>,
-    allIds: number[]
+    byId: Record<string, ChatTicket>,
+    allIds: string[]
   };
   selectedTicketId: string | null  | undefined// Id for the currently established conversation/ticket
   assigningTicketId?: string | null  | undefined// Id for the ticket being assigned right now
