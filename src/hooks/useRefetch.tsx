@@ -12,7 +12,7 @@ import { selectNotificationsArray } from '../utils/selectors';
 export const useRefetchMyChat = () => {
   const dispatch = useDispatch();
   const is_superuser = useSelector((state: any) => state.user.is_superuser);
-  const { data: assignChatsData } = useGetAssignedChatsQuery<any>(undefined, { pollingInterval: 5000, skip: is_superuser });
+  const { data: assignChatsData } = useGetAssignedChatsQuery<any>(undefined, { skip: is_superuser });
 
   useEffect(() => {
     dispatch(setAssignedChats(assignChatsData?.chats || []));
@@ -28,7 +28,7 @@ export const useRefetchMyChat = () => {
 export const useRefetchWaitingChats = () => {
   const dispatch = useDispatch();
   const is_superuser = useSelector((state: any) => state.user.is_superuser);
-  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { pollingInterval: 5000, skip: is_superuser });
+  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { skip: is_superuser });
 
   useEffect(() => {
     dispatch(setTickets(waitingChatsData?.chats || []));
@@ -42,7 +42,7 @@ export const useRefetchWaitingChats = () => {
 /* Refetches Notifications */
 export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
-  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
+  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { skip: false });
   const unreadNotifications = useSelector(selectNotificationsArray).filter(notif => !notif.is_read);
   const lastFiveNotifications = unreadNotifications.sort((a, b) => 
     (Number(a.is_read) - Number(b.is_read))

@@ -16,7 +16,7 @@ import guest from '../assets/sounds/guest.mp3'
 import { setHasNotificationsSoundPlayed } from '../store/slices/base'
 
 const useNotifications = () => {
-    const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
+    const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { skip: false });
     const dispatch = useDispatch();
   
     const [isOpen, setIsOpen] = useState(false);
