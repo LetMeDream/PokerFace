@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { setHasAutoOpened } from "../store/slices/base";
 import { useDispatch } from "react-redux";
 import { useRefetchWaitingChats } from "./useRefetch";
+import type { RootState } from "../store/store";
+import { setAssignedChatMessage } from "../store/slices/agent";
 
 const useDashboard = () => {
   /* Resizing Logic */
@@ -45,6 +47,37 @@ const useDashboard = () => {
   /* Search logic value */
   const [searchValue, setSearchValue] = useState<string>('');
   useRefetchWaitingChats();
+  const { token } = useSelector((state: RootState) => state.auth)
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8000/ws/my_chats/?token=' + token.access);
+  
+    /* Conectando con el web socket de Dashboard de agentes */
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(data)
+
+      
+      if (data.type === 'guest_message') {
+        // Manejar mensaje del guest
+        const payload = {
+          chat_room_id: data.room_id,
+          message: data.message
+        }
+        dispatch(setAssignedChatMessage(payload));
+        // Scroll to bottom could be handled in the component displaying the messages
+        const agentChatBodyContainer = document.getElementById('agent-chat-body-scrollable-container');
+        if (agentChatBodyContainer) {
+          setTimeout(() => {
+            agentChatBodyContainer.scrollTop = agentChatBodyContainer.scrollHeight;
+          }, 10);
+        }
+      }
+
+    };
+
+    return () => ws.close();
+  }, []);
 
   return {
     drawerButtonRef,
