@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { useSelector } from "react-redux";
-import { setHasAutoOpened } from "../store/slices/base";
+import { setHasAutoOpened, addTicket } from "../store/slices/base";
 import { useDispatch } from "react-redux";
 import { useRefetchWaitingChats } from "./useRefetch";
 import type { RootState } from "../store/store";
@@ -72,6 +72,10 @@ const useDashboard = () => {
             agentChatBodyContainer.scrollTop = agentChatBodyContainer.scrollHeight;
           }, 10);
         }
+      }
+
+      if (data.type === 'new_chat') {
+        dispatch(addTicket(data.chat_instance));
       }
 
     };
