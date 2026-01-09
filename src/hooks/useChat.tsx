@@ -174,8 +174,9 @@ const useChat = () => {
   const wsRef = useRef<WebSocket | null>(null);
   const { id: chat_room_id } = useSelector((state: any) => state.guest);
   
+  /* Connect to WebSocket for guest chat, using chat_room_id */
   useEffect(() => {
-    if (!chat_room_id) return;
+    if (!chat_room_id || !isUserConected) return;
     const ws = new WebSocket(`ws://localhost:8000/ws/guest_chat_${chat_room_id}/`);
     wsRef.current = ws;
 
@@ -206,12 +207,12 @@ const useChat = () => {
     ws.onclose = () => console.log('WebSocket cerrado');
 
     return () => ws.close();
-  }, [chat_room_id, dispatch]);
+  }, [chat_room_id, dispatch, isUserConected]);
 
 
 
   const sendAndEmitMessage = () => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN || !isUserConected) {
       send()
     }
   }
