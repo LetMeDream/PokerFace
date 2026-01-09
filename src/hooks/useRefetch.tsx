@@ -28,7 +28,7 @@ export const useRefetchMyChat = () => {
 export const useRefetchWaitingChats = () => {
   const dispatch = useDispatch();
   const is_superuser = useSelector((state: any) => state.user.is_superuser);
-  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { skip: is_superuser });
+  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { skip: is_superuser, refetchOnMountOrArgChange: true });
 
   useEffect(() => {
     dispatch(setTickets(waitingChatsData?.chats || []));
