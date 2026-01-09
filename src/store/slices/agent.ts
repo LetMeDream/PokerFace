@@ -71,9 +71,24 @@ export const agentSlice = createSlice({
     },
     setCurrentNotification: (state, action: PayloadAction<NotificationItem | null>) => {
       state.current_notification = action.payload;
-    }
+    },
+
+    setAssignedChatMessage: (state, action) => {
+      const payload = action.payload;
+      const chatId = payload.chat_room_id;
+      if (chatId && state.assigned_chats.byId[chatId]) {
+        const oldChat = state.assigned_chats.byId[chatId];
+        state.assigned_chats.byId[chatId] = {
+          ...oldChat,
+          messages: [
+            ...oldChat.messages,
+            payload.message,
+          ],
+        };
+      }
+    },
   },
 });
 
-export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification, removeNotification } = agentSlice.actions;
+export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification, removeNotification, setAssignedChatMessage } = agentSlice.actions;
 export default agentSlice.reducer;
