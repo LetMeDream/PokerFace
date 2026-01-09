@@ -61,8 +61,8 @@ export const selectTicketById = createSelector(
 /* Selector from getting a specific ticket by ID (FROM REDUX'S AGENT.ASSIGNED_CHATS) */
 export const selectAssignedChatById = createSelector(
   (state: AgentState) => state.assigned_chats.byId,
-  (_, ticketId: number) => ticketId,
-  (byId, ticketId) => byId[ticketId]
+  (_, ticketId: string | null) => ticketId,
+  (byId, ticketId) => ticketId ? byId[ticketId] : undefined
 );
 
 /* Selector for getting all unassigned tickets */
