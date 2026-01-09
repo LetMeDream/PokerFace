@@ -83,7 +83,12 @@ const AgentChat = ({selectedTicketId}: {selectedTicketId: string | null}) => {
                 </div>
               </div>
               {/* Messages Area */}
-              <div className="p-4 h-96 overflow-y-auto scroll-smooth" ref={chatBodyRef} >
+              <div 
+                className="p-4 h-96 overflow-y-auto scroll-smooth" 
+                ref={chatBodyRef} 
+                id='agent-chat-body-scrollable-container'
+
+              >
                   <Messages
                     chatMessages={selectedTicket?.messages}
                     type={'agent'}
