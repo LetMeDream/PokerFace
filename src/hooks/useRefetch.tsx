@@ -63,9 +63,9 @@ export const useRefetchNotifications = () => {
 
 /* Refetches guest chat status */
 export const useRefetchGuestChatStatus = () => {
-  const { id: chat_room_id, /* session_id: sessionId, */ status } = useSelector((state: any) => state.guest);
+  const { id: chat_room_id, session_id: sessionId, status } = useSelector((state: any) => state.guest);
   // Ejecuta la query si hay sessionId y el status no es 'closed' ni 'resolved'
-  const skipQuery = status === 'closed' || status === 'resolved';
+  const skipQuery = status === 'closed' || status === 'resolved' || !sessionId;
   const { data: guestChatStatusData } = useGetGuestChatStatusQuery<any>({ chat_room_id }, { skip: skipQuery, refetchOnMountOrArgChange: true });
   const dispatch = useDispatch();
 
