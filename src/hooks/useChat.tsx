@@ -198,7 +198,7 @@ const useChat = () => {
         dispatch(setGuestMessages([...currentMessages, receivedMessage]));
         console.log('Mensaje del AGENTE recibido:', event.data);
       } else {
-        console.log('Mensaje del GUEST recibido:', event.data);
+        console.log('Mensaje desconocido recibido:', event.data);
       }
 
     };
@@ -209,22 +209,10 @@ const useChat = () => {
   }, [chat_room_id, dispatch]);
 
 
-  
-  /*  useEffect(() => {
-    if (wsRef.current) {
-      console.log(wsRef.current);
-    }
-  }, [wsRef.current]); */
 
   const sendAndEmitMessage = () => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       send()
-      wsRef.current.send(JSON.stringify({
-        type: 'guest_message',
-        chat_room_id: chat_room_id,
-        content: messageInput,
-        timestamp: Date.now()
-      }));
     }
   }
 
