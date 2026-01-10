@@ -21,4 +21,6 @@ export const endpoints = {
   UPDATE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Put
   NOTIFICATIONS: `/notifications/`, // Get
   MARK_NOTIFICATION_READ: () => `/notifications/mark_read/`, // Post
+
+  WS_BASE_URL: import.meta.env.VITE_WS_URL,
 }
