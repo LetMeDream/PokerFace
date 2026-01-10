@@ -79,6 +79,10 @@ const useDashboard = () => {
         dispatch(addTicket(data.chat_instance));
       }
 
+      if (data.type === 'chat_taken_by_other') {
+        dispatch(removeTicket({ ticketId: data.chat_id }));
+       }
+
     };
 
     return () => ws.close();
