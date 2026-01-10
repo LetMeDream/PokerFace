@@ -1,11 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 import useMediaQuery from "../hooks/useMediaQuery";
 import { useSelector } from "react-redux";
-import { setHasAutoOpened, addTicket } from "../store/slices/base";
+import { setHasAutoOpened, addTicket, removeTicket } from "../store/slices/base";
 import { useDispatch } from "react-redux";
 import { useRefetchWaitingChats } from "./useRefetch";
 import type { RootState } from "../store/store";
 import { setAssignedChatMessage } from "../store/slices/agent";
+import { endpoints } from "../constants/envSettings";
 
 const useDashboard = () => {
   /* Resizing Logic */
@@ -50,7 +51,7 @@ const useDashboard = () => {
   const { token } = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8000/ws/my_chats/?token=' + token.access);
+    const ws = new WebSocket(`${endpoints.WS_BASE_URL}/my_chats/?token=` + token.access);
   
     /* Conectando con el web socket de Dashboard de agentes */
     ws.onmessage = (event) => {

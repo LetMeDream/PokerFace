@@ -17,6 +17,7 @@ import { useCompleteChatMutation } from "../services/service";
 declare const grecaptcha: any;
 import { setGuestProfile } from "../store/slices/guest";
 import { handleCompleteChatError } from "../utils/helpers";
+import { endpoints } from "../constants/envSettings";
 
 
 type ChatMessage = {
@@ -177,7 +178,7 @@ const useChat = () => {
   /* Connect to WebSocket for guest chat, using chat_room_id */
   useEffect(() => {
     if (!chat_room_id || !isUserConected) return;
-    const ws = new WebSocket(`ws://localhost:8000/ws/guest_chat_${chat_room_id}/`);
+    const ws = new WebSocket(`${endpoints.WS_BASE_URL}/guest_chat_${chat_room_id}/`);
     wsRef.current = ws;
 
     ws.onopen = () => console.log('WebSocket abierto');
