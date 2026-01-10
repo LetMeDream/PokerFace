@@ -61,7 +61,7 @@ export const Notifications = () => {
           )}
           {/* See More Notifications */}
           {notificationsData && notificationsData.notifications.length > 5 && (
-            <div className=' flex justify-between'>
+            <div className=' flex justify-between select-none'>
               <li
                 className="text-start !text-primary p-2 py-1.5 cursor-pointer hover:underline"
                 onClick={handleMarkAllAsRead}
