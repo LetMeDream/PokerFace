@@ -5,7 +5,7 @@ import { setHasNotificationsSoundPlayed, setTickets } from '../store/slices/base
 import { setGuestMessages, setGuestStatus } from '../store/slices/guest';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { setHasAutoOpened } from '../store/slices/base';
+// import { setHasAutoOpened } from '../store/slices/base';
 import { selectNotificationsArray } from '../utils/selectors';
 
 /* Refetches and re-set assigned chats  */
@@ -42,7 +42,7 @@ export const useRefetchWaitingChats = () => {
 /* Refetches Notifications */
 export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
-  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { skip: false });
+  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { skip: false, refetchOnMountOrArgChange: true });
   const unreadNotifications = useSelector(selectNotificationsArray).filter(notif => !notif.is_read);
   const lastFiveNotifications = unreadNotifications.sort((a, b) => 
     (Number(a.is_read) - Number(b.is_read))
@@ -52,7 +52,7 @@ export const useRefetchNotifications = () => {
     dispatch(setNotifications(notificationsData?.notifications || []));
     if (lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
       dispatch(setHasNotificationsSoundPlayed(false));
-      dispatch(setHasAutoOpened(false));
+      // dispatch(setHasAutoOpened(false));
     }
   }, [notificationsData, dispatch]);
 
