@@ -10,6 +10,8 @@ import { endpoints } from "../constants/envSettings";
 import type { NotificationItem } from "../types/Slices";
 import { addNotification } from "../store/slices/agent";
 import { addMessageToTicket } from "../store/slices/base";
+import useSound from "use-sound";
+import guest from '../assets/sounds/guest.mp3'
 
 const useDashboard = () => {
   /* Resizing Logic */
@@ -53,6 +55,7 @@ const useDashboard = () => {
   useRefetchWaitingChats();
   const { token } = useSelector((state: RootState) => state.auth)
   const agentId = useSelector((state: RootState) => state.agent.id);
+  const [ping] = useSound(guest);
 
 
   useEffect(() => {
@@ -108,6 +111,7 @@ const useDashboard = () => {
         } else {
           dispatch(addNotification(notificationForCurrentAgent[0]));
         }
+        ping();
       }
 
       if (data.type === 'notify_send_message') {
@@ -119,6 +123,7 @@ const useDashboard = () => {
         } else {
           dispatch(addNotification(notificationForCurrentAgent[0]));
         }
+        ping();
 
         const completeMessage = data.message;
         const newMessage = {
