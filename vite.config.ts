@@ -18,5 +18,8 @@ export default defineConfig({
         tsconfigPath: './tsconfig.app.json', 
       }, 
     }),
-  ]
+  ],
+  build: {
+    sourcemap: true
+  }
 })
