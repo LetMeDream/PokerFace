@@ -103,13 +103,22 @@ const useDashboard = () => {
       if (data.type === 'notify_new_chat') {
         const notificationForCurrentAgent = data?.notification?.length > 0 ? 
           data.notification.filter((n: NotificationItem) => n.agent_info.id === agentId) : data.notification; 
-        dispatch(addNotification(notificationForCurrentAgent[0]));
+        if (!notificationForCurrentAgent[0]) {
+          dispatch(addNotification(data?.notification));
+        } else {
+          dispatch(addNotification(notificationForCurrentAgent[0]));
+        }
       }
 
       if (data.type === 'notify_send_message') {
-        const notificationForCurrentAgent = data?.notification?.length > 0 ? 
+        let notificationForCurrentAgent = data?.notification?.length > 0 ? 
           data.notification.filter((n: NotificationItem) => n.agent_info.id === agentId) : data.notification; 
-        dispatch(addNotification(notificationForCurrentAgent[0]));
+        if (!notificationForCurrentAgent[0]) {
+          notificationForCurrentAgent = data?.notification;
+          dispatch(addNotification(notificationForCurrentAgent));
+        } else {
+          dispatch(addNotification(notificationForCurrentAgent[0]));
+        }
 
         const completeMessage = data.message;
         const newMessage = {
