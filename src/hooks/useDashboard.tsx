@@ -7,6 +7,9 @@ import { useRefetchWaitingChats } from "./useRefetch";
 import type { RootState } from "../store/store";
 import { setAssignedChatMessage } from "../store/slices/agent";
 import { endpoints } from "../constants/envSettings";
+import type { NotificationItem } from "../types/Slices";
+import { addNotification } from "../store/slices/agent";
+import { addMessageToTicket } from "../store/slices/base";
 
 const useDashboard = () => {
   /* Resizing Logic */
@@ -49,6 +52,8 @@ const useDashboard = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   useRefetchWaitingChats();
   const { token } = useSelector((state: RootState) => state.auth)
+  const agentId = useSelector((state: RootState) => state.agent.id);
+
 
   useEffect(() => {
     const ws = new WebSocket(`${endpoints.WS_BASE_URL}/my_chats/?token=` + token.access);
@@ -86,6 +91,42 @@ const useDashboard = () => {
       if (data.type === 'chat_unassigned_by_other') {
         dispatch(addTicket(data.chat_instance));
       }
+
+      if (data.type === 'chat_closed') {
+        dispatch(removeTicket({ ticketId: data.chat_id }));
+      }
+
+      if (data.type === 'chat_resolved') {
+        dispatch(removeTicket({ ticketId: data.chat_id }));
+      }
+
+      if (data.type === 'notify_new_chat') {
+        const notificationForCurrentAgent = data?.notification?.length > 0 ? 
+          data.notification.filter((n: NotificationItem) => n.agent_info.id === agentId) : data.notification; 
+        dispatch(addNotification(notificationForCurrentAgent[0]));
+      }
+
+      if (data.type === 'notify_send_message') {
+        const notificationForCurrentAgent = data?.notification?.length > 0 ? 
+          data.notification.filter((n: NotificationItem) => n.agent_info.id === agentId) : data.notification; 
+        dispatch(addNotification(notificationForCurrentAgent[0]));
+
+        const completeMessage = data.message;
+        const newMessage = {
+          "sender_type": completeMessage.sender_type,
+          "sender_diplay:": completeMessage.sender_display_name,
+          "content": completeMessage.content,
+          "created_at": completeMessage.created_at,
+          "is_read": false
+        }
+        if (notificationForCurrentAgent[0]?.message) {
+          dispatch(addMessageToTicket({
+              chatRoomId: completeMessage.chat_room_id,
+              message: newMessage
+          }))
+        }
+      }
+
     };
 
     return () => ws.close();

@@ -5,7 +5,7 @@ import guest from '../assets/sounds/guest.mp3'
 // import { messages } from "../constants/chat";
 import { useInitiateChatMutation } from "../services/service";
 import { useDispatch } from "react-redux";
-import { setGuestSessionId } from "../store/slices/guest";
+import { setGuestSessionId, setGuestStatus } from "../store/slices/guest";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store/store";
 import { useGuestSendMessageMutation } from "../services/service";
@@ -199,6 +199,10 @@ const useChat = () => {
         };
         dispatch(setGuestMessages([...currentMessages, receivedMessage]));
         console.log('Mensaje del AGENTE recibido:', event.data);
+      } else if (data.type === 'chat_closed') {
+        dispatch(setGuestStatus('closed'));
+      } else if (data.type === 'chat_resolved') {
+        dispatch(setGuestStatus('resolved'));
       } else {
         console.log('Mensaje desconocido recibido:', event.data);
       }

@@ -62,6 +62,11 @@ export const agentSlice = createSlice({
       const { byId, allIds } = normalizeNotifications(action.payload);
       state.notifications = { byId, allIds };
     },
+    addNotification: (state, action: PayloadAction<NotificationItem>) => {
+      const notification = action.payload;
+      state.notifications.byId[notification.id] = notification;
+      state.notifications.allIds.unshift(notification.id);
+    },
     removeNotification: (state, action) => {
       const idToRemove = action.payload;
       delete state.notifications.byId[idToRemove];
@@ -90,5 +95,5 @@ export const agentSlice = createSlice({
   },
 });
 
-export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification, removeNotification, setAssignedChatMessage } = agentSlice.actions;
+export const { setChatProfile, unsetChatProfile, setAssignedChats, setNotifications, setCurrentNotification, removeNotification, addNotification, setAssignedChatMessage } = agentSlice.actions;
 export default agentSlice.reducer;

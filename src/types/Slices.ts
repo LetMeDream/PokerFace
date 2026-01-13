@@ -82,6 +82,11 @@ export interface NotificationItem {
   notification_type: notificationStatusKey;
   read_at: string | null; // ISO 8601 or null
   title: string;
+  agent_info: {
+    id: number;
+    full_name: string;
+    employee_id: string;
+  }
 }
 
 export type AllNotifications = NotificationItem[];
