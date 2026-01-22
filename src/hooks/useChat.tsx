@@ -23,6 +23,7 @@ import { endpoints } from "../constants/envSettings";
 type ChatMessage = {
   type: string;
   content: string;
+  id: string;
 };
 
 const useChat = () => {
@@ -49,7 +50,8 @@ const useChat = () => {
   }, [])
 
   const updateGuestChatAfterSend = (chatMessages: ChatMessage[], messageInput: string) => {
-    dispatch(setGuestMessages([...chatMessages, { type: 'guest', content: messageInput }]));
+    // id temporal
+    dispatch(setGuestMessages([...chatMessages, { type: 'guest', content: messageInput, id: `guest-msg-${Date.now()}` }]));
     (document.activeElement as HTMLElement | null)?.blur();
     setMessageInput("");
   }
@@ -172,17 +174,41 @@ const useChat = () => {
 
   const { isUserConected } = useSelector((state: RootState) => state.guest);
 
-  const wsRef = useRef<WebSocket | null>(null);
+const wsRef = useRef<WebSocket | null>(null);
   const { id: chat_room_id } = useSelector((state: any) => state.guest);
+  const reconnectTimeoutRef = useRef<number | null>(null);
+  const heartbeatIntervalRef = useRef<number | null>(null);
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+  const maxReconnectAttempts = 5;
   
-  /* Connect to WebSocket for guest chat, using chat_room_id */
-  useEffect(() => {
+  const connectWebSocket = () => {
     if (!chat_room_id || !isUserConected) return;
+    
     const ws = new WebSocket(`${endpoints.WS_BASE_URL}/guest_chat_${chat_room_id}/`);
     wsRef.current = ws;
 
-    ws.onopen = () => console.log('WebSocket abierto');
+    ws.onopen = () => {
+      console.log('WebSocket abierto');
+      setReconnectAttempts(0);
+      
+      // Heartbeat para mantener conexión viva
+      heartbeatIntervalRef.current = window.setInterval(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          // Enviar heartbeat simple para mantener conexión activa
+          ws.send(JSON.stringify({ type: 'heartbeat', chat_room_id: chat_room_id }) );
+        }
+      }, 30000); // Ping cada 30 segundos
+    };
+
     ws.onmessage = (event) => {
+      // console.log('Mensaje recibido:', event.data);
+      
+      // Ignorar mensajes de heartbeat
+      if (event.data === JSON.stringify({ type: 'heartbeat', chat_room_id: chat_room_id }) || event.data.includes('pong')) {
+        // console.log('Ignorando heartbeat');
+        return;
+      }
+      
       // Aquí manejas el mensaje recibido
       let data;
       try {
@@ -193,12 +219,18 @@ const useChat = () => {
       // Obtener el valor actualizado de messages directamente del store
       if (data.sender === 'agent') {
         const currentMessages = store.getState().guest.messages;
+        const currentMessagesIds = new Set(currentMessages.map(msg => msg.id));
         const receivedMessage: ChatMessage = {
           type: 'agent',
-          content: String(data.message.content ?? '')
+          content: String(data.message.content ?? ''),
+          id: data.message.id
         };
+        if (currentMessagesIds.has(receivedMessage.id)) {
+          // console.log('Mensaje duplicado recibido, ignorando:', receivedMessage);
+          return;
+        }
         dispatch(setGuestMessages([...currentMessages, receivedMessage]));
-        console.log('Mensaje del AGENTE recibido:', event.data);
+        // console.log('Mensaje del AGENTE recibido:', event.data);
       } else if (data.type === 'chat_closed') {
         dispatch(setGuestStatus('closed'));
       } else if (data.type === 'chat_resolved') {
@@ -206,13 +238,50 @@ const useChat = () => {
       } else {
         console.log('Mensaje desconocido recibido:', event.data);
       }
-
     };
-    ws.onerror = (e) => console.error('WebSocket error', e);
-    ws.onclose = () => console.log('WebSocket cerrado');
 
-    return () => ws.close();
-  }, [chat_room_id, dispatch, isUserConected]);
+    ws.onerror = (e) => {
+      console.error('WebSocket error', e);
+    };
+
+    ws.onclose = (event) => {
+      console.log('WebSocket cerrado', event.code, event.reason);
+      
+      // Limpiar heartbeat
+      if (heartbeatIntervalRef.current) {
+        window.clearInterval(heartbeatIntervalRef.current);
+        heartbeatIntervalRef.current = null;
+      }
+
+      // Reconexión automática si no fue un cierre intencional
+      if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts && isUserConected) {
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000); // Exponential backoff
+        console.log(`Intentando reconectar en ${delay}ms (intento ${reconnectAttempts + 1}/${maxReconnectAttempts})`);
+        
+        reconnectTimeoutRef.current = window.setTimeout(() => {
+          setReconnectAttempts(prev => prev + 1);
+          connectWebSocket();
+        }, delay);
+      }
+    };
+  };
+
+  /* Connect to WebSocket for guest chat, using chat_room_id */
+  useEffect(() => {
+    connectWebSocket();
+    
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close(1000, 'Component unmounting');
+      }
+      if (reconnectTimeoutRef.current) {
+        window.clearTimeout(reconnectTimeoutRef.current);
+      }
+      if (heartbeatIntervalRef.current) {
+        window.clearInterval(heartbeatIntervalRef.current);
+      }
+    };
+  }, [chat_room_id, isUserConected]);
 
 
 
