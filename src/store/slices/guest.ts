@@ -10,7 +10,7 @@ interface GuesstState {
   full_name: string;
   phone_number: string;
   is_temporary: boolean;
-  messages: { type: string; content: string; }[];
+  messages: { type: string; content: string; id: string }[];
   isUserConected: boolean;
   created_at: string;
   status?: string;
@@ -43,7 +43,7 @@ export const guestSlice = createSlice({
     setIsUserConected: (state, action: PayloadAction<boolean>) => {
       state.isUserConected = action.payload;
     },
-    setGuestMessages: (state, action: PayloadAction<{ type: string; content: string; }[]>) => {
+    setGuestMessages: (state, action: PayloadAction<{ type: string; content: string; id: string }[]>) => {
       state.messages = action.payload;
     },
     setGuestStatus: (state, action: PayloadAction<string>) => {

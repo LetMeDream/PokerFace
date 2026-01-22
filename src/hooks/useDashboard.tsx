@@ -64,7 +64,7 @@ const useDashboard = () => {
     /* Conectando con el web socket de Dashboard de agentes */
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data)
+      // console.log(data)
 
       
       if (data.type === 'guest_message') {
