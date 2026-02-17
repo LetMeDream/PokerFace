@@ -5,6 +5,7 @@ export const endpoints = {
   REFRESH_TOKEN: '/token/refresh/',
   LOGOUT: '/auth/logout/',
   WAITING_CHATS: `/chat-rooms/waiting_chats/`,
+  RESOLVED_AND_CLOSED_CHATS: `/chat-rooms/resolved_closed_chats`,
   INITIAL_MESSAGE: `/chat/start_chat/`,
   COMPLETE_CHAT: `/chat/complete_chat/`,
   GUEST_SEND_MESSAGE: `/chat/send_message/`,
