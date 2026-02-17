@@ -11,6 +11,7 @@ import { setAssignedChats } from '../store/slices/agent';
 import { useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
 import { useResolveChatMutation } from '../services/service';
 import { setTickets } from '../store/slices/base';
+import { useNavigate } from 'react-router-dom';
 
 const useGeneralInbox = () => {
   const dispatch = useDispatch();
@@ -107,6 +108,10 @@ const useGeneralInbox = () => {
   const reopenTicketModalId = 'reopen_ticket_modal'
   const closeReopenTicketBntId = `reopen_ticket_btn_${assigningTicketId}`;
 
+  const navigate = useNavigate();
+  const handleGoHistory = () => {
+    navigate('/dashboard/history'); 
+  }
 
 
 
@@ -125,7 +130,8 @@ const useGeneralInbox = () => {
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,
-    closeReopenTicketBntId
+    closeReopenTicketBntId,
+    handleGoHistory
   }
 }
 
