@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import DashboardPage from './pages/Dashboard/DashboardPage'
 import PrivateRoute from './layout/PrivateRoute'
 import AllNotifications from './pages/Dashboard/AllNotifications'
+import History from './pages/Dashboard/History'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
 
           <Route path="dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
           <Route path="dashboard/notifications" element={<PrivateRoute><AllNotifications /></PrivateRoute>} />
+          <Route path="dashboard/history" element={<PrivateRoute><History /></PrivateRoute>} />
 
         </Routes>
       </HashRouter>
