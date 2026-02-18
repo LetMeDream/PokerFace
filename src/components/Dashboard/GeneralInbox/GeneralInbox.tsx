@@ -4,7 +4,7 @@ import useGeneralInbox from '../../../hooks/useGeneralInbox';
 import usePagination from '../../../hooks/usePagination';
 import Pagination from '../Pagination';
 import useMediaQuery from '../../../hooks/useMediaQuery';
-import { GoHistory } from "react-icons/go";
+// import { GoHistory } from "react-icons/go";
 
 const GeneralInbox = () => {
   const {
@@ -20,7 +20,7 @@ const GeneralInbox = () => {
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,
-    handleGoHistory
+    // handleGoHistory
   } = useGeneralInbox();
 
 
@@ -79,11 +79,12 @@ const GeneralInbox = () => {
             </li>
             
           </ul>
-          <div className='basis-3/5 p-4 pb-2 flex justify-end md:pr-16'>
+          {/* Go to History */}
+          {/* <div className='basis-3/5 p-4 pb-2 flex justify-end md:pr-16'>
             <div className='flex items-center justify-center cursor-pointer group' onClick={handleGoHistory}>
               <GoHistory className='text-2xl ml-2 text-gray-800 group-hover:text-gray-600'/>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Ticket list */}
