@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import { useGetNotificationsQuery } from '../services/service'
 import { useDispatch } from 'react-redux'
 import { setNotifications, removeNotification} from '../store/slices/agent'
@@ -53,34 +53,42 @@ const useNotifications = () => {
   
     useEffect(() => {
       if (notificationsData) {
-        dispatch(setNotifications(notificationsData.notifications));
+        const newMessagesNotifications = notificationsData.notifications.filter((n: NotificationItem) => n.notification_type === 'new_message' || n.notification_type === 'new_chat');
+
+        console.log(newMessagesNotifications)
+        dispatch(setNotifications(newMessagesNotifications));
       }
     }, [notificationsData, dispatch]);
 
-    const [lastFiveNotifications, setLastFiveNotifications] = useState<Array<NotificationItem>>(notificationsData 
-      ? notificationsData.notifications.slice(0, 5) 
+    /* const [lastFiveNotifications, setLastFiveNotifications] = useState<Array<NotificationItem>>(notificationsData 
+      ? notificationsData.notifications.filter((n: NotificationItem) => n.notification_type === 'new_message' || n.notification_type === 'new_chat').slice(0, 5) 
       : []
-    );
+    ); */
 
     const currentNotifications = useSelector(selectNotificationsArray);
 
-    /* See More */
     useEffect(() => {
-      if (notificationsData) {
-        const sortedNotifications = [...currentNotifications.filter((n: NotificationItem) => !n.is_read)].sort((a, b) => 
-          (Number(a.is_read) - Number(b.is_read))
-        );
-        setLastFiveNotifications(sortedNotifications.slice(0, 5));
-      }
-    }, [setLastFiveNotifications, notificationsData]);
+      if (!notificationsData?.notifications) return;
 
-    /* Get Unread notifications */
-    useEffect(() => {
-      if (notificationsData) {
-        const unreadNotifications = currentNotifications.filter((n: NotificationItem) => !n.is_read);
-        setLastFiveNotifications(unreadNotifications.slice(0, 5));
-      }
-    }, [notificationsData, currentNotifications]);
+      // We filter the notifications to keep only 'new_message' and 'new_chat' types before saving them in Redux
+      const relevantNotifications = notificationsData.notifications.filter((n: NotificationItem) =>
+        n.notification_type === 'new_message' || n.notification_type === 'new_chat'
+      );
+
+      dispatch(setNotifications(relevantNotifications));
+
+    }, [notificationsData, dispatch]);
+
+    const lastFiveNotifications = useMemo(() => {
+      return currentNotifications
+        .filter(n => !n.is_read)
+        // .filter(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')
+        .sort((a, b) => Number(a.created_at || 0) - Number(b.created_at || 0)) // o como ordenes
+        .slice(0, 5);
+    }, [currentNotifications]);
+
+    
+    
 
 
     /* Sound when new notifications (for 'new_message' || 'new_chat') arrive */
@@ -115,21 +123,28 @@ const useNotifications = () => {
       try {
         const isAssigned = assignedChats.byId[notification.chat_room_id];
         dispatch(removeNotification(notification.id));
+        let takeChatResult;
         if (notification.notification_type === 'new_chat') {
           if (!isAssigned) {
-            await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+            takeChatResult = await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+            if (takeChatResult) {
+              await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+              dispatch(setSelectedTicketId(notification.chat_room_id));
+            }
           }
-          await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
-          dispatch(setSelectedTicketId(notification.chat_room_id));
         } else if (notification.notification_type === 'agent_assigned') {
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
-          dispatch(setSelectedTicketId(notification.chat_room_id));
+          if (isAssigned) dispatch(setSelectedTicketId(notification.chat_room_id));
         } else if (notification.notification_type === 'new_message') {
           if (!isAssigned) {
-            takeChat({ ticketId: notification.chat_room_id })
+            try {
+              await takeChat({ ticketId: notification.chat_room_id }).unwrap();
+              await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+              dispatch(setSelectedTicketId(notification.chat_room_id));
+            } catch (error) {
+              console.error('Failed to take chat from notification:', error);
+            }
           }
-          await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
-          dispatch(setSelectedTicketId(notification.chat_room_id));
         } else if (
           notification.notification_type === 'chat_resolved'  || 
           notification.notification_type === 'chat_closed'    || 
@@ -137,12 +152,18 @@ const useNotifications = () => {
         ) {
           await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
         }
-        // Signal success in some way, e.g., with a toast notification using icons
-        toast.success('');
+        // Signal success in some way
+        toastInfo('Notificación marcada como leída');
       } catch (error) {
         // reset previously removed notification, if needed
         // dispatch(setNotifications(currentNotifications));
-        console.error('Failed to navigate to notification:', error);
+        if ((error as any)?.data?.error === 'Este chat ya ha sido asignado o no está en espera'){
+          toastInfo('No se ha podido tomar el chat porque ya ha sido asignado a otro agente ');
+        } else {
+          toastInfo((error as any)?.data?.error || 'Error al procesar la notificación');
+        }
+        await markNotificationRead({ notificationIds: [notification.id] }).unwrap();
+
       }
     }
 
