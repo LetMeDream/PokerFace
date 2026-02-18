@@ -9,11 +9,40 @@ import { setSelectedTicketId } from '../store/slices/base'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../store/store'
 import { useNavigate } from 'react-router-dom'
-import toast from 'react-hot-toast'
 import { selectNotificationsArray } from '../utils/selectors'
 import useSound from 'use-sound'
 import guest from '../assets/sounds/guest.mp3'
 import { setHasNotificationsSoundPlayed } from '../store/slices/base'
+import toast from 'react-hot-toast';
+import { FiInfo } from 'react-icons/fi';
+
+export const toastInfo = (message: string) => {
+  return toast.custom(
+    (t) => (
+      <div
+        className={`
+          flex items-center gap-3 
+          bg-white text-gray-800 
+          px-4 py-3 rounded-lg shadow-md border border-gray-200
+          min-w-[320px] max-w-md
+          ${t.visible ? 'opacity-100' : 'opacity-0'}
+          transition-opacity duration-200
+        `}
+      >
+        <FiInfo className="text-blue-500 flex-shrink-0 text-xl" />
+        <p className="text-sm font-medium flex-1">{message}</p>
+        <button
+          onClick={() => toast.dismiss(t.id)}
+          className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+        >
+          ×
+        </button>
+      </div>
+    ),
+    { duration: 4500 }
+  );
+};
+
 
 const useNotifications = () => {
     const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { skip: false });
