@@ -58,6 +58,7 @@ const useDashboard = () => {
   const [ping] = useSound(guest);
 
 
+  const idsForCurrentAgentChats = useSelector((state: RootState) => state.agent.assigned_chats.allIds) as string[];
   useEffect(() => {
     const ws = new WebSocket(`${endpoints.WS_BASE_URL}/my_chats/?token=` + token.access);
   
@@ -115,13 +116,18 @@ const useDashboard = () => {
       }
 
       if (data.type === 'notify_send_message') {
-        let notificationForCurrentAgent = data?.notification?.length > 0 ? 
-          data.notification.filter((n: NotificationItem) => n.agent_info.id === agentId) : data.notification; 
-        if (!notificationForCurrentAgent[0]) {
-          notificationForCurrentAgent = data?.notification;
-          dispatch(addNotification(notificationForCurrentAgent));
+        const currentNotification = data?.notification?.length > 0 ? 
+        data.notification.filter((n: NotificationItem) => n.agent_info.id === agentId) : data.notification; 
+        const belogsToCurrentAgent = currentNotification[0] ?
+          idsForCurrentAgentChats.includes(currentNotification[0].chat_room_id) : idsForCurrentAgentChats.includes(data?.notification.chat_room_id);
+        if (!belogsToCurrentAgent) return; // We stop here if the notification doesn't belong to the current agent
+
+        
+        if (!currentNotification[0]) {
+          const notificationToSend = data?.notification;
+          dispatch(addNotification(notificationToSend));
         } else {
-          dispatch(addNotification(notificationForCurrentAgent[0]));
+          dispatch(addNotification(currentNotification[0]));
         }
         ping();
 
@@ -133,7 +139,7 @@ const useDashboard = () => {
           "created_at": completeMessage.created_at,
           "is_read": false
         }
-        if (notificationForCurrentAgent[0]?.message) {
+        if (currentNotification[0]?.message) {
           dispatch(addMessageToTicket({
               chatRoomId: completeMessage.chat_room_id,
               message: newMessage
