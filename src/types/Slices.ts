@@ -44,7 +44,7 @@ interface ChatUser {
   created_at: string; // ISO 8601
 }
 export interface ChatTicket {
-  id: number;
+  id: string;
   chat_room_id: string | null;
   chat_user_info: ChatUser;
   status: TicketStatus;
@@ -61,8 +61,8 @@ export interface ChatTicket {
 export type AllTickets = ChatTicket[];
 
 export type NormalizedTickets = {
-    byId: Record<number, AllTickets[number]>,
-    allIds: number[]
+    byId: Record<string, AllTickets[number]>,
+    allIds: string[]
 }
 
 export type NormalizedAgents = {
@@ -82,6 +82,11 @@ export interface NotificationItem {
   notification_type: notificationStatusKey;
   read_at: string | null; // ISO 8601 or null
   title: string;
+  agent_info: {
+    id: number;
+    full_name: string;
+    employee_id: string;
+  }
 }
 
 export type AllNotifications = NotificationItem[];

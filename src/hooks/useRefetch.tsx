@@ -5,14 +5,14 @@ import { setHasNotificationsSoundPlayed, setTickets } from '../store/slices/base
 import { setGuestMessages, setGuestStatus } from '../store/slices/guest';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { setHasAutoOpened } from '../store/slices/base';
+// import { setHasAutoOpened } from '../store/slices/base';
 import { selectNotificationsArray } from '../utils/selectors';
 
 /* Refetches and re-set assigned chats  */
 export const useRefetchMyChat = () => {
   const dispatch = useDispatch();
   const is_superuser = useSelector((state: any) => state.user.is_superuser);
-  const { data: assignChatsData } = useGetAssignedChatsQuery<any>(undefined, { pollingInterval: 5000, skip: is_superuser });
+  const { data: assignChatsData } = useGetAssignedChatsQuery<any>(undefined, { skip: is_superuser });
 
   useEffect(() => {
     dispatch(setAssignedChats(assignChatsData?.chats || []));
@@ -28,7 +28,7 @@ export const useRefetchMyChat = () => {
 export const useRefetchWaitingChats = () => {
   const dispatch = useDispatch();
   const is_superuser = useSelector((state: any) => state.user.is_superuser);
-  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { pollingInterval: 5000, skip: is_superuser });
+  const { data: waitingChatsData } = useGetWaitingChatsQuery<any>(undefined, { skip: is_superuser, refetchOnMountOrArgChange: true });
 
   useEffect(() => {
     dispatch(setTickets(waitingChatsData?.chats || []));
@@ -42,7 +42,7 @@ export const useRefetchWaitingChats = () => {
 /* Refetches Notifications */
 export const useRefetchNotifications = () => {
   const dispatch = useDispatch();
-  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { pollingInterval: 5000, skip: false });
+  const { data: notificationsData } = useGetNotificationsQuery<any>(undefined, { skip: false, refetchOnMountOrArgChange: true });
   const unreadNotifications = useSelector(selectNotificationsArray).filter(notif => !notif.is_read);
   const lastFiveNotifications = unreadNotifications.sort((a, b) => 
     (Number(a.is_read) - Number(b.is_read))
@@ -52,7 +52,7 @@ export const useRefetchNotifications = () => {
     dispatch(setNotifications(notificationsData?.notifications || []));
     if (lastFiveNotifications.some(n => n.notification_type === 'new_message' || n.notification_type === 'new_chat')) {
       dispatch(setHasNotificationsSoundPlayed(false));
-      dispatch(setHasAutoOpened(false));
+      // dispatch(setHasAutoOpened(false));
     }
   }, [notificationsData, dispatch]);
 
@@ -64,29 +64,26 @@ export const useRefetchNotifications = () => {
 /* Refetches guest chat status */
 export const useRefetchGuestChatStatus = () => {
   const { id: chat_room_id, session_id: sessionId, status } = useSelector((state: any) => state.guest);
-  const skipQuery = !sessionId || status === 'closed' || status === 'resolved';
-  const { data: guestChatStatusData } = useGetGuestChatStatusQuery<any>({ chat_room_id }, { pollingInterval: 5000, skip: skipQuery });
+  // Ejecuta la query si hay sessionId y el status no es 'closed' ni 'resolved'
+  const skipQuery = status === 'closed' || status === 'resolved' || !sessionId;
+  const { data: guestChatStatusData } = useGetGuestChatStatusQuery<any>({ chat_room_id }, { skip: skipQuery, refetchOnMountOrArgChange: true });
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // console.log(guestChatStatusData)
-    
+    if (!guestChatStatusData) return;
+
     let settableMessages = guestChatStatusData?.message_history || [];
-    // Map the messages to match the guest slice structure
     settableMessages = settableMessages.filter((msg: any) => msg.sender_type !== 'system')
-    .map((msg: any) => ({
-      type: msg.sender_type === 'user' ? 'guest' : (msg.sender_type === 'agent' || msg.sender_type === 'system') ? 'agent' : 'unknown',
-      content: msg.content
-    }));
-    // console.log(settableMessages)
+      .map((msg: any) => ({
+        type: msg.sender_type === 'user' ? 'guest' : (msg.sender_type === 'agent' || msg.sender_type === 'system') ? 'agent' : 'unknown',
+        content: msg.content
+      }));
     dispatch(setGuestStatus(guestChatStatusData?.status || ''));
-    dispatch(setGuestMessages(settableMessages));
-
-
-    // setGuestMessages(guestChatStatusData?.message_history || []);
+    if (settableMessages.length > 0) {
+      dispatch(setGuestMessages([]))
+      dispatch(setGuestMessages(settableMessages));
+    }
   }, [guestChatStatusData, dispatch]);
 
-  return {
-    
-  }
+  return {};
 }

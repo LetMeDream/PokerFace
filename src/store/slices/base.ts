@@ -4,8 +4,8 @@ import { normalizeTickets } from '../../utils/helpers';
 
 export interface BaseState {
   tickets: {
-    byId: Record<number, ChatTicket>,
-    allIds: number[]
+    byId: Record<string, ChatTicket>,
+    allIds: string[]
   };
   selectedTicketId: string | null  | undefined// Id for the currently established conversation/ticket
   assigningTicketId?: string | null  | undefined// Id for the ticket being assigned right now
@@ -130,8 +130,23 @@ export const baseSlice = createSlice({
     // Set guest chat open state
     setIsGuestChatOpen(state, action) {
       state.isGuestChatOpen = action.payload
-    }
+    }, 
 
+    // Add new ticket
+    addTicket(state, action) {
+      const ticket: ChatTicket = action.payload;
+      state.tickets.byId[ticket.id] = ticket;
+      if (!state.tickets.allIds.includes(ticket.id)) {
+        state.tickets.allIds.push(ticket.id);
+      }
+    },
+
+    // Remove ticket
+    removeTicket(state, action) {
+      const { ticketId } = action.payload;
+      delete state.tickets.byId[ticketId];
+      state.tickets.allIds = state.tickets.allIds.filter(id => id !== ticketId);
+    }
 
   }
 })
@@ -140,7 +155,8 @@ export const {
   setSelectedTicketId, unsetBase, setHasAutoOpened, setTickets, addMessageToTicket, 
   unsetSelectedTicketId, assignTicketToAgent, setAssigningTicketId, unassignAgentFromTicket, 
   deleteTicket, closeTicket, reopenTicket, setHasNotificationsSoundPlayed, 
-  // These below are use to fix the UI error when opening the chat from a different component
+  addTicket, removeTicket,
+  // These below are used to fix the UI error when opening the chat from a different component
   setIsGuestChatOpen
 } = baseSlice.actions
 

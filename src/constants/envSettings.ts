@@ -5,6 +5,7 @@ export const endpoints = {
   REFRESH_TOKEN: '/token/refresh/',
   LOGOUT: '/auth/logout/',
   WAITING_CHATS: `/chat-rooms/waiting_chats/`,
+  RESOLVED_AND_CLOSED_CHATS: `/chat-rooms/resolved_closed_chats`,
   INITIAL_MESSAGE: `/chat/start_chat/`,
   COMPLETE_CHAT: `/chat/complete_chat/`,
   GUEST_SEND_MESSAGE: `/chat/send_message/`,
@@ -21,4 +22,6 @@ export const endpoints = {
   UPDATE_ADMIN_AGENT: (id: string | number) => `/admin-agents/${id}/`, // Put
   NOTIFICATIONS: `/notifications/`, // Get
   MARK_NOTIFICATION_READ: () => `/notifications/mark_read/`, // Post
+
+  WS_BASE_URL: import.meta.env.VITE_WS_URL,
 }

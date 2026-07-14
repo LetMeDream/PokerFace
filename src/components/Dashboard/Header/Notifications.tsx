@@ -26,7 +26,7 @@ export const Notifications = () => {
         {/* change popover-1 and --anchor-1 names. Use unique names for each dropdown */}
         {/* For TSX uncomment the commented types below */}
         <button 
-          className="btn !bg-secondary text-gray-200" 
+          className="btn !bg-secondary/80 hover:!bg-secondary/90 text-gray-200 !shadow-none !border-none" 
           popoverTarget="popover-1" 
           style={{ anchorName: "--anchor-1" } as React.CSSProperties}
           onClick={() => {
@@ -40,11 +40,11 @@ export const Notifications = () => {
         </button>
 
         <div 
-          className={`dropdown dropdown-down dropdown-end menu w-[40ch] rounded-box bg-base-100 shadow-sm !truncate`}
+          className={`dropdown dropdown-down dropdown-end menu w-[40ch] rounded-box !shadow-none !truncate bg-secondary`}
           popover="auto" id="popover-1" style={{ positionAnchor: "--anchor-1" } as React.CSSProperties }
         >
           <li>
-            <h3 className="font-bold !text-white border-b-1 border-b-gray-200 pb-2 mb-2 text-center">Notificaciones</h3>
+            <h3 className="font-bold !text-white border-b-1 border-b-gray-200 pb-2 mb-2 text-center bg-secondary/80">Notificaciones</h3>
           </li>
           {lastFiveNotifications.map((notification) => (
             <NotificationEntry
@@ -61,7 +61,7 @@ export const Notifications = () => {
           )}
           {/* See More Notifications */}
           {notificationsData && notificationsData.notifications.length > 5 && (
-            <div className=' flex justify-between'>
+            <div className=' flex justify-between select-none'>
               <li
                 className="text-start !text-primary p-2 py-1.5 cursor-pointer hover:underline"
                 onClick={handleMarkAllAsRead}

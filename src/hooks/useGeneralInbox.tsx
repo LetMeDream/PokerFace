@@ -11,6 +11,7 @@ import { setAssignedChats } from '../store/slices/agent';
 import { useGetAssignedChatsQuery, useGetWaitingChatsQuery } from '../services/service';
 import { useResolveChatMutation } from '../services/service';
 import { setTickets } from '../store/slices/base';
+import { useNavigate } from 'react-router-dom';
 
 const useGeneralInbox = () => {
   const dispatch = useDispatch();
@@ -20,8 +21,8 @@ const useGeneralInbox = () => {
   const filteredUnassignedTickets = useSelector((state: RootState) => selectFilteredUnassignedTickets(state.base, inboxSearchValue));
   const [ takeChat, { isLoading: isTakingChat } ] = useTakeChatMutation();
   const is_superuser = useSelector((state: RootState) => state.user.is_superuser);
-  const { refetch: refetchAssignedChats } = useGetAssignedChatsQuery(undefined, { pollingInterval: 5000, skip: is_superuser }); // to keep assigned chats updated
-  const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery(undefined, { pollingInterval: 5000, skip: is_superuser }); // to keep waiting chats updated
+  const { refetch: refetchAssignedChats } = useGetAssignedChatsQuery(undefined, { skip: is_superuser }); // to keep assigned chats updated
+  const { refetch: refetchWaitingChats } = useGetWaitingChatsQuery(undefined, { skip: is_superuser }); // to keep waiting chats updated
 
   const assignAndGo = async () => {
     // Dispatch action to assign agent to ticket
@@ -107,6 +108,10 @@ const useGeneralInbox = () => {
   const reopenTicketModalId = 'reopen_ticket_modal'
   const closeReopenTicketBntId = `reopen_ticket_btn_${assigningTicketId}`;
 
+  const navigate = useNavigate();
+  const handleGoHistory = () => {
+    navigate('/dashboard/history'); 
+  }
 
 
 
@@ -125,7 +130,8 @@ const useGeneralInbox = () => {
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,
-    closeReopenTicketBntId
+    closeReopenTicketBntId,
+    handleGoHistory
   }
 }
 

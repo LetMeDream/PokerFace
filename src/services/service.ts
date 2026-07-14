@@ -109,6 +109,12 @@ export const tribet_api = createApi({
       providesTags: ['WaitingChats'],
     }),
 
+    // Get all closed and resolved chats
+    getClosedResolvedChats: builder.query<void, void>({
+      query: () => ({ url: endpoints.RESOLVED_AND_CLOSED_CHATS, method: 'GET' }),
+    }),
+    
+
     // * Obtain all assigned chats for agent
     // `GET /api/chat-rooms/my_chats/
     getAssignedChats: builder.query<void, void>({
@@ -298,6 +304,7 @@ export const {
   useUpdateAgentMutation,
   useGetNotificationsQuery,
   useMarkNotificationReadMutation,
+  useGetClosedResolvedChatsQuery,
 
   /* 
   TODO: MOCKUP HOOKS DOWN HERE THAT NEED TO BE REPLACED

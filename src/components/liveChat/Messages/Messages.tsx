@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { Fragment } from "react";
 import { guestMessage, agentMessage } from "../../../constants/chat";
 import type { MessagesProps } from "../../../types/Chat";
 import ContactForm from "../ContactForm/ContactForm";
@@ -40,9 +41,9 @@ const Messages: FC<MessagesProps> = ({
     return (
       <>
         {chatMessages.map((msg, index) => (
-          <>
+          <Fragment key={index}>
             <div 
-              key={index}
+              key={msg.id || index}
             >
               {/* Guest messages */}
               {msg.type === 'guest' ? guestMessage(msg.content) : null}
@@ -80,7 +81,7 @@ const Messages: FC<MessagesProps> = ({
                 </button>
               </div>
             )}
-          </>
+          </Fragment>
               
         ))}
       </>

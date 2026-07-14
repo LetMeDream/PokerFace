@@ -4,7 +4,7 @@ import useGeneralInbox from '../../../hooks/useGeneralInbox';
 import usePagination from '../../../hooks/usePagination';
 import Pagination from '../Pagination';
 import useMediaQuery from '../../../hooks/useMediaQuery';
-
+// import { GoHistory } from "react-icons/go";
 
 const GeneralInbox = () => {
   const {
@@ -14,14 +14,13 @@ const GeneralInbox = () => {
     handleDelete,
     isClosing,
     closeDeleteTicketBntId,
-    inboxSearchValue,
-    setInboxSearchValue,
     filteredUnassignedTickets,
     closeTicketModalId,
     handleResolveChat,
     isClosingTicket,
     closeCloseTicketBntId,
     reopenTicketModalId,
+    // handleGoHistory
   } = useGeneralInbox();
 
 
@@ -80,15 +79,12 @@ const GeneralInbox = () => {
             </li>
             
           </ul>
-          <div className='basis-3/5  p-4 pb-2'>
-            <input 
-                type="text" 
-                placeholder="Buscar..." 
-                className="input input-bordered w-full caret-primary active:!ring-1 focus-within:!ring-1 focus-visible:!ring-1 focus:!ring-1 active:!outline-none focus-within:!outline-none focus-visible:!outline-none focus:!outline-none active:!border-none focus-within:!border-none focus-visible:!border-none focus:!border-none" 
-                value={inboxSearchValue}
-                onChange={(e) => setInboxSearchValue(e.target.value)}
-            />
-          </div>
+          {/* Go to History */}
+          {/* <div className='basis-3/5 p-4 pb-2 flex justify-end md:pr-16'>
+            <div className='flex items-center justify-center cursor-pointer group' onClick={handleGoHistory}>
+              <GoHistory className='text-2xl ml-2 text-gray-800 group-hover:text-gray-600'/>
+            </div>
+          </div> */}
         </div>
 
         {/* Ticket list */}

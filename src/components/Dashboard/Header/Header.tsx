@@ -22,7 +22,7 @@ const Header = () => {
   }
 
   return (
-    <div className="navbar bg-gray-600 shadow-sm">
+    <div className="navbar bg-gray-600">
       <div className="navbar-start">
 
         <a className="btn btn-ghost text-lg !text-sky-50" onClick={handleOnClick}>Agente</a>
@@ -38,7 +38,7 @@ const Header = () => {
           Bienvenido, <br/> 
           {fullName || user.username || 'Usuario'}!
         </span>
-        <a className="btn !text-primary !bg-secondary" onClick={logUserOut}>Log out</a>
+        <a className="btn !text-primary !bg-secondary/80 hover:!bg-secondary/90 !shadow-none !border-none" onClick={logUserOut}>Log out</a>
       </div>
     </div>
   )
